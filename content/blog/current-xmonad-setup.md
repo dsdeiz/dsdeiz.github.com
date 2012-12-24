@@ -32,18 +32,18 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Hooks.ManageHelpers
 
 myManageHook = composeAll
-    [ (role =? "gimp-toolbox" &lt;||&gt; role =? "gimp-image-window") --&gt; (ask &gt;&gt;= doF . W.sink)
-    , className =? "Skype"                --&gt; doShift "3:skype"
-    , className =? "Chrome"               --&gt; doShift "2:web"
-    , className =? "Shiretoko"            --&gt; doShift "2:web"
-    , className =? "Evince"               --&gt; doShift "6:pdf"
-    , className =? "feh"                  --&gt; doCenterFloat
-    , className =? "Gimp"                 --&gt; doShift "4:gimp"
-    , className =? "Keepassx"             --&gt; doShift "2:web"
-    , className =? "ROX-Filer"            --&gt; doCenterFloat
-    , className =? "XCalc"                --&gt; doCenterFloat
-    , className =? "OpenOffice.org 3.1"   --&gt; doShift "7:office"
-    , className =? "Pidgin"               --&gt; doShift "5:pidgin"
+    [ (role =? "gimp-toolbox" <||> role =? "gimp-image-window") --> (ask >>= doF . W.sink)
+    , className =? "Skype"                --> doShift "3:skype"
+    , className =? "Chrome"               --> doShift "2:web"
+    , className =? "Shiretoko"            --> doShift "2:web"
+    , className =? "Evince"               --> doShift "6:pdf"
+    , className =? "feh"                  --> doCenterFloat
+    , className =? "Gimp"                 --> doShift "4:gimp"
+    , className =? "Keepassx"             --> doShift "2:web"
+    , className =? "ROX-Filer"            --> doCenterFloat
+    , className =? "XCalc"                --> doCenterFloat
+    , className =? "OpenOffice.org 3.1"   --> doShift "7:office"
+    , className =? "Pidgin"               --> doShift "5:pidgin"
     ]
   where role = stringProperty "WM_WINDOW_ROLE"
 
@@ -60,7 +60,7 @@ myXPConfig = defaultXPConfig { fgColor   = "#FFFFFF"
                               , font     = "xft:Terminus:pixelsize=12"
                               }
 
-myLogHook :: Handle -&gt; X ()
+myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ customPP { ppOutput = hPutStrLn h }
 
 customPP :: PP
@@ -73,9 +73,9 @@ customPP = defaultPP { ppCurrent = xmobarColor "#FFFFFF" ""
 myWorkspaces = ["1:main", "2:web", "3:skype", "4:gimp", "5:pidgin", "6:pdf", "7:office"] ++ map show [8..9]
 
 main = do
-    xmproc &lt;- spawnPipe "xmobar"
+    xmproc <- spawnPipe "xmobar"
     xmonad $ defaultConfig
-        { manageHook = manageDocks &lt;+&gt; myManageHook &lt;+&gt; manageHook defaultConfig
+        { manageHook = manageDocks <+> myManageHook <+> manageHook defaultConfig
         , layoutHook = myLayoutHook
         , logHook = myLogHook xmproc
         , modMask = mod4Mask
@@ -104,17 +104,17 @@ Config { font = "xft:Terminus:pixelsize=12"
        , position = TopW L 90
        , lowerOnStart = True
        , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
-                    , Run Memory ["-t","Mem: &lt;usedratio&gt;%"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
                     , Run Date "%a %b %_d %l:%M" "date" 10
                     , Run StdinReader
                     , Run Battery ["-l", "#FF0000"] 600
-                    , Run CoreTemp ["-t","&lt;core0&gt;","-L","40","-H","60","-l","lightblue","-n","orange","-h","red"] 50
+                    , Run CoreTemp ["-t","<core0>","-L","40","-H","60","-l","lightblue","-n","orange","-h","red"] 50
                     , Run Com "/home/personal/scripts/volume.sh" [] "vol" 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %vol% &lt;fc=#ffffff&gt;%battery%&lt;/fc&gt; %cpu% Temp: %coretemp% %memory% %swap% &lt;fc=#ee9a00&gt;%date%&lt;/fc&gt;"
+       , template = "%StdinReader% }{ %vol% <fc=#ffffff>%battery%</fc> %cpu% Temp: %coretemp% %memory% %swap% <fc=#ee9a00>%date%</fc>"
        }
 ~~~
 

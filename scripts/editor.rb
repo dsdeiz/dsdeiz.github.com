@@ -40,7 +40,7 @@ Dir.glob(ARGV[0] + '/*.md') do |file|
   # Substitute '{% highlight [language] %}...{% endhighlight %}' with
   # '<pre><code class="language-[language]">...</code></pre>'. Substitute '<'
   # and '>' inside the code block with their HTML entities equivalents.
-  content = split[2].strip.gsub(/\{% highlight (\w*) %\}(.*?)\{% endhighlight %\}/m) { "~~~ #{$1}" + $2.gsub(/[<>]/m, '>' => '&gt;', '<' => '&lt;') + '~~~' }
+  content = split[2].strip.gsub(/\{% highlight (\w*) %\}(.*?)\{% endhighlight %\}/m, '~~~ \1\2~~~')
 
   # Write the content to a new file. New filenames will have no dates in 'em.
   new_file = File.open(File.dirname(file) + "/" + filename[11..-1] + '.md', 'w+')
