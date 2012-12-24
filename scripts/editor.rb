@@ -41,6 +41,9 @@ Dir.glob(ARGV[0] + '/*.md') do |file|
   # '~~~ [language]...~~~'.
   content = split[2].strip.gsub(/\{% highlight (\w*) %\}(.*?)\{% endhighlight %\}/m, '~~~ \1\2~~~')
 
+  # Delete the current file.
+  File.delete(file)
+
   # Write the content to a new file. New filenames will have no dates in 'em.
   new_file = File.open(File.dirname(file) + "/" + filename[11..-1] + '.md', 'w+')
   new_file.write("#{hash.to_yaml}---\n#{content}")
