@@ -38,8 +38,7 @@ Dir.glob(ARGV[0] + '/*.md') do |file|
   hash['tags'] = yaml['tags']
 
   # Substitute '{% highlight [language] %}...{% endhighlight %}' with
-  # '<pre><code class="language-[language]">...</code></pre>'. Substitute '<'
-  # and '>' inside the code block with their HTML entities equivalents.
+  # '~~~ [language]...~~~'.
   content = split[2].strip.gsub(/\{% highlight (\w*) %\}(.*?)\{% endhighlight %\}/m, '~~~ \1\2~~~')
 
   # Write the content to a new file. New filenames will have no dates in 'em.
