@@ -14,6 +14,7 @@
 #   because “*” matches zero or more characters.
 
 require 'compass'
+require 'time'
 
 Compass.add_project_configuration 'config.rb'
 
@@ -30,9 +31,11 @@ compile '/assets/css/*/' do
 end
 
 compile '/blog/*/' do
-  filter :kramdown
+  filter :redcarpet,
+         :options => { :fenced_code_blocks => true },
+         :renderer => CustomRenderer
   filter :colorize_syntax,
-         :coderay => { :line_numbers => :table }
+         :default_colorizer => :pygmentize
   layout 'page'
 end
 
@@ -62,6 +65,8 @@ route '*' do
   if item.binary?
     # Write item with identifier /foo/ to /foo.ext
     item.identifier.chop + '.' + item[:extension]
+  elsif item[:kind] == 'article'
+    '/blog/' + item.identifier[6..-1] + 'index.html'
   else
     # Write item with identifier /foo/ to /foo/index.html
     item.identifier + 'index.html'
