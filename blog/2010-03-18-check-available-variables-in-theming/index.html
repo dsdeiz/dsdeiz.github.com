@@ -39,17 +39,6 @@
 <p>Works perfectly for me. :bigsmile:</p>
   </section>
 </article>
-<p>First off, you can probably check out <a href="http://www.thingy-ma-jig.co.uk/blog/02-10-2007/hugely-useful-hugely-undocumented">this entry</a> which provides four functions to look at upon developing. You would need the <a href="http://drupal.org/project/devel">Devel</a> module for this.</p>
-
-<p>I personally use <code>dsm</code> though I believe it simply makes use of the <code>dpm</code> function from devel. I am not certain if this is the <em>proper</em> way of checking the available variables when theming. You could first take a look at the template files e.g. <a href="http://api.drupal.org/api/drupal/modules--system--page.tpl.php/6">page.tpl.php</a> or <a href="http://api.drupal.org/api/drupal/modules--node--node.tpl.php/6">node.tpl.php</a> to check what variables are available for you. I also sometimes add the code below to check for the available variables in a template file. </p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span> <span class="nx">dsm</span><span class="p">(</span><span class="nb">get_defined_vars</span><span class="p">());</span> <span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
-
-<p><a href="http://drupalcontrib.org/api/function/dsm/6">dsm</a> I believe print outs the array provided by <a href="http://php.net/manual/en/function.get-defined-vars.php">get<em>defined</em>vars</a> onto the message area.</p>
-
-<p>You could also make use of <code>krumo_ob</code> by simply adding the code below to the location you'd wish to print out the variables.</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span> <span class="k">print</span> <span class="nx">krumo_ob</span><span class="p">(</span><span class="nb">get_defined_vars</span><span class="p">());</span> <span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
-
-<p>Works perfectly for me. :bigsmile:</p>
 
         </div>
 

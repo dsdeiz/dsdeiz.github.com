@@ -58,36 +58,6 @@
 <p>Woot! :D</p>
   </section>
 </article>
-<p>There are times that I would like to print the output of a view without it being rendered from a template i.e. it would go through <code>page.tpl.php</code>. I find this useful when say I'd like to do an Ajax call and I'd like it to return just the output of the view itself so I could print it inside a <code>div</code> container for example. This is quite simple as I could use <a href="http://api.drupal.org/api/drupal/includes--common.inc/function/drupal_json/6">drupal_json</a> as my reference.</p>
-
-<p>I first created a new menu like so:</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
-<span class="k">function</span> <span class="nf">MODULE_menu</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nv">$items</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
-
-  <span class="nv">$items</span><span class="p">[</span><span class="s1">'example/js'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">'page callback'</span> <span class="o">=&gt;</span> <span class="s1">'MODULE_menu_callback'</span><span class="p">,</span>
-    <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="nx">MENU_CALLBACK</span><span class="p">,</span>
-    <span class="s1">'access callback'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
-  <span class="p">);</span>
-
-  <span class="k">return</span> <span class="nv">$items</span><span class="p">;</span>
-<span class="p">}</span></code></pre></div>
-
-<p>Then the callback which is based on <code>drupal_json()</code>:</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
-<span class="k">function</span> <span class="nf">MODULE_menu_callback</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">drupal_set_header</span><span class="p">(</span><span class="s1">'Content-Type: text/plain; charset=utf-8'</span><span class="p">);</span>
-
-  <span class="k">echo</span> <span class="nx">views_embed_view</span><span class="p">(</span><span class="s1">'view_name'</span><span class="p">);</span>
-<span class="p">}</span></code></pre></div>
-
-<p>Now, I could just do a simple ajax call to use the output inside any element like so:</p>
-<div class="highlight"><pre><code class="language-javascript"><span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">Drupal</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">basePath</span> <span class="o">+</span> <span class="s1">'example/js'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">'.some-element'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-<span class="p">});</span></code></pre></div>
-
-<p>Woot! :D</p>
 
         </div>
 

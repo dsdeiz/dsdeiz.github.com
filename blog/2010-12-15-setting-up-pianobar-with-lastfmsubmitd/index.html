@@ -47,25 +47,6 @@
 <p>Cheers! :D</p>
   </section>
 </article>
-<p><a href="http://www.pandora.com/">Pandora</a> is a really neat, free internet radio service. I am using a console client for <strong>Pandora</strong> which is <a href="https://github.com/PromyLOPh/pianobar">Pianobar</a>. It's lacking one feature that I wanted though in which it would scrobble the music it plays over to <a href="http://www.last.fm/">Last.fm</a>. Previously it did support scrobbling to <strong>Last.fm</strong> but has been <a href="https://github.com/PromyLOPh/pianobar/issues/issue/21">moved</a>. The author said you can make use an external scrobbler.</p>
-
-<p>For my external scrobbler I've used <a href="http://www.red-bean.com/decklin/lastfmsubmitd/">lastfmsubmitd</a>. To set it up, you'll first need to have a script that would handle the events for <strong>Pianobar</strong>. You can use the <a href="https://github.com/PromyLOPh/pianobar/blob/master/contrib/eventcmd.sh">eventcmd.sh</a> script under <strong>contrib</strong> from Pianobar's source. For <strong>lastfmsubmitd</strong>, you can simply uncomment the lines from <code>songfinish</code> to <code>;;</code>. Leave the <code>scrobbler-helper ...</code> commented (or remove) since it would be replaced with <strong>lastfmsubmitd</strong>. What I have in my <code>eventcmd.sh</code> script is this:</p>
-<div class="highlight"><pre><code class="language-bash">  songfinish<span class="o">)</span>
-      <span class="c"># scrobble if 75% of song have been played, but only if the song hasn't</span>
-      <span class="c"># been banned</span>
-      <span class="k">if</span> <span class="o">[</span> -n <span class="s2">"$songDuration"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span>
-              <span class="o">[</span> <span class="k">$(</span><span class="nb">echo</span> <span class="s2">"scale=4; ($songPlayed/$songDuration*100)&gt;50"</span> | bc<span class="k">)</span> -eq 1 <span class="o">]</span> <span class="o">&amp;&amp;</span>
-              <span class="o">[</span> <span class="s2">"$rating"</span> -ne 2 <span class="o">]</span>; <span class="k">then</span>
-        /usr/lib/lastfmsubmitd/lastfmsubmit --artist <span class="s2">"$artist"</span> --title <span class="s2">"$title"</span> --album <span class="s2">"$album"</span> --length <span class="s2">"$((songDuration/1000))"</span>
-      <span class="k">fi</span>
-      ;;</code></pre></div>
-
-<p>Once you have your <code>eventcmd.sh</code> script set up, you simply need to add this in your <strong>config</strong>:</p>
-<div class="highlight"><pre><code class="language-bash"><span class="nv">event_command</span> <span class="o">=</span> /path/to/eventcmd.sh</code></pre></div>
-
-<p>Now that that's set up, you can run the lastfmsubmitd daemon. If you're on <strong>Arch Linux</strong>, you can do <code>sudo /etc/rc.d/lastfmsubmitd start</code>, then finally start <code>pianobar</code>.</p>
-
-<p>Cheers! :D</p>
 
         </div>
 

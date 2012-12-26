@@ -52,30 +52,6 @@ I had a problem yesterday with my <a href="http://archlinux.org">Archlinux</a> i
 </ol><p>Then all was good! :party: I have no idea what caused the change of the file beforehand though.</p>
   </section>
 </article>
-<p>I had a problem yesterday with my <a href="http://archlinux.org">Archlinux</a> installation. Everything was just going fine until I restarted my computer. Arch was trying to load the daemons and modules but can't seem to do it as there was an error saying <strong>"Read-only filesystem"</strong>.</p>
-
-<p>I was thinking to simply remount it after Arch gives me a prompt though it never did.</p>
-
-<p>After some few research and inquiries in the <strong>#archlinux</strong> channel in <strong>Freenode</strong>, I was able to resolve this. The solution an arch user gave me:</p>
-
-<ol>
-<li>Used an Archlinux Live CD (mine was in a USB drive) to mount my Archlinux system that was not booting.</li>
-<li>Put <code>sleep 60</code> in <strong>/etc/rc.sysinit</strong> just before the line <code>status "Mounting Root Read-only" /bin/mount -n -o remount,ro /</code> so when I reboot it would give me 60 seconds to scroll up (Shift + PgUp) and check for errors. This wasn't necessary for me since boot just hangs after the last daemon was being ran.
-&lt;!--break--&gt;
-I had a problem yesterday with my <a href="http://archlinux.org">Archlinux</a> installation. Everything was just going fine until I restarted my computer. Arch was trying to load the daemons and modules but can't seem to do it as there was an error saying <strong>"Read-only filesystem"</strong>.</li>
-</ol><p>I was thinking to simply remount it after Arch gives me a prompt though it never did.</p>
-
-<p>After some few research and inquiries in the <strong>#archlinux</strong> channel in <strong>Freenode</strong>, I was able to resolve this. The solution an arch user gave me:</p>
-
-<ol>
-<li>Used an Archlinux Live CD to mount my Archlinux system that was not booting.</li>
-<li>Put <code>sleep 60</code> in <strong>/etc/rc.sysinit</strong> just before the line <code>status "Mounting Root Read-only" /bin/mount -n -o remount,ro /</code> so when I reboot it would give me 60 seconds to scroll up (Shift + PgUp) and check for errors. This wasn't necessary for me since boot just hangs after the last daemon was being ran.</li>
-</ol><p>I was able to find out that the error was <code>INIT: Couldn't execute /etc/rc.sysinit</code>. Also probably means that even if I modified <strong>/etc/rc.sysinit</strong> for the 60-second delay, it still wouldn't be executed. Solution given to me was to reinstall the <strong>Initscripts</strong> package.</p>
-
-<ol>
-<li>Used an Archlinux Live CD again to mount my messed up Archlinux system.</li>
-<li>Issued the command <code>pacman --root /mnt --dbpath /mnt/var/lib/pacman -S initscripts</code>.</li>
-</ol><p>Then all was good! :party: I have no idea what caused the change of the file beforehand though.</p>
 
         </div>
 

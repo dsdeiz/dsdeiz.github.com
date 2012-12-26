@@ -36,14 +36,6 @@
 <p>Cheers. :D</p>
   </section>
 </article>
-<p>There are times that I would want to list the File permissions in the current working directory. To do this, I would use the <code>ls -l</code> command which lists the files and shows the <a href="http://www.zzee.com/solutions/linux-permissions.shtml#zzee_link_3_1077830297">Textual representation</a> of file permissions. But for some reason I would want the <a href="http://www.zzee.com/solutions/linux-permissions.shtml#numeric">Numeric representation</a> such as 777, 755, etc. In order to achieve this, you can simply do <code>stat -c "%a %n" *</code>. If you often use this you may want to add in your <code>.bashrc</code> this line:</p>
-<div class="highlight"><pre><code class="language-bash"><span class="nb">alias </span><span class="nv">statls</span><span class="o">=</span><span class="s1">'stat -c "%a %n"'</span></code></pre></div>
-
-<p>Then reload your <code>.bashrc</code> by doing <code>. ~/.bashrc</code>. You can use the alias like so <code>statls *</code> or <code>statls dir/*</code>.</p>
-
-<p>For changing permissions, you can do <code>chmod u+x file</code> and such. But if you want to also use Numeric format, you can simply remember this <a href="http://www.zzee.com/solutions/linux-permissions.shtml#numeric">format</a> (the data on the table). Or, you can just remember <code>rwx</code> to be similar to <code>421</code> e.g. you want it to be <code>r--</code> so it's <code>4</code> or <code>r-x</code> so it's <code>5</code>. If you want the permission of the file <code>foo</code> to come out as something like <code>rwxr-xr-x</code>, you can do <code>chmod 755 foo</code>.</p>
-
-<p>Cheers. :D</p>
 
         </div>
 

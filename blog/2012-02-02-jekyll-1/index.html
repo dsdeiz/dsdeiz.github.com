@@ -54,32 +54,6 @@
 <p>{% highlight yaml %}</p>
   </section>
 </article>
-<p>Recently, I read about a few Drupal blogs migrating over to <a href="https://github.com/mojombo/jekyll">Jekyll</a> — <a href="http://acko.net/blog/making-love-to-webkit/">acko.net</a> and <a href="http://developmentseed.org/blog/2011/09/09/jekyll-github-pages/">Development Seed</a>. The concept seems nice as you will be writing the content in files instead of a database so I thought I would give it a try. With this, I am able to write blog posts using <a href="http://www.vim.org/">Vim</a>. Also, on my current blog, I am using <a href="http://daringfireball.net/projects/markdown/">Markdown</a> as my input filter for writing blog posts.</p>
-
-<h2>Installation &amp; Configuration</h2>
-
-<p>Installing <strong>Jekyll</strong> was easy as I had only to follow <a href="https://github.com/mojombo/jekyll/wiki/Install">these instructions</a>. Did the following steps to install it:</p>
-<div class="highlight"><pre><code class="language-bash"><span class="nv">$ </span>sudo apt-get install rubygems
-<span class="nv">$ </span>sudo gem install jekyll
-<span class="nv">$ </span>sudo apt-get install python-pygments
-<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/var/lib/gems/1.8/bin</code></pre></div>
-
-<p>For the path, I added it after on my <code>.bashrc</code>. I then created a directory structure based on <a href="https://github.com/mojombo/jekyll/wiki/Usage">this</a>. I have also added the directories <strong>css, images and fonts</strong> that would store media files. And for my <code>_config.yml</code> file, I have this:</p>
-<div class="highlight"><pre><code class="language-yaml"><span class="l-Scalar-Plain">baseurl</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/</span>
-<span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dsdeiz.github.com</span>
-<span class="l-Scalar-Plain">pygments</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span></code></pre></div>
-
-<h2>Setup</h2>
-
-<p>The current setup of my Jekyll site has 2 categories namely <strong>blog</strong> and <strong>gallery</strong>. The <strong>blog</strong> category would contain the actual blog posts as the <strong>gallery</strong> would contain images. The variables used for <a href="https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter">YAML Front Matter</a> for my <strong>blog</strong> post only contain the basic ones:</p>
-
-<ul>
-<li>layout (value is <em>post</em> always)</li>
-<li>title</li>
-<li>category</li>
-</ul><p>For my <strong>gallery</strong> post, I have this format:</p>
-
-<p>{% highlight yaml %}</p>
 
         </div>
 

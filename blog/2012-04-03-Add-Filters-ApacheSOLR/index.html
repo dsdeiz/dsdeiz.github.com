@@ -55,33 +55,6 @@
 <p>Cheers! :D</p>
   </section>
 </article>
-<p>To add simple filters on your search query with <a href="http://drupal.org/project/apachesolr">apachesolr</a> can be easily done through <code>hook_apachesolr_query_alter</code>. You'll find the documentation on <code>path/to/apachesolr/apachesolr.api.php</code>. An example would be:</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
-<span class="k">function</span> <span class="nf">module_apachesolr_query_alter</span><span class="p">(</span><span class="nv">$query</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'page'</span><span class="p">);</span>
-
-  <span class="c1">// To filter by either page or article content type</span>
-  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'page OR article'</span><span class="p">);</span>
-<span class="p">}</span></code></pre></div>
-
-<p>For adding subqueries (which is a bit different), you may do this:</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
-<span class="k">function</span> <span class="nf">module_apachesolr_query_alter</span><span class="p">(</span><span class="nv">$query</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nv">$sometid</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
-  <span class="nv">$filter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SolrFilterSubQuery</span><span class="p">(</span><span class="s1">'AND'</span><span class="p">);</span>
-  <span class="nv">$filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'video'</span><span class="p">);</span>
-  <span class="nv">$filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'tid'</span><span class="p">,</span> <span class="nv">$sometid</span><span class="p">);</span>
-
-  <span class="nv">$compiled_filter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SolrFilterSubQuery</span><span class="p">(</span><span class="s1">'OR'</span><span class="p">);</span>
-  <span class="nv">$compiled_filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'faq'</span><span class="p">);</span>
-  <span class="nv">$compiled_filter</span><span class="o">-&gt;</span><span class="na">addFilterSubQuery</span><span class="p">(</span><span class="nv">$filter</span><span class="p">);</span>
-
-  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilterSubQuery</span><span class="p">(</span><span class="nv">$compiled_filter</span><span class="p">);</span>
-<span class="p">}</span></code></pre></div>
-
-<p>In here, I've used <code>addFilterSubQuery</code> for the final query as when you do <code>$query-&gt;addFilter('bundle', 'faq'); $query-&gt;addFilterSubQuery($filter)</code>, the operator would be <strong>AND</strong>. For filtering, you can go to <code>admin/reports/apachesolr</code> to find the available fields.</p>
-
-<p>Cheers! :D</p>
 
         </div>
 

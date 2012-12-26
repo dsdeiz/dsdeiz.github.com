@@ -62,40 +62,6 @@
 <p>Now I have my config back! 8) It wasn't really the latest one but rather the latest one recovered by <strong>PhotoRec</strong>. :D</p>
   </section>
 </article>
-<p>Recently I accidentally deleted my <code>xmonad.hs</code> file which I've worked on for so long. I had no back up or a Trash folder whatsoever. I searched for a file recovery software that would bring back my config file. I took a look at <a href="http://wiki.archlinux.org/index.php/File_Recovery">Arch Linux's File Recovery</a> wiki to try out the ones they've listed.</p>
-
-<p>The first software I tested was <a href="http://extundelete.sourceforge.net/">Extundelete</a> unfortunately it seems to require me to unmount the device although the file resided on the same partition where my OS is so I didn't seem to work out for me.</p>
-
-<p>I also tried searching for a Windows program to recover files from an <a href="http://en.wikipedia.org/wiki/Ext4">ext4</a> partition but unfortunately never found one.</p>
-
-<p>The next was <a href="http://www.cgsecurity.org/wiki/PhotoRec">PhotoRec</a> which did it for me.</p>
-
-<p>Here are some screenshots on the steps I did for recovering the deleted file (most are similar to the screenshots found in <a href="http://www.cgsecurity.org/wiki/PhotoRec_Step_By_Step">PhotoRec's Step by Step guide</a>):</p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/first.png"><img src="http://dl.dropbox.com/u/24796303/blog/first.png" width="383"></a></p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/second.png"><img src="http://dl.dropbox.com/u/24796303/blog/second.png" width="383"></a></p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/third.png"><img src="http://dl.dropbox.com/u/24796303/blog/third.png" width="383"></a></p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/fourth.png"><img src="http://dl.dropbox.com/u/24796303/blog/fourth.png" width="383"></a></p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/fifth.png"><img src="http://dl.dropbox.com/u/24796303/blog/fifth.png" width="383"></a></p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/sixth.png"><img src="http://dl.dropbox.com/u/24796303/blog/sixth.png" width="383"></a></p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/seventh.png"><img src="http://dl.dropbox.com/u/24796303/blog/seventh.png" width="383"></a></p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/eighth.png"><img src="http://dl.dropbox.com/u/24796303/blog/eighth.png" width="383"></a></p>
-
-<p>I'm not certain which to check in the <strong>sixth step</strong> though. I've only selected <strong>Free</strong> as I believe it would be fast searching there. In the <strong>seventh step</strong>, it was required to select a different partition to where to store the recovered files. After the search was complete you'll find the folders <strong>recup_dir.*</strong> in the directory to where you chose to save the recovered files. It would somehow look like this:</p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/browser.png"><img src="http://dl.dropbox.com/u/24796303/blog/browser.png" width="383"></a></p>
-
-<p>I then just did a simple command to search for my <code>xmonad.hs</code> latest config file (I had <code>import Xmonad.Layout.Gaps</code> on my latest config):</p>
-<div class="highlight"><pre><code class="language-bash">find . -name <span class="s2">"recup_dir.*"</span> -exec grep -iR <span class="s2">"xmonad.layout.gaps"</span> <span class="s1">'{}'</span> <span class="se">\;</span></code></pre></div>
-
-<p>Now I have my config back! 8) It wasn't really the latest one but rather the latest one recovered by <strong>PhotoRec</strong>. :D</p>
 
         </div>
 

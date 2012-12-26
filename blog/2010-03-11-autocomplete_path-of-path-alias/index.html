@@ -85,63 +85,6 @@
 <p>Thanks to <a href="http://drupal.org/user/324696">Jay Matwichuk</a> for providing me a solution as autocompletion of URL aliases is somewhat tricky.</p>
   </section>
 </article>
-<p>I was trying to implement the <code>#autocomplete_path</code> to be used to autocomplete URL aliases. I believe this is somewhat a short introduction to doing autocomplete in your textfields when using the <a href="http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html">Form API</a>.</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
-<span class="k">function</span> <span class="nf">example_autocomplete</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nv">$items</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
-  <span class="nv">$i</span> <span class="o">=</span> <span class="m">2</span><span class="p">;</span>
-  <span class="k">while</span><span class="p">(</span><span class="nx">arg</span><span class="p">(</span><span class="nv">$i</span><span class="p">))</span>
-  <span class="p">{</span>
-    <span class="nv">$items</span><span class="p">[]</span> <span class="o">=</span> <span class="nx">arg</span><span class="p">(</span><span class="nv">$i</span><span class="p">);</span>
-    <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="nv">$string</span> <span class="o">=</span> <span class="nb">implode</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nv">$items</span><span class="p">);</span>
-
-  <span class="nv">$matches</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nv">$string</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nv">$result</span> <span class="o">=</span> <span class="nx">db_query_range</span><span class="p">(</span><span class="s2">"SELECT dst FROM {url_alias} WHERE LOWER(dst) LIKE LOWER ('%s%%')"</span><span class="p">,</span> <span class="nv">$string</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">10</span><span class="p">);</span>
-    <span class="k">while</span> <span class="p">(</span><span class="nv">$destination</span> <span class="o">=</span> <span class="nx">db_fetch_object</span><span class="p">(</span><span class="nv">$result</span><span class="p">))</span> <span class="p">{</span>
-      <span class="nv">$matches</span><span class="p">[</span><span class="nv">$destination</span><span class="o">-&gt;</span><span class="na">dst</span><span class="p">]</span> <span class="o">=</span> <span class="nx">check_plain</span><span class="p">(</span><span class="nv">$destination</span><span class="o">-&gt;</span><span class="na">dst</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-
-  <span class="nx">drupal_json</span><span class="p">(</span><span class="nv">$matches</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
-
-<p>What it basically does is take advantage of the URL and using the <a href="http://api.drupal.org/api/function/arg">arg</a> function in Drupal.</p>
-
-<p>You'll then need to specify on your <a href="http://api.drupal.org/api/function/hook_menu/6">hook_menu</a> this:</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
-<span class="k">function</span> <span class="nf">example_menu</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nv">$items</span><span class="p">[</span><span class="s1">'example/autocomplete'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>  
-    <span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="s1">'Example autocomplete'</span><span class="p">,</span>
-    <span class="s1">'page callback'</span> <span class="o">=&gt;</span> <span class="s1">'example_autocomplete'</span><span class="p">,</span>  
-    <span class="s1">'access callback'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
-    <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="nx">MENU_CALLBACK</span><span class="p">,</span>
-  <span class="p">);</span>
-
-  <span class="k">return</span> <span class="nv">$items</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
-
-<p>You can try visiting the URL <code>example.com/example/autocomplete/path/to/autocomplete</code> to see if it indeed returns the expected URL in json format.</p>
-
-<p>Once you are done, you can now make use of your <code>#autocomplete_path</code> in your form. For example:</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
-  <span class="nv">$form</span><span class="p">[</span><span class="s1">'example'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">'#type'</span> <span class="o">=&gt;</span> <span class="s1">'textfield'</span><span class="p">,</span>
-    <span class="s1">'#title'</span> <span class="o">=&gt;</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Example Autocomplete Path'</span><span class="p">),</span>
-  <span class="p">);</span>
-
-  <span class="k">if</span> <span class="p">(</span><span class="nx">module_exists</span><span class="p">(</span><span class="s1">'path'</span><span class="p">))</span> <span class="p">{</span>
-    <span class="nv">$form</span><span class="p">[</span><span class="s1">'example'</span><span class="p">][</span><span class="s1">'#autocomplete_path'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'example/autocomplete'</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
-
-<p>You'll be able to find more information <a href="http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html#autocomplete_path">here</a>.</p>
-
-<p>Thanks to <a href="http://drupal.org/user/324696">Jay Matwichuk</a> for providing me a solution as autocompletion of URL aliases is somewhat tricky.</p>
 
         </div>
 

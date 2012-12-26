@@ -39,17 +39,6 @@
 <p>So I guess the way to change the username and <em>renaming the HOME directory</em> would be <code>usermod -l new<em>login -d /home/new</em>login/ -m old_login</code>. I gotta read the man pages more. :D</p>
   </section>
 </article>
-<p>I tried changing my username on my Arch Linux install but somewhat caused a problem. I did the usual <code>usermod -l new<em>login old</em>login</code> and renamed my HOME directory. I followed the instructions from <a href="http://www.cyberciti.biz/faq/howto-change-rename-user-name-id/">this page</a>.</p>
-
-<p>I tried logging in with the new username but for some reason, it wasn't logging me in. I was not able to spot any "useful information" in the logs - <em>auth.log</em> and <em>user.log</em>. </p>
-
-<p>Someone advised me to login from the root shell by calling the command <code>login</code>. This then gave me the error message. I obviously didn't change my HOME directory correctly as it was pointing to /home/old_login and goes to / as it can't find the directory (since I've moved it :bigsmile:). I misunderstood the statement below:</p>
-
-<blockquote>
-<p>...In particular, the user's home directory name should probably be changed to reflect the new login name.</p>
-</blockquote>
-
-<p>So I guess the way to change the username and <em>renaming the HOME directory</em> would be <code>usermod -l new<em>login -d /home/new</em>login/ -m old_login</code>. I gotta read the man pages more. :D</p>
 
         </div>
 

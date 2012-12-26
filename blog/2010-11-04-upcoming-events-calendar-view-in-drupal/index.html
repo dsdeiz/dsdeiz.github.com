@@ -40,18 +40,6 @@
 <p><a href="http://dl.dropbox.com/u/24796303/blog/files/events-6.x-1.0.tar">Attached</a> is the exported feature. Cheers! :D</p>
   </section>
 </article>
-<p>Here's what I have when I worked on an Event feature for a site. I first tried the <a href="http://drupal.org/project/event">Event</a> module although it wasn't flexible enough to accomplish some of the things I needed. The modules I finally used (with their specific versions) were:</p>
-
-<ul>
-<li><a href="http://drupal.org/project/calendar">Calendar 6.x-2.2</a></li>
-<li><a href="http://drupal.org/project/cck">CCK 6.x-2.8</a></li>
-<li><a href="http://drupal.org/project/date">Date 6.x-2.6</a></li>
-<li><a href="http://drupal.org/project/views">Views 6.x-2.11</a></li>
-</ul><p>For my <strong>Event</strong> content type, I just have the usual fields for a node with a <strong>datestamp</strong> as a <em>CCK date field</em>. And for my <strong>Upcoming Events Calendar</strong> view, I simply cloned the <strong>Calendar</strong> view that came with the <strong>Calendar</strong> module and removed some of the displays. It did have an <strong>Upcoming</strong> display although wasn't a calendar view. </p>
-
-<p>The "trick" that I somehow came up was to change the <em>method</em> in the argument <strong>Date: Date (node)</strong> to <strong>AND</strong> rather than <strong>OR</strong> so the query that would come out would somehow look like this <code>...AND ((DATE_FORMAT(FROM_UNIXTIME([date field]), '%Y-%m-%d') &gt;= '2010-11-03') __AND__ ((DATE_FORMAT(FROM_UNIXTIME([date field]), '%Y-%m')...</code> instead of <code>...AND ((DATE_FORMAT(FROM_UNIXTIME([date field]), '%Y-%m-%d') &gt;= '2010-11-03') __OR__ ((DATE_FORMAT(FROM_UNIXTIME([date field]), '%Y-%m')...</code>.</p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/files/events-6.x-1.0.tar">Attached</a> is the exported feature. Cheers! :D</p>
 
         </div>
 

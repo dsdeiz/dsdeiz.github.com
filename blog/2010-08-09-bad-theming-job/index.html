@@ -68,46 +68,6 @@
 <p>Not really that bad for a theme compared to the mistakes listed on the <strong>Drupal Theming Nightmares</strong> blog entries :P. Still, it could use some improvements although we might not rewrite this as it works just fine :D. It isn't just the "Drupal Way" I believe. Although I'll try to remember these mistakes so as not to commit them again. 8)</p>
   </section>
 </article>
-<p>I read last time about <a href="http://sotak.co.uk/blog/drupal-theming-nightmares-part-1">Drupal Theming Nightmares</a> written by a <a href="http://sotak.co.uk/about-me">Drupalist</a>. It is somehow a series of the blogger's experience upon continuing the theming job started by another themer. If you know about theming in Drupal then your reaction would probably be similar to the comments.</p>
-
-<p>I then recently checked one of the themes I've created and also found out that it had <strong>a few</strong> (:P) mistakes too considering that I wasn't that familiar to theming when we've started this. This one is a subtheme from <a href="http://drupal.org/project/zen">Zen</a> (at least the theme came from a decent base theme :P). A screenshot of the file structure follows:</p>
-
-<p><a href="http://dl.dropbox.com/u/24796303/blog/2010-08-09-122419_1280x800_scrot.png"><img src="http://dl.dropbox.com/u/24796303/blog/2010-08-09-122419_1280x800_scrot.png" width="383"></a></p>
-
-<h2>Back up Files</h2>
-
-<p>If you try to look at the files listed you'll see a file called <code>xxx1.css</code> and <code>xxx.css</code>, and <code>html-elements.css</code> and <code>html-elements.css.bak</code>. We were not using any <a href="http://en.wikipedia.org/wiki/Revision_control">VCS</a> so I've decided to ask other themers to simply put the back up of the files they are modifying on the theme directory itself for reference and in case another I overwritten the files that another themer was modifying.</p>
-
-<h2>Hardcoded Block Titles and Content</h2>
-
-<p>There is a file there called <code>block-block-4.tpl.php</code>, it was designed specifically for the fourth block obviously. This is what it basically contains:</p>
-<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
-<span class="o">&lt;</span><span class="nx">h2</span> <span class="nx">class</span><span class="o">=</span><span class="s2">"title"</span><span class="o">&gt;</span><span class="nx">Title</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">Block</span><span class="o">&lt;/</span><span class="nx">h2</span><span class="o">&gt;</span>
-<span class="o">...</span>
-<span class="o">&lt;?</span><span class="nx">php</span>
-   <span class="nv">$video</span> <span class="o">=</span> <span class="nx">theme</span><span class="p">(</span><span class="s1">'flowplayer'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
-  <span class="s1">'clip'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-    <span class="s1">'url'</span> <span class="o">=&gt;</span> <span class="s1">'/path/to/video.flv'</span><span class="p">,</span>
-    <span class="s1">'autoPlay'</span> <span class="o">=&gt;</span> <span class="k">FALSE</span><span class="p">,</span> <span class="c1">// Turn autoplay off </span>
-  <span class="p">),</span>
-<span class="p">),</span><span class="s1">'flowplayer'</span><span class="p">,</span> <span class="k">array</span><span class="p">(),</span> <span class="nx">theme</span><span class="p">(</span><span class="s1">'image'</span><span class="p">,</span> <span class="s1">'/path/to/splash-image.png'</span><span class="p">,</span> <span class="s1">'Some description'</span><span class="p">,</span> <span class="s1">'Some description'</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="k">FALSE</span><span class="p">));</span>
-
-    <span class="k">print</span> <span class="nv">$video</span><span class="p">;</span>
-<span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
-
-<p>I'm not entirely sure why we've hardcoded the title and put the content on the template file. If I remember correctly, I must've thought that doing it on template files are pretty cool. Silly idea if you ask me now. I should have just done it by implementing a <a href="http://api.drupal.org/api/function/hook_block/6">hook_block</a> or simply using the <strong>PHP Input Filter</strong>. Might as well change if I learn a better way to do this again.</p>
-
-<h2>Page Specific Templates and Contemplate</h2>
-
-<p>It's also a bit weird that we are creating different templates and at the same time using the <a href="http://drupal.org/project/contemplate">Contemplate</a> module. Contemplate if I remember correctly allows administrators to define different templates through the admin UI.</p>
-
-<h2>Undeleted Template Files</h2>
-
-<p>We've also used this same theme on another website although we haven't deleted the template files that were specific to the other site. An example is <code>block-block-8.tpl.php</code> which is the same as <code>block-block-2.tpl.php</code>.</p>
-
-<h2>Conclusion</h2>
-
-<p>Not really that bad for a theme compared to the mistakes listed on the <strong>Drupal Theming Nightmares</strong> blog entries :P. Still, it could use some improvements although we might not rewrite this as it works just fine :D. It isn't just the "Drupal Way" I believe. Although I'll try to remember these mistakes so as not to commit them again. 8)</p>
 
         </div>
 

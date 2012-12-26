@@ -39,17 +39,6 @@
 <p>Somehow cheated because I based it on <a href="http://www.haskell.org/haskellwiki/Haskell_Quiz/FizzBuzz/Solution_Ninju">this</a> though I don't quite get that one yet. :D So for now I just have this one which produces a list. And to provide the input I have - <code>[fizzBuzz x | x &lt;- [1..100]]</code>. Woot!</p>
   </section>
 </article>
-<p>Yesterday I started reading about <a href="http://www.haskell.org/">Haskell</a> through <a href="http://learnyouahaskell.com/">Learn You a Haskell</a>. I started playing around with <strong>Haskell</strong> when I changed my window manager to <strong>Xmonad</strong>. </p>
-
-<p>Currently reading on <a href="http://learnyouahaskell.com/syntax-in-functions#guards-guards">Syntax in Functions: Guards, guards!</a>. I was able to come up with this <a href="http://www.codinghorror.com/blog/2007/02/why-cant-programmers-program.html">FizzBuzz</a> function that I've read in <a href="http://www.codinghorror.com/">Coding Horror</a>.</p>
-<div class="highlight"><pre><code class="language-haskell"><span class="nf">fizzBuzz</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">Integral</span> <span class="n">a</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="kt">String</span>
-<span class="nf">fizzBuzz</span> <span class="n">a</span>
-    <span class="o">|</span> <span class="n">a</span> <span class="p">`</span><span class="n">mod</span><span class="p">`</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">a</span> <span class="p">`</span><span class="n">mod</span><span class="p">`</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">=</span> <span class="s">"FizzBuzz"</span>
-    <span class="o">|</span> <span class="n">a</span> <span class="p">`</span><span class="n">mod</span><span class="p">`</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">=</span> <span class="s">"Fizz"</span>
-    <span class="o">|</span> <span class="n">a</span> <span class="p">`</span><span class="n">mod</span><span class="p">`</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">=</span> <span class="s">"Buzz"</span>
-    <span class="o">|</span> <span class="n">otherwise</span> <span class="ow">=</span> <span class="n">show</span> <span class="n">a</span></code></pre></div>
-
-<p>Somehow cheated because I based it on <a href="http://www.haskell.org/haskellwiki/Haskell_Quiz/FizzBuzz/Solution_Ninju">this</a> though I don't quite get that one yet. :D So for now I just have this one which produces a list. And to provide the input I have - <code>[fizzBuzz x | x &lt;- [1..100]]</code>. Woot!</p>
 
         </div>
 
