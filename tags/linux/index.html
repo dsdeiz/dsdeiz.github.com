@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Articles on &ldquo;linux&rdquo;</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="tag-title">Articles on &ldquo;linux&rdquo;</h1>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-02-12-fixing-initscripts/">Fixing Initscripts</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Feb 12 2010">February 02, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/initscripts" rel="tag">initscripts</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>I had a problem yesterday with my Archlinux installation. Everything was just going fine until I restarted my computer. Arch was trying to load the daemons and modules but can't seem to do it as there was an error saying "Read-only filesystem".
+
+I was thinking to simply remount it after Arch gives me a prompt though it never did.
+
+After some few research and inquiries in the #archlinux channel in Freenode, I was able to resolve this. The solution an arch user gave me:
+
+
+Used an Archlinux Live CD (mine was in a USB drive) to mount my Archlinux system that was not booting.
+Put sleep 60 in /et...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-02-09-current-xmonad-setup/">Current Xmonad Setup</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Feb 9 2010">February 02, 2010</time> on <a href="/tags/xmonad" rel="tag">xmonad</a>, <a href="/tags/linux" rel="tag">linux</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>My xmonad.hs:
+import XMonad
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
+import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.EZConfig
+import System.IO
+import XMonad.Layout.NoBorders
+import XMonad.Layout.IM
+import Data.Ratio ((%))
+import XMonad.Layout.Grid
+import XMonad.Prompt
+import XMonad.Prompt.Shell
+import XMonad.Actions.GridSelect
+import XMonad.Layout.SimplestFloat
+import XMonad.Layout.Reflect
+import qualified XMonad.StackSet as W
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.PerWorkspace
+import XMonad.Hooks.ManageHelpers
+
+myManageHook = composeAll
+    [ (ro...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-12-15-setting-up-pianobar-with-lastfmsubmitd/">Setting Up Pianobar with lastfmsubmitd</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Dec 15 2010">December 12, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/pianobar" rel="tag">pianobar</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>Pandora is a really neat, free internet radio service. I am using a console client for Pandora which is Pianobar. It's lacking one feature that I wanted though in which it would scrobble the music it plays over to Last.fm. Previously it did support scrobbling to Last.fm but has been moved. The author said you can make use an external scrobbler.
+
+For my external scrobbler I've used lastfmsubmitd. To set it up, you'll first need to have a script that would handle the events for Pianobar. You can use the eventcmd.sh script under contrib from Pianobar's source. For lastfmsubmitd, you can simply...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2011-03-11-quick-tip-for-numeric-and-textual-file-permissions/">Quick Tip for Numeric and Textual File Permissions</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Mar 11 2011">March 03, 2011</time> on <a href="/tags/linux" rel="tag">linux</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>There are times that I would want to list the File permissions in the current working directory. To do this, I would use the ls -l command which lists the files and shows the Textual representation of file permissions. But for some reason I would want the Numeric representation such as 777, 755, etc. In order to achieve this, you can simply do stat -c "%a %n" *. If you often use this you may want to add in your .bashrc this line:
+alias statls='stat -c "%a %n"'
+
+Then reload your .bashrc by doing . ~/.bashrc. You can use the alias like so statls * or statls dir/*.
+
+For changing permissions, y...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-04-16-changing-username-in-linux/">Changing Username in Linux</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Apr 16 2010">April 04, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/arch linux" rel="tag">arch linux</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>I tried changing my username on my Arch Linux install but somewhat caused a problem. I did the usual usermod -l newlogin oldlogin and renamed my HOME directory. I followed the instructions from this page.
+
+I tried logging in with the new username but for some reason, it wasn't logging me in. I was not able to spot any "useful information" in the logs - auth.log and user.log. 
+
+Someone advised me to login from the root shell by calling the command login. This then gave me the error message. I obviously didn't change my HOME directory correctly as it was pointing to /home/old_login and goes t...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-02-14-uzbl-minimalistic-web-browser/">Uzbl - Minimalistic Web Browser</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Feb 14 2010">February 02, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>Uzbl is a very nice browser — quite easy to use, navigation is through keybinds, has modes, and a lot more features. Uzbl can be taken here.
+
+A brief description of Uzbl taken directly from Wikipedia:
+
+
+Uzbl is a free and open source minimalistic web browser designed for simplicity and adherence to the Unix philosophy. Development started in early 2009 and is still considered in alpha software by the developers. The core component of uzbl is developed in C but other languages are also used, most notably Python. All parts of the uzbl project is released as free software under the GNU General...</p>
+  </section>
+</article>
+
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

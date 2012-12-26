@@ -1,0 +1,454 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Articles on &ldquo;drupal&rdquo;</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="tag-title">Articles on &ldquo;drupal&rdquo;</h1>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-11-04-upcoming-events-calendar-view-in-drupal/">Upcoming Events Calendar View in Drupal</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Nov 4 2010">November 11, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>Here's what I have when I worked on an Event feature for a site. I first tried the Event module although it wasn't flexible enough to accomplish some of the things I needed. The modules I finally used (with their specific versions) were:
+
+
+Calendar 6.x-2.2
+CCK 6.x-2.8
+Date 6.x-2.6
+Views 6.x-2.11
+For my Event content type, I just have the usual fields for a node with a datestamp as a CCK date field. And for my Upcoming Events Calendar view, I simply cloned the Calendar view that came with the Calendar module and removed some of the displays. It did have an Upcoming display although wasn't a ...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-02-14-span-primary-genesis/">&lt;span&gt; Tag in Primary Links in a Genesis Subtheme</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Feb 14 2010">February 02, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>The codes on this post below would result to a markup like this in a Genesis subtheme:
+&lt;a href="/" title="Home" class="active"&gt;&lt;span&gt;Home&lt;/span&gt;&lt;/a&gt;
+
+First, you would need to edit the template.php file of your Genesis subtheme and add the codes below. For the SUBTHEME_primary_links function, you'll need to copy the  theme_links function. You'll then need to make some slight modifications on the function.
+&lt;?php
+function SUBTHEME_theme(&amp;$existing, $type, $theme, $path) {
+  $hooks = genesis_theme($existing, $type, $theme, $path);
+  $hooks['primary_links'] = array...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-03-03-drupal-starter-themes/">Drupal Starter Themes</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Mar 3 2010">March 03, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>Here's a list of starter themes that I have observed popular. The first three would be the ones that I've tried out. The next ones are the ones I am planning to try out. Below the names of each theme are the description taken directly from their project page:
+
+Zen
+
+
+For many people, Zen is the ultimate starting theme for Drupal. If you are building your own standards-compliant theme, you will find it much easier to start with Zen than to start with Garland or Bluemarine. This theme has LOTs of documentation in the form of code comments for both the PHP (template.php) and HTML (page.tpl.php,...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-03-08-remove-class-from-body-classes/">Remove Class from Body Classes</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Mar 8 2010">March 03, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>Removing a class from the variable $body_classes is very simple. All you need to do is make some changes on the variable in the SUBTHEME_preprocess_page function.
+
+I have done this with a Zen subtheme:
+&lt;?php
+function SUBTHEME_preprocess_page(&amp;$vars, $hook) {
+  if {$node = menu_get_object()) {
+    $vars['node'] = $node;
+  }
+
+  /*
+   * Make some changes once the node type is 'full'. 'full' is the content
+   * type I am using for pages with no sidebars.
+   */
+  if ($node-&gt;type == 'full') {
+    $body_classes = explode(' ', $vars['body_classes']);
+    $new_body_classes = array();
+
+    ...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2012-09-14-Create-Custom-Form-Instead-Of-Altering-Node-Form/">Create Custom Form Instead Of Altering Node Form</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Sep 14 2012">September 09, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>This a post to remind me to not alter the node form as much as possible, but instead create a custom form and save the node upon submission. Some issues I had trouble with:
+
+
+Field attach form isn't that flexible for altering.
+The node form becomes ugly for administrators that want to just create/edit a node due to form alterations.
+The fields I have in the node type I'm trying to create are:
+
+
+Taxonomy term with a 'select' widget.
+Taxonomy term with the 'checkboxes' widget.
+2 textfields for 'First name' and 'Last name'.
+Email field.
+Checkbox for agreement.
+Requirements:
+
+
+Make the first ta...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-09-08-add-a-save-and-continue-editing-button-in-a-node-edit-form/">Add a "Save and continue editing" button in a Node Edit Form</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Sep 8 2010">September 09, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>There are times that I would somehow want to continue editing a node rather than view it after saving. Here's a little snippet that would achieve what I needed.
+&lt;?php
+function module_form_alter(&amp;$form, &amp;$form_state, $form_id) {
+  if (isset($form['type']) &amp;&amp; isset($form['#node']) &amp;&amp; $form['type']['#value'] .'_node_form' == $form_id) {
+    $form['buttons']['continue_edit'] = array(
+      '#type' =&gt; 'submit',
+      '#value' =&gt; t('Save and continue editing'),
+      '#submit' =&gt; array('node_form_submit', '_module_continue_edit'),
+    );
+  }
+}
+
+function _module...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2012-04-03-Add-Filters-ApacheSOLR/">Add Filters for Apache SOLR</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Apr 3 2012">April 04, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/solr" rel="tag">solr</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>To add simple filters on your search query with apachesolr can be easily done through hook_apachesolr_query_alter. You'll find the documentation on path/to/apachesolr/apachesolr.api.php. An example would be:
+&lt;?php
+function module_apachesolr_query_alter($query) {
+  $query-&gt;addFilter('bundle', 'page');
+
+  // To filter by either page or article content type
+  $query-&gt;addFilter('bundle', 'page OR article');
+}
+
+For adding subqueries (which is a bit different), you may do this:
+&lt;?php
+function module_apachesolr_query_alter($query) {
+  $sometid = 1;
+  $filter = new SolrFilterSubQuery('A...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-05-11-problems-with-hook_download_authorize-in-ubercart/">Problems with hook_download_authorize in Ubercart</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="May 11 2010">May 05, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/ubercart" rel="tag">ubercart</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>My task involved to limit the number of downloads to 1 but with an exemption for those with a specific role or a so-called "credit". I've used hookdownloadauthorize() to try this one out.
+
+The first problem I encountered was that if you do a return FALSE as what the documentation mentioned, it would return the error "A hook denied your access to this file. Please contact the site administrator if this message has been received in error." based on this section of the code:
+&lt;?php
+//Check any if any hook_download_authorize calls deny the download
+foreach (module_implements('download_authori...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-03-11-autocomplete_path-of-path-alias/">#autocomplete_path of Path Alias</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Mar 11 2010">March 03, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>I was trying to implement the #autocomplete_path to be used to autocomplete URL aliases. I believe this is somewhat a short introduction to doing autocomplete in your textfields when using the Form API.
+&lt;?php
+function example_autocomplete() {
+  $items = array();
+  $i = 2;
+  while(arg($i))
+  {
+    $items[] = arg($i);
+    $i++;
+  }
+  $string = implode('/', $items);
+
+  $matches = array();
+  if ($string) {
+    $result = db_query_range("SELECT dst FROM {url_alias} WHERE LOWER(dst) LIKE LOWER ('%s%%')", $string, 0, 10);
+    while ($destination = db_fetch_object($result)) {
+      $matches[$dest...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2011-09-20-using-hook_views_query_alter/">Using hook_views_query_alter</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Sep 20 2011">September 09, 2011</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/views" rel="tag">views</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>There are times that you might want to alter the query that the Views module generates. My problem was to include an attribute filter for products from the Ubercart module. uc_views might be able to do the trick although filters for product attributes were only for products that have already been order. There is also a patch available although I didn't make use of it as I only needed something simple. I decided to use hookviewsquery_alter. It says to put your function MODULENAME_views_query_alter in MODULENAME.views.inc although it seemed to have just been called in my MODULENAME.module.
+
+I...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-06-22-bluetrip-css-framework/">BlueTrip CSS Framework</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Jun 22 2010">June 06, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/web design" rel="tag">web design</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>I was recently searching for a CSS Framework. Amongst the ones I found that I believe are popular were Blueprint, 960gs, and YUI. I also searched from the Kohana forums since I was planning to use the CSS framework on trying out Kohana and found BlueTrip. Looked really nice and was quite easy to use (check out its documentation :D) although I haven't much explored it.
+
+BlueTrip's definition taken directly from its site:
+
+
+A full featured and beautiful CSS framework which originally combined the best of Blueprint, Tripoli (hence the name), Hartija, 960.gs, and Elements, but has now found a l...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2012-12-12-Breakdown-Checkboxes/">Breakdown checkboxes in FAPI and '#disabled' Property</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Dec 12 2012">December 12, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>If you wish to set some FAPI properties of the checkboxes generated with #type =&gt; 'checkboxes' individually, you'll need to breakdown the checkboxes first. There are two ways to do this that I am aware of. One is to add a #process callback to the form element, and another is to set each #options as a separate element e.g. $form['checkboxes'][{#option-key}].
+
+For adding the #process callback, you can do it like this:
+&lt;?php
+$form['checkboxes'] = array(
+  '#type' =&gt; 'checkboxes',
+  '#options' =&gt; $options,
+  '#process' =&gt; array('some_callback'),
+  ...
+)
+
+You'll then need to break...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-05-31-pathauto-batch-custom-module/">Pathauto Batch Custom Module</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="May 31 2010">May 05, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>I recently just started studying about Drupal's Batch API. I've decided to duplicate Pathauto Bulk Update but using the Batch API in order to bypass the limit you set for Pathauto Bulk Update. Mostly are based on the samples from the API reference and the Handbook.
+
+For my .info file, I simply added the dependency for pathauto like so, dependencies[] = "pathauto".
+
+For the .module file specifically the Batch API section, I have this:
+&lt;?php
+function pathauto_batch_form_submit($form, &amp;$form_state) {
+  $batch = array(
+    'title' =&gt; t('Generating Aliases'),
+    'finished' =&gt; 'path...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-08-09-bad-theming-job/">Bad Theming Job</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Aug 9 2010">August 08, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>I read last time about Drupal Theming Nightmares written by a Drupalist. It is somehow a series of the blogger's experience upon continuing the theming job started by another themer. If you know about theming in Drupal then your reaction would probably be similar to the comments.
+
+I then recently checked one of the themes I've created and also found out that it had a few (:P) mistakes too considering that I wasn't that familiar to theming when we've started this. This one is a subtheme from Zen (at least the theme came from a decent base theme :P). A screenshot of the file structure follows...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2012-02-06-Print-Views-Output/">Print Views Output in Drupal</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Feb 6 2012">February 02, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>There are times that I would like to print the output of a view without it being rendered from a template i.e. it would go through page.tpl.php. I find this useful when say I'd like to do an Ajax call and I'd like it to return just the output of the view itself so I could print it inside a div container for example. This is quite simple as I could use drupal_json as my reference.
+
+I first created a new menu like so:
+&lt;?php
+function MODULE_menu() {
+  $items = array();
+
+  $items['example/js'] = array(
+    'page callback' =&gt; 'MODULE_menu_callback',
+    'type' =&gt; MENU_CALLBACK,
+    'acc...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-03-18-check-available-variables-in-theming/">Check Available Variables in Theming</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Mar 18 2010">March 03, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>First off, you can probably check out this entry which provides four functions to look at upon developing. You would need the Devel module for this.
+
+I personally use dsm though I believe it simply makes use of the dpm function from devel. I am not certain if this is the proper way of checking the available variables when theming. You could first take a look at the template files e.g. page.tpl.php or node.tpl.php to check what variables are available for you. I also sometimes add the code below to check for the available variables in a template file. 
+&lt;?php dsm(get_defined_vars()); ?&gt;...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2010-04-13-url-shortening-custom-module/">URL Shortening Custom Module</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Apr 13 2010">April 04, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>I first tried using the modules Short URL and Shorten URLs but I believe the module Short URL is currently on its early stages.
+
+I've decided to create a custom module for our project but basing it on the modules above. Unfortunately, the module isn't an API like Short URL. It was a combination of both in which it provides a UI for shortening URLs and records them.
+
+I started with how the module redirects the URLs when it encounters one from the record. The Short URL implemented the hookinit() to do this. This is somewhat what I was able to come up with based on the _Short URL__ module:
+&lt...</p>
+  </section>
+</article>
+
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

@@ -23,7 +23,7 @@
 <h1 class="post-title">Breakdown checkboxes in FAPI and '#disabled' Property</h1>
 <article>
   <small class="meta">
-    Posted on <time datetime="Dec 12 2012">December 12, 2012</time>
+    Posted <time datetime="Dec 12 2012">December 12, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>
   </small>
   <section class="post-content">
     <p>If you wish to set some FAPI properties of the checkboxes generated with <code>#type =&gt; 'checkboxes'</code> individually, you'll need to breakdown the checkboxes first. There are two ways to do this that I am aware of. One is to add a <code>#process</code> callback to the form element, and another is to set each <code>#options</code> as a separate element e.g. <code>$form['checkboxes'][{#option-key}]</code>.</p>
