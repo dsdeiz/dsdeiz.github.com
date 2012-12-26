@@ -10,6 +10,7 @@ Dir.glob(ARGV[0] + '/*.md') do |file|
   filename = File.basename(file, '.md')
 
   # Split the file by the '---' separator.
+  puts "Processing #{file}..."
   split = s.read.split(/-{3}\s*/)
   yaml = YAML.load(split[1])
 
@@ -26,7 +27,7 @@ Dir.glob(ARGV[0] + '/*.md') do |file|
 
   # Get the 'created' from the YAML front formatter and add 'created_at' if it's
   # available. If not, create the 'created_at' attribute based on the filename.
-  # Convert timestamp to the format 'Jan 7 1987' too.
+  # Convert timestamp to the format 'Aug 24 2010' too.
   if yaml.has_key?('created')
     hash['created_at'] = Time.at(yaml['created']).strftime('%b %-d %Y')
   else

@@ -33,10 +33,10 @@ end
 compile '/blog/*/' do
   filter :redcarpet,
          :options => { :fenced_code_blocks => true },
-         :renderer => CustomRenderer
+         :renderer => MyHelper::CustomRenderer
   filter :colorize_syntax,
          :default_colorizer => :pygmentize
-  layout 'page'
+  layout 'post'
 end
 
 compile '*' do
@@ -66,7 +66,10 @@ route '*' do
     # Write item with identifier /foo/ to /foo.ext
     item.identifier.chop + '.' + item[:extension]
   elsif item[:kind] == 'article'
-    '/blog/' + item.identifier[6..-1] + 'index.html'
+    require 'time'
+
+    date = Time.parse(item[:created_at]).strftime('%F')
+    '/blog/' + date + '-' + item.identifier[6..-1] + 'index.html'
   else
     # Write item with identifier /foo/ to /foo/index.html
     item.identifier + 'index.html'

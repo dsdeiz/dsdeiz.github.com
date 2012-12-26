@@ -1,27 +1,27 @@
-$base-font-size:    16px;
-$base-line-height:  24px;
+$base-font-size:    14px;
+$base-line-height:  20px;
 
 $special-serif:       'Arbutus Slab';
 $special-sans-serif:  'Carrois Gothic';
-$serif:               $special-serif, Georgia, "Times New Roman", "DejaVu Serif", serif;
-$sans-serif:          $special-sans-serif, Verdana, Tahoma, "DejaVu Sans", sans-serif;
-$monospace:           'Bitstream Vera Sans Mono', monospace;
+$serif:               Georgia, "Times New Roman", "DejaVu Serif", serif;
+$sans-serif:          Verdana, Tahoma, "DejaVu Sans", sans-serif;
+$monospace:           'Monaco', 'Bitstream Vera Sans Mono', monospace;
 
-$base-font-family:  $serif;
+$base-font-family:  $sans-serif;
 
 $total-columns:     14;
 $column-width:      4em;
 $gutter-width:      1em;
 $grid-padding:      $gutter-width;
 
-$fontAwesomePath:   "fontawesome-webfont";
+$fontAwesomePath:   "/assets/fonts/fontawesome-webfont";
 
 $indent-amount:     3em;
 
 @import "compass/typography/lists";
 @import "compass/typography/links";
 @import "susy";
-/* @import "font-awesome"; */
+@import "font-awesome";
 @import "compass/typography/vertical_rhythm";
 @import "compass/typography/text/replacement";
 @import "compass/typography/lists/bullets";

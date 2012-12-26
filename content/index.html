@@ -1,3 +1,20 @@
 ---
 title: Home
 ---
+
+<% sorted_articles.each do |item| %>
+<article class="post">
+  <header>
+    <h2>
+      <%= link_to(item[:title], item) %>
+    </h2>
+    <small class="meta">
+      Posted on <time datetime="<%= item[:created_at] %>"><%= published_date(item) %></time>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p><%= excerptize(strip_html(item.compiled_content), { :length => 600 }) %></p>
+  </section>
+</article>
+<% end %>
