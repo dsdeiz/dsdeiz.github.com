@@ -18,6 +18,28 @@ module MyHelper
     require 'time'
     Time.parse(item[:created_at]).strftime('%B %m, %Y')
   end
+
+  # Retrieve the articles belonging to the current tag. See
+  # https://gist.github.com/889341 as the base. This is a static site so items
+  # rendered here are only random upon compilation.
+  def related_articles
+    articles = []
+
+    unless item[:tags].nil?
+      item[:tags].each do |tag|
+        articles.concat(items_with_tag(tag))
+      end
+    end
+
+    # Shuffle the items.
+    articles.shuffle!
+
+    # Return only unique items.
+    articles.uniq!
+
+    # Return only items from first to fifth.
+    articles[0..4]
+  end
 end
 
 include MyHelper
