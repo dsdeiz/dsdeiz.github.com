@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Upon Redmine Installation</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Upon Redmine Installation</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Jul 28 2010">July 07, 2010</time>
+  </small>
+  <section class="post-content">
+    <p>Recently I stumbled upon an <a href="http://www.cyberciti.biz/tips/open-source-project-management-software.html">entry</a> from <a href="http://www.cyberciti.biz/">nixCraft</a> about Web-Based <a href="http://en.wikipedia.org/wiki/Project_management_software">Project Management Software</a>. The one that got my attention at first was <a href="http://trac.edgewall.org/">Trac</a> as it was the tool we are using in our projects and that it was written in <a href="http://www.python.org/">Python</a> (a programming language I was very much interested to learn but didn't have the time; and was too complicated for me :P). I also wanted to integrate <a href="http://git-scm.com">Git</a> with <strong>Trac</strong>. I then found an entry from <a href="http://stackoverflow.com/questions/623130/git-and-trac-or-similar">Stack Overflow</a> in which the "best" answer was to use <a href="http://www.redmine.org/">Redmine</a>. It's a bit new to me so I decided to give it a try.</p>
+
+<h2>Installation</h2>
+
+<p>It was a good thing that there was a <a href="http://wiki.archlinux.org/index.php/Redmine_setup">wiki</a> about setting up <strong>Redmine</strong> in <strong>Arch Linux</strong>. These were the steps I did:</p>
+
+<ol>
+<li>
+<code>pacman -Rd ruby</code> (I had <strong>gVim</strong> installed which I believe makes use of Ruby)</li>
+<li>
+<code>slurpy -d ruby1.8</code> (I have <a href="http://aur.archlinux.org/packages.php?ID=28285">slurpy</a> instead of <strong>yaourt</strong>) and then did the usual <code>makepkg</code> and <code>pacman -U package</code>.</li>
+<li>
+<code>slurpy -d rubygems1.8</code> and once again did the <code>makepkg</code> and <code>pacman -U package</code>.</li>
+<li>Then followed the rest of the guide for <a href="http://wiki.archlinux.org/index.php/Redmine_setup#Ruby_1.8_Environment">Ruby 1.8 Environment</a> (I've also invoked the commands that were optional) including installation of MySQL gem. I wanted to use <a href="http://www.sqlite.org/">SQLite</a> although was getting an error <code>ERROR:  While executing gem ... (OptionParser::InvalidOption)  invalid option: --with-sqlite3-include=/usr/include</code> and had no time to find a fix for it. Also, upon installation of <strong>rails</strong> with <strong>gem</strong>, I've encountered a bunch of <em>No definition for xyz</em> errors in which after researching was just about the documents.</li>
+<li>
+<code>slurpy -d redmine-mysql-git</code>, <code>makepkg</code>, and <code>pacman -U package</code> (I've also modified the <strong>PKGBUILD</strong> as mentioned in the guide)</li>
+<li>Then followed the guide for <a href="http://wiki.archlinux.org/index.php/Redmine_setup#Create_the_Default_Redmine_DB_Structure">Create the Default Redmine DB Structure</a>.</li>
+<li>And finally did <code>script/server -e production</code> under <strong>/opt/redmine</strong>.</li>
+</ol><p>I then visited <strong>http://hostname:3000/</strong>. I had Redmine up and running in no less than <strong>45 minutes</strong>. Sweet! 8)</p>
+
+<h2>Configuration</h2>
+
+<p>Since I really wanted to test out <strong>Git</strong>, I then immediately followed the guide from <strong>Redmine</strong> on configuring repositories specifically for <a href="http://www.redmine.org/wiki/redmine/RedmineRepositories#Git-repository">Git</a>.</p>
+
+<h2>Screenshots</h2>
+
+<p>Screenshots for my <strong>Redmine</strong> installation :D:</p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/Pathauto%20Batch%20-%20Overview%20-%20Redmine_1280237854127.png"><img src="http://dl.dropbox.com/u/24796303/blog/Pathauto%20Batch%20-%20Overview%20-%20Redmine_1280237854127.png" width="383"></a></p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/Pathauto%20Batch%20-%20pathauto_batch.module%20-%20Redmine_1280237875077.png"><img src="http://dl.dropbox.com/u/24796303/blog/Pathauto%20Batch%20-%20pathauto_batch.module%20-%20Redmine_1280237875077.png" width="383"></a></p>
+
+<p>I still haven't played much with Redmine though. I would really like <strong>Syntax Highlighting</strong> for <strong>.module</strong> files but haven't look into it yet. Redmine++! Oh, and the demo for <strong>Redmine</strong> can be found <a href="http://demo.redmine.org/">here</a>. :D</p>
+  </section>
+</article>
+<p>Recently I stumbled upon an <a href="http://www.cyberciti.biz/tips/open-source-project-management-software.html">entry</a> from <a href="http://www.cyberciti.biz/">nixCraft</a> about Web-Based <a href="http://en.wikipedia.org/wiki/Project_management_software">Project Management Software</a>. The one that got my attention at first was <a href="http://trac.edgewall.org/">Trac</a> as it was the tool we are using in our projects and that it was written in <a href="http://www.python.org/">Python</a> (a programming language I was very much interested to learn but didn't have the time; and was too complicated for me :P). I also wanted to integrate <a href="http://git-scm.com">Git</a> with <strong>Trac</strong>. I then found an entry from <a href="http://stackoverflow.com/questions/623130/git-and-trac-or-similar">Stack Overflow</a> in which the "best" answer was to use <a href="http://www.redmine.org/">Redmine</a>. It's a bit new to me so I decided to give it a try.</p>
+
+<h2>Installation</h2>
+
+<p>It was a good thing that there was a <a href="http://wiki.archlinux.org/index.php/Redmine_setup">wiki</a> about setting up <strong>Redmine</strong> in <strong>Arch Linux</strong>. These were the steps I did:</p>
+
+<ol>
+<li>
+<code>pacman -Rd ruby</code> (I had <strong>gVim</strong> installed which I believe makes use of Ruby)</li>
+<li>
+<code>slurpy -d ruby1.8</code> (I have <a href="http://aur.archlinux.org/packages.php?ID=28285">slurpy</a> instead of <strong>yaourt</strong>) and then did the usual <code>makepkg</code> and <code>pacman -U package</code>.</li>
+<li>
+<code>slurpy -d rubygems1.8</code> and once again did the <code>makepkg</code> and <code>pacman -U package</code>.</li>
+<li>Then followed the rest of the guide for <a href="http://wiki.archlinux.org/index.php/Redmine_setup#Ruby_1.8_Environment">Ruby 1.8 Environment</a> (I've also invoked the commands that were optional) including installation of MySQL gem. I wanted to use <a href="http://www.sqlite.org/">SQLite</a> although was getting an error <code>ERROR:  While executing gem ... (OptionParser::InvalidOption)  invalid option: --with-sqlite3-include=/usr/include</code> and had no time to find a fix for it. Also, upon installation of <strong>rails</strong> with <strong>gem</strong>, I've encountered a bunch of <em>No definition for xyz</em> errors in which after researching was just about the documents.</li>
+<li>
+<code>slurpy -d redmine-mysql-git</code>, <code>makepkg</code>, and <code>pacman -U package</code> (I've also modified the <strong>PKGBUILD</strong> as mentioned in the guide)</li>
+<li>Then followed the guide for <a href="http://wiki.archlinux.org/index.php/Redmine_setup#Create_the_Default_Redmine_DB_Structure">Create the Default Redmine DB Structure</a>.</li>
+<li>And finally did <code>script/server -e production</code> under <strong>/opt/redmine</strong>.</li>
+</ol><p>I then visited <strong>http://hostname:3000/</strong>. I had Redmine up and running in no less than <strong>45 minutes</strong>. Sweet! 8)</p>
+
+<h2>Configuration</h2>
+
+<p>Since I really wanted to test out <strong>Git</strong>, I then immediately followed the guide from <strong>Redmine</strong> on configuring repositories specifically for <a href="http://www.redmine.org/wiki/redmine/RedmineRepositories#Git-repository">Git</a>.</p>
+
+<h2>Screenshots</h2>
+
+<p>Screenshots for my <strong>Redmine</strong> installation :D:</p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/Pathauto%20Batch%20-%20Overview%20-%20Redmine_1280237854127.png"><img src="http://dl.dropbox.com/u/24796303/blog/Pathauto%20Batch%20-%20Overview%20-%20Redmine_1280237854127.png" width="383"></a></p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/Pathauto%20Batch%20-%20pathauto_batch.module%20-%20Redmine_1280237875077.png"><img src="http://dl.dropbox.com/u/24796303/blog/Pathauto%20Batch%20-%20pathauto_batch.module%20-%20Redmine_1280237875077.png" width="383"></a></p>
+
+<p>I still haven't played much with Redmine though. I would really like <strong>Syntax Highlighting</strong> for <strong>.module</strong> files but haven't look into it yet. Redmine++! Oh, and the demo for <strong>Redmine</strong> can be found <a href="http://demo.redmine.org/">here</a>. :D</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

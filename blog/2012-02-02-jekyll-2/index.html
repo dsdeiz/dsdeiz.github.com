@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Migrating to Jekyll Part 2</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Migrating to Jekyll Part 2</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Feb 2 2012">February 02, 2012</time>
+  </small>
+  <section class="post-content">
+    <p>After setting up the basic install of my Jekyll site, I then migrated the posts of my current Drupal site over to Jekyll.</p>
+
+<h2>Migrating Drupal Posts to Jekyll</h2>
+
+<p>Migration was also easy as I only needed to follow <a href="https://github.com/mojombo/jekyll/wiki/Blog-Migrations">these steps</a>. I first installed the extensions <code>sequel</code> and <code>mysqlplus</code>.</p>
+<div class="highlight"><pre><code class="language-bash"><span class="nv">$ </span>sudo gem install sequel mysqlplus</code></pre></div>
+
+<p>After this, I downloaded a backup copy of the database of my current blog using <a href="http://drupal.org/project/backup_migrate">Backup and Migrate</a> and imported it to a newly created database. As far as I know, you would only actually need the tables <code>node</code> and <code>node_revisions</code>. My Drupal site has a prefix <code>drpl_</code> for its tables so I need to make some minor modifications on the migration script. If you are not aware if where the migration script exists, I was able to find it at <code>/var/lib/gems/1.8/gems/jekyll-0.11.2/lib/jekyll/migrators/drupal.rb</code>. I've prepended the tables with <code>drpl_</code>. You can also opt to use this <a href="http://drupal.org/node/403742">script</a> to remove the prefixes. The migration script also makes use of the <strong>System URL</strong> i.e. node/[nid]. I've read in other sites that the script messes up when nodes use an alias. What I did was that I deleted all aliases since the database I'm using is only a backup. I did <code>mysql -u user -p -e "TRUNCATE TABLE drpl_url_alias"</code> for this.</p>
+
+<p>After preparing the script and removing the aliases, I executed the migration command from Jekyll's documentation.</p>
+<div class="highlight"><pre><code class="language-bash"><span class="nv">$ </span>ruby -rubygems -e <span class="s1">'require "jekyll/migrators/drupal"; Jekyll::Drupal.process("database", "user", "pass")'</span></code></pre></div>
+
+<blockquote>
+<p><strong>Note:</strong> You'll need to execute this on the root directory of your site which is <code>$HOME/dsdeiz.github.com/</code> for me.</p>
+</blockquote>
+
+<p>After the migration, the posts were created under the directory <code>_posts</code>. All I needed to do then was to just move them over to my subdirectory <code>blog</code>, added the variable <code>category: blog</code> for the <strong>YAML Front Matter</strong> on each post and made some changes on the posts for images, code highlighting and file attachments.</p>
+
+<h2>Deploying the Site</h2>
+
+<p>I've used Github's Pages feature to host the site. Deployment was also very easy as Github has documented it <a href="http://pages.github.com/">here</a>. I only followed the instructions and waited for a few minutes for the site to be published. For updating the site, I only needed to push the changes and new files over to my repo.</p>
+  </section>
+</article>
+<p>After setting up the basic install of my Jekyll site, I then migrated the posts of my current Drupal site over to Jekyll.</p>
+
+<h2>Migrating Drupal Posts to Jekyll</h2>
+
+<p>Migration was also easy as I only needed to follow <a href="https://github.com/mojombo/jekyll/wiki/Blog-Migrations">these steps</a>. I first installed the extensions <code>sequel</code> and <code>mysqlplus</code>.</p>
+<div class="highlight"><pre><code class="language-bash"><span class="nv">$ </span>sudo gem install sequel mysqlplus</code></pre></div>
+
+<p>After this, I downloaded a backup copy of the database of my current blog using <a href="http://drupal.org/project/backup_migrate">Backup and Migrate</a> and imported it to a newly created database. As far as I know, you would only actually need the tables <code>node</code> and <code>node_revisions</code>. My Drupal site has a prefix <code>drpl_</code> for its tables so I need to make some minor modifications on the migration script. If you are not aware if where the migration script exists, I was able to find it at <code>/var/lib/gems/1.8/gems/jekyll-0.11.2/lib/jekyll/migrators/drupal.rb</code>. I've prepended the tables with <code>drpl_</code>. You can also opt to use this <a href="http://drupal.org/node/403742">script</a> to remove the prefixes. The migration script also makes use of the <strong>System URL</strong> i.e. node/[nid]. I've read in other sites that the script messes up when nodes use an alias. What I did was that I deleted all aliases since the database I'm using is only a backup. I did <code>mysql -u user -p -e "TRUNCATE TABLE drpl_url_alias"</code> for this.</p>
+
+<p>After preparing the script and removing the aliases, I executed the migration command from Jekyll's documentation.</p>
+<div class="highlight"><pre><code class="language-bash"><span class="nv">$ </span>ruby -rubygems -e <span class="s1">'require "jekyll/migrators/drupal"; Jekyll::Drupal.process("database", "user", "pass")'</span></code></pre></div>
+
+<blockquote>
+<p><strong>Note:</strong> You'll need to execute this on the root directory of your site which is <code>$HOME/dsdeiz.github.com/</code> for me.</p>
+</blockquote>
+
+<p>After the migration, the posts were created under the directory <code>_posts</code>. All I needed to do then was to just move them over to my subdirectory <code>blog</code>, added the variable <code>category: blog</code> for the <strong>YAML Front Matter</strong> on each post and made some changes on the posts for images, code highlighting and file attachments.</p>
+
+<h2>Deploying the Site</h2>
+
+<p>I've used Github's Pages feature to host the site. Deployment was also very easy as Github has documented it <a href="http://pages.github.com/">here</a>. I only followed the instructions and waited for a few minutes for the site to be published. For updating the site, I only needed to push the changes and new files over to my repo.</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Create Custom Form Instead Of Altering Node Form</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Create Custom Form Instead Of Altering Node Form</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Sep 14 2012">September 09, 2012</time>
+  </small>
+  <section class="post-content">
+    <p>This a post to remind me to not alter the node form as much as possible, but instead create a custom form and save the node upon submission. Some issues I had trouble with:</p>
+
+<ul>
+<li>Field attach form isn't that flexible for altering.</li>
+<li>The node form becomes ugly for administrators that want to just create/edit a node due to form alterations.</li>
+</ul><p>The fields I have in the node type I'm trying to create are:</p>
+
+<ul>
+<li>Taxonomy term with a 'select' widget.</li>
+<li>Taxonomy term with the 'checkboxes' widget.</li>
+<li>2 textfields for 'First name' and 'Last name'.</li>
+<li>Email field.</li>
+<li>Checkbox for agreement.</li>
+</ul><h3>Requirements:</h3>
+
+<ol>
+<li>Make the first taxonomy term field display its field image on a 'change' event; and only display child terms.</li>
+<li>Second taxonomy term has some sort of a custom theme where it displays an image and description.</li>
+<li>Make the 2 textfields and email address field only available for anonymous users.</li>
+<li>All fields are required when submitting a new node.</li>
+</ol><h3>My solution:</h3>
+
+<p>I've implemented <code>hook_admin_paths()</code> to disable admin theme on node/add/content-type.</p>
+
+<p>I've implemented <code>hook_field_widget_form_alter()</code> and added the <code>#ajax</code> property on the element. The structure of the terms are also in a format of 'parent' &gt; 'children' so I had to generate a flat list of child terms to omit the parents. Since I've used <code>hook_field_widget_form_alter</code>, the node form to me looks ugly when trying to edit an existing node. I tried to add a condition to only do the alteration when the path is 'node/add/content-type' (since I don't have enough context) like so:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="sd">/**</span>
+<span class="sd"> * Implements hook_field_widget_form_alter().</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">MY_FEATURE_field_widget_form_alter</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arg</span><span class="p">(</span><span class="m">0</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'node'</span> <span class="o">&amp;&amp;</span> <span class="nx">arg</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'content-type'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">...</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>This posts a problem for the ajax function since the path becomes 'system/ajax'. So I had to remove it, and now the alteration affects all the places the field is located. This includes the field's settings form. xD</p>
+
+<p>In <code>hook_field_widget_form_alter()</code>, I added a <code>#theme</code> property to display the images and description. In the theme function, I also made some alterations on the element. I wasn't able to do this on the widget form alter since the element didn't have the individual checkboxes in it.</p>
+
+<p>I've altered the node form itself and set <code>#access</code> for each fields to <code>FALSE</code>. I've also set the <code>#access</code> to <code>FALSE</code> for the vertical tabs to hide them. Theme isn't really designed for admin purposes so vertical tabs didn't have much attention on styling. There was also another field that was created just for storing a value and shouldn't be accessible as well. Hid that field once again. :D</p>
+
+<p>The email address field needs to be unique. I was able to do this with the <a href="http://drupal.org/project/field_validation">Field validation</a> module. Error messages for the required fields to be custom too. This was a problem for me since Drupal by default has the message "[field_name] field is required." and isn't changeable. Or perhaps I just don't know how. I've disabled the "Required field" on the remaining fields so I can just do my custom validation. I've implemented <code>hook_field_attach_validate()</code> to achieve this.</p>
+
+<p>I've also implemented <code>hook_theme</code> for the node form since it needs to display some text.</p>
+
+<h3>What I'll Do Next Time</h3>
+
+<p>I think a better way to do this is create a custom form. It might contain more codes but at least I have full control over the form. No need to hide fields and such. Validate handler would include the "required" fields and checking if the email address is unique. In the submit handler, make use of <a href="http://drupal.org/project/entity">Entity API's</a> <code>entity_metadata_wrapper</code> to create the node. Also make use of templates rather than theme functions, it looks a bit messy when you have things like <code>$output = '&lt;div&gt;' . t('Foo') . '&lt;/div&gt;'</code> in the theme function.</p>
+  </section>
+</article>
+<p>This a post to remind me to not alter the node form as much as possible, but instead create a custom form and save the node upon submission. Some issues I had trouble with:</p>
+
+<ul>
+<li>Field attach form isn't that flexible for altering.</li>
+<li>The node form becomes ugly for administrators that want to just create/edit a node due to form alterations.</li>
+</ul><p>The fields I have in the node type I'm trying to create are:</p>
+
+<ul>
+<li>Taxonomy term with a 'select' widget.</li>
+<li>Taxonomy term with the 'checkboxes' widget.</li>
+<li>2 textfields for 'First name' and 'Last name'.</li>
+<li>Email field.</li>
+<li>Checkbox for agreement.</li>
+</ul><h3>Requirements:</h3>
+
+<ol>
+<li>Make the first taxonomy term field display its field image on a 'change' event; and only display child terms.</li>
+<li>Second taxonomy term has some sort of a custom theme where it displays an image and description.</li>
+<li>Make the 2 textfields and email address field only available for anonymous users.</li>
+<li>All fields are required when submitting a new node.</li>
+</ol><h3>My solution:</h3>
+
+<p>I've implemented <code>hook_admin_paths()</code> to disable admin theme on node/add/content-type.</p>
+
+<p>I've implemented <code>hook_field_widget_form_alter()</code> and added the <code>#ajax</code> property on the element. The structure of the terms are also in a format of 'parent' &gt; 'children' so I had to generate a flat list of child terms to omit the parents. Since I've used <code>hook_field_widget_form_alter</code>, the node form to me looks ugly when trying to edit an existing node. I tried to add a condition to only do the alteration when the path is 'node/add/content-type' (since I don't have enough context) like so:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="sd">/**</span>
+<span class="sd"> * Implements hook_field_widget_form_alter().</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">MY_FEATURE_field_widget_form_alter</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arg</span><span class="p">(</span><span class="m">0</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'node'</span> <span class="o">&amp;&amp;</span> <span class="nx">arg</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'content-type'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="o">...</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>This posts a problem for the ajax function since the path becomes 'system/ajax'. So I had to remove it, and now the alteration affects all the places the field is located. This includes the field's settings form. xD</p>
+
+<p>In <code>hook_field_widget_form_alter()</code>, I added a <code>#theme</code> property to display the images and description. In the theme function, I also made some alterations on the element. I wasn't able to do this on the widget form alter since the element didn't have the individual checkboxes in it.</p>
+
+<p>I've altered the node form itself and set <code>#access</code> for each fields to <code>FALSE</code>. I've also set the <code>#access</code> to <code>FALSE</code> for the vertical tabs to hide them. Theme isn't really designed for admin purposes so vertical tabs didn't have much attention on styling. There was also another field that was created just for storing a value and shouldn't be accessible as well. Hid that field once again. :D</p>
+
+<p>The email address field needs to be unique. I was able to do this with the <a href="http://drupal.org/project/field_validation">Field validation</a> module. Error messages for the required fields to be custom too. This was a problem for me since Drupal by default has the message "[field_name] field is required." and isn't changeable. Or perhaps I just don't know how. I've disabled the "Required field" on the remaining fields so I can just do my custom validation. I've implemented <code>hook_field_attach_validate()</code> to achieve this.</p>
+
+<p>I've also implemented <code>hook_theme</code> for the node form since it needs to display some text.</p>
+
+<h3>What I'll Do Next Time</h3>
+
+<p>I think a better way to do this is create a custom form. It might contain more codes but at least I have full control over the form. No need to hide fields and such. Validate handler would include the "required" fields and checking if the email address is unique. In the submit handler, make use of <a href="http://drupal.org/project/entity">Entity API's</a> <code>entity_metadata_wrapper</code> to create the node. Also make use of templates rather than theme functions, it looks a bit messy when you have things like <code>$output = '&lt;div&gt;' . t('Foo') . '&lt;/div&gt;'</code> in the theme function.</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

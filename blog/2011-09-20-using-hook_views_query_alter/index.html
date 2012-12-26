@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Using hook_views_query_alter</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Using hook_views_query_alter</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Sep 20 2011">September 09, 2011</time>
+  </small>
+  <section class="post-content">
+    <p>There are times that you might want to alter the query that the Views module generates. My problem was to include an attribute filter for products from the <a href="http://www.ubercart.org/">Ubercart</a> module. <a href="http://drupal.org/project/uc_views">uc_views</a> might be able to do the trick although filters for product attributes were only for products that have already been order. There is also a <a href="http://drupal.org/node/651036">patch</a> available although I didn't make use of it as I only needed something simple. I decided to use <a href="http://views.doc.logrus.com/group__views__hooks.html#gf4d538493930fe0fa0ce6fb3bf42c156">hook<em>views</em>query_alter</a>. It says to put your function <code>MODULENAME_views_query_alter</code> in <strong>MODULENAME.views.inc</strong> although it seemed to have just been called in my <strong>MODULENAME.module</strong>.</p>
+
+<p>In order to add a new table to join, you'll need to create a new <code>views_join</code> object. This is what I have for mine:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nv">$join</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">views_join</span><span class="p">;</span>
+<span class="nv">$join</span><span class="o">-&gt;</span><span class="na">construct</span><span class="p">(</span><span class="s1">'uc_product_options'</span><span class="p">,</span> <span class="s1">'node'</span><span class="p">,</span> <span class="s1">'nid'</span><span class="p">,</span> <span class="s1">'nid'</span><span class="p">);</span></code></pre></div>
+
+<p>Details related to <code>views_join</code> can be found under <strong>views/includes/handlers.inc</strong>. After this, I used the method <code>add_relationship</code> from the class <code>views_query</code> which can be found in <strong>views/includes/query.inc</strong>. Most functions for building a query can be found on this file, I believe. This is how my relationship was added:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="c1">// $join is the views_join object created above</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">add_relationship</span><span class="p">(</span><span class="s1">'uc_product_options'</span><span class="p">,</span> <span class="nv">$join</span><span class="p">,</span> <span class="s1">'node'</span><span class="p">);</span></code></pre></div>
+
+<p>Now that I have my relationship, I will be needing to add my <strong>where</strong> clause. I only needed to append in the default group as it was only a simple clause. I have this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">[</span><span class="m">0</span><span class="p">][</span><span class="s1">'clauses'</span><span class="p">][]</span> <span class="o">=</span> <span class="s1">'uc_product_options.oid = %d'</span><span class="p">;</span>
+<span class="c1">// I used GET for getting the value for an attribute</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">[</span><span class="m">0</span><span class="p">][</span><span class="s1">'args'</span><span class="p">][]</span> <span class="o">=</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'attribute'</span><span class="p">];</span></code></pre></div>
+
+<p>There are also times that you might want to group a clause. This is what I did for another view that I've altered the query:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">set_where_group</span><span class="p">(</span><span class="s1">'OR'</span><span class="p">);</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">add_where</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="s1">'baz = "baz"'</span><span class="p">);</span>
+<span class="c1">// Unfortunately, nested groups are not allowed</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">add_where</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="s1">'(foo = "%s" AND bar = "%s")'</span><span class="p">,</span> <span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">);</span></code></pre></div>
+
+<p>And that's it, cheers! :D</p>
+  </section>
+</article>
+<p>There are times that you might want to alter the query that the Views module generates. My problem was to include an attribute filter for products from the <a href="http://www.ubercart.org/">Ubercart</a> module. <a href="http://drupal.org/project/uc_views">uc_views</a> might be able to do the trick although filters for product attributes were only for products that have already been order. There is also a <a href="http://drupal.org/node/651036">patch</a> available although I didn't make use of it as I only needed something simple. I decided to use <a href="http://views.doc.logrus.com/group__views__hooks.html#gf4d538493930fe0fa0ce6fb3bf42c156">hook<em>views</em>query_alter</a>. It says to put your function <code>MODULENAME_views_query_alter</code> in <strong>MODULENAME.views.inc</strong> although it seemed to have just been called in my <strong>MODULENAME.module</strong>.</p>
+
+<p>In order to add a new table to join, you'll need to create a new <code>views_join</code> object. This is what I have for mine:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nv">$join</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">views_join</span><span class="p">;</span>
+<span class="nv">$join</span><span class="o">-&gt;</span><span class="na">construct</span><span class="p">(</span><span class="s1">'uc_product_options'</span><span class="p">,</span> <span class="s1">'node'</span><span class="p">,</span> <span class="s1">'nid'</span><span class="p">,</span> <span class="s1">'nid'</span><span class="p">);</span></code></pre></div>
+
+<p>Details related to <code>views_join</code> can be found under <strong>views/includes/handlers.inc</strong>. After this, I used the method <code>add_relationship</code> from the class <code>views_query</code> which can be found in <strong>views/includes/query.inc</strong>. Most functions for building a query can be found on this file, I believe. This is how my relationship was added:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="c1">// $join is the views_join object created above</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">add_relationship</span><span class="p">(</span><span class="s1">'uc_product_options'</span><span class="p">,</span> <span class="nv">$join</span><span class="p">,</span> <span class="s1">'node'</span><span class="p">);</span></code></pre></div>
+
+<p>Now that I have my relationship, I will be needing to add my <strong>where</strong> clause. I only needed to append in the default group as it was only a simple clause. I have this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">[</span><span class="m">0</span><span class="p">][</span><span class="s1">'clauses'</span><span class="p">][]</span> <span class="o">=</span> <span class="s1">'uc_product_options.oid = %d'</span><span class="p">;</span>
+<span class="c1">// I used GET for getting the value for an attribute</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">where</span><span class="p">[</span><span class="m">0</span><span class="p">][</span><span class="s1">'args'</span><span class="p">][]</span> <span class="o">=</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">'attribute'</span><span class="p">];</span></code></pre></div>
+
+<p>There are also times that you might want to group a clause. This is what I did for another view that I've altered the query:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">set_where_group</span><span class="p">(</span><span class="s1">'OR'</span><span class="p">);</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">add_where</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="s1">'baz = "baz"'</span><span class="p">);</span>
+<span class="c1">// Unfortunately, nested groups are not allowed</span>
+<span class="nv">$query</span><span class="o">-&gt;</span><span class="na">add_where</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="s1">'(foo = "%s" AND bar = "%s")'</span><span class="p">,</span> <span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">);</span></code></pre></div>
+
+<p>And that's it, cheers! :D</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

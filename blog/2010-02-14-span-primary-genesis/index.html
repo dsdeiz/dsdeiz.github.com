@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; &lt;span&gt; Tag in Primary Links in a Genesis Subtheme</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">&lt;span&gt; Tag in Primary Links in a Genesis Subtheme</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Feb 14 2010">February 02, 2010</time>
+  </small>
+  <section class="post-content">
+    <p>The codes on this post below would result to a markup like this in a <a href="http://drupal.org/project/genesis">Genesis</a> subtheme:</p>
+<div class="highlight"><pre><code class="language-html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/"</span> <span class="na">title=</span><span class="s">"Home"</span> <span class="na">class=</span><span class="s">"active"</span><span class="nt">&gt;&lt;span&gt;</span>Home<span class="nt">&lt;/span&gt;&lt;/a&gt;</span></code></pre></div>
+
+<p>First, you would need to edit the <code>template.php</code> file of your Genesis subtheme and add the codes below. For the <code>SUBTHEME_primary_links</code> function, you'll need to copy the  <a href="http://api.drupal.org/api/function/theme_links/6">theme_links</a> function. You'll then need to make some slight modifications on the function.</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">SUBTHEME_theme</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$existing</span><span class="p">,</span> <span class="nv">$type</span><span class="p">,</span> <span class="nv">$theme</span><span class="p">,</span> <span class="nv">$path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$hooks</span> <span class="o">=</span> <span class="nx">genesis_theme</span><span class="p">(</span><span class="nv">$existing</span><span class="p">,</span> <span class="nv">$type</span><span class="p">,</span> <span class="nv">$theme</span><span class="p">,</span> <span class="nv">$path</span><span class="p">);</span>
+  <span class="nv">$hooks</span><span class="p">[</span><span class="s1">'primary_links'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'arguments'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">'links'</span> <span class="o">=&gt;</span> <span class="k">NULL</span><span class="p">),</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="nv">$hooks</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">SUBTHEME_primary_links</span><span class="p">(</span><span class="nv">$links</span><span class="p">,</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'class'</span> <span class="o">=&gt;</span> <span class="s1">'links'</span><span class="p">))</span> <span class="p">{</span>
+      <span class="o">...</span>
+      <span class="cm">/* Changes are on this section */</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$link</span><span class="p">[</span><span class="s1">'href'</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="nv">$link</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'&lt;span class="link"&gt;'</span> <span class="o">.</span> <span class="nx">check_plain</span><span class="p">(</span><span class="nv">$link</span><span class="p">[</span><span class="s1">'title'</span><span class="p">])</span> <span class="o">.</span> <span class="s1">'&lt;/span&gt;'</span><span class="p">;</span>
+        <span class="nv">$link</span><span class="p">[</span><span class="s1">'html'</span><span class="p">]</span> <span class="o">=</span> <span class="k">TRUE</span><span class="p">;</span>
+        <span class="c1">// Pass in $link as $options, they share the same keys.</span>
+        <span class="nv">$output</span> <span class="o">.=</span> <span class="nx">l</span><span class="p">(</span><span class="nv">$link</span><span class="p">[</span><span class="s1">'title'</span><span class="p">],</span> <span class="nv">$link</span><span class="p">[</span><span class="s1">'href'</span><span class="p">],</span> <span class="nv">$link</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="o">...</span>
+  <span class="k">return</span> <span class="nv">$output</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
+
+<p>You'll then need to edit your <code>page-*.tpl.php</code> files specifically changing the <code>$primary_menu</code> with this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span> <span class="k">print</span> <span class="nx">theme</span><span class="p">(</span><span class="s1">'primary_links'</span><span class="p">,</span> <span class="nv">$primary_links</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'class'</span> <span class="o">=&gt;</span> <span class="s1">'links primary-links'</span><span class="p">));</span> <span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
+
+<p>Finally, you'll need to clear your cache by going to Administer → Site Configuration → Performance.</p>
+
+<p>You'll might as well check these threads, <a href="http://drupal.org/node/112761">&lt;span&gt; In Primary Links</a> and <a href="http://drupal.org/node/373901">Add &lt;SPAN&gt; to primary links?</a>.</p>
+  </section>
+</article>
+<p>The codes on this post below would result to a markup like this in a <a href="http://drupal.org/project/genesis">Genesis</a> subtheme:</p>
+<div class="highlight"><pre><code class="language-html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/"</span> <span class="na">title=</span><span class="s">"Home"</span> <span class="na">class=</span><span class="s">"active"</span><span class="nt">&gt;&lt;span&gt;</span>Home<span class="nt">&lt;/span&gt;&lt;/a&gt;</span></code></pre></div>
+
+<p>First, you would need to edit the <code>template.php</code> file of your Genesis subtheme and add the codes below. For the <code>SUBTHEME_primary_links</code> function, you'll need to copy the  <a href="http://api.drupal.org/api/function/theme_links/6">theme_links</a> function. You'll then need to make some slight modifications on the function.</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">SUBTHEME_theme</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$existing</span><span class="p">,</span> <span class="nv">$type</span><span class="p">,</span> <span class="nv">$theme</span><span class="p">,</span> <span class="nv">$path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$hooks</span> <span class="o">=</span> <span class="nx">genesis_theme</span><span class="p">(</span><span class="nv">$existing</span><span class="p">,</span> <span class="nv">$type</span><span class="p">,</span> <span class="nv">$theme</span><span class="p">,</span> <span class="nv">$path</span><span class="p">);</span>
+  <span class="nv">$hooks</span><span class="p">[</span><span class="s1">'primary_links'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'arguments'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">'links'</span> <span class="o">=&gt;</span> <span class="k">NULL</span><span class="p">),</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="nv">$hooks</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">SUBTHEME_primary_links</span><span class="p">(</span><span class="nv">$links</span><span class="p">,</span> <span class="nv">$attributes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'class'</span> <span class="o">=&gt;</span> <span class="s1">'links'</span><span class="p">))</span> <span class="p">{</span>
+      <span class="o">...</span>
+      <span class="cm">/* Changes are on this section */</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$link</span><span class="p">[</span><span class="s1">'href'</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="nv">$link</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'&lt;span class="link"&gt;'</span> <span class="o">.</span> <span class="nx">check_plain</span><span class="p">(</span><span class="nv">$link</span><span class="p">[</span><span class="s1">'title'</span><span class="p">])</span> <span class="o">.</span> <span class="s1">'&lt;/span&gt;'</span><span class="p">;</span>
+        <span class="nv">$link</span><span class="p">[</span><span class="s1">'html'</span><span class="p">]</span> <span class="o">=</span> <span class="k">TRUE</span><span class="p">;</span>
+        <span class="c1">// Pass in $link as $options, they share the same keys.</span>
+        <span class="nv">$output</span> <span class="o">.=</span> <span class="nx">l</span><span class="p">(</span><span class="nv">$link</span><span class="p">[</span><span class="s1">'title'</span><span class="p">],</span> <span class="nv">$link</span><span class="p">[</span><span class="s1">'href'</span><span class="p">],</span> <span class="nv">$link</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="o">...</span>
+  <span class="k">return</span> <span class="nv">$output</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
+
+<p>You'll then need to edit your <code>page-*.tpl.php</code> files specifically changing the <code>$primary_menu</code> with this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span> <span class="k">print</span> <span class="nx">theme</span><span class="p">(</span><span class="s1">'primary_links'</span><span class="p">,</span> <span class="nv">$primary_links</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="s1">'class'</span> <span class="o">=&gt;</span> <span class="s1">'links primary-links'</span><span class="p">));</span> <span class="cp">?&gt;</span><span class="x"></span></code></pre></div>
+
+<p>Finally, you'll need to clear your cache by going to Administer → Site Configuration → Performance.</p>
+
+<p>You'll might as well check these threads, <a href="http://drupal.org/node/112761">&lt;span&gt; In Primary Links</a> and <a href="http://drupal.org/node/373901">Add &lt;SPAN&gt; to primary links?</a>.</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Add a "Save and continue editing" button in a Node Edit Form</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Add a "Save and continue editing" button in a Node Edit Form</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Sep 8 2010">September 09, 2010</time>
+  </small>
+  <section class="post-content">
+    <p>There are times that I would somehow want to continue editing a node rather than view it after saving. Here's a little snippet that would achieve what I needed.</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">module_form_alter</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$form</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">$form_state</span><span class="p">,</span> <span class="nv">$form_id</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$form</span><span class="p">[</span><span class="s1">'type'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$form</span><span class="p">[</span><span class="s1">'#node'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$form</span><span class="p">[</span><span class="s1">'type'</span><span class="p">][</span><span class="s1">'#value'</span><span class="p">]</span> <span class="o">.</span><span class="s1">'_node_form'</span> <span class="o">==</span> <span class="nv">$form_id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$form</span><span class="p">[</span><span class="s1">'buttons'</span><span class="p">][</span><span class="s1">'continue_edit'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">'#type'</span> <span class="o">=&gt;</span> <span class="s1">'submit'</span><span class="p">,</span>
+      <span class="s1">'#value'</span> <span class="o">=&gt;</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Save and continue editing'</span><span class="p">),</span>
+      <span class="s1">'#submit'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">'node_form_submit'</span><span class="p">,</span> <span class="s1">'_module_continue_edit'</span><span class="p">),</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">_module_continue_edit</span><span class="p">(</span><span class="nv">$form</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">$form_state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$form_state</span><span class="p">[</span><span class="s1">'redirect'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'node/'</span> <span class="o">.</span> <span class="nv">$form_state</span><span class="p">[</span><span class="s1">'nid'</span><span class="p">]</span> <span class="o">.</span> <span class="s1">'/edit'</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>A contributed module that would do this better would be <a href="http://drupal.org/project/save_edit">Save &amp; Edit</a>.</p>
+  </section>
+</article>
+<p>There are times that I would somehow want to continue editing a node rather than view it after saving. Here's a little snippet that would achieve what I needed.</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">module_form_alter</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$form</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">$form_state</span><span class="p">,</span> <span class="nv">$form_id</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$form</span><span class="p">[</span><span class="s1">'type'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$form</span><span class="p">[</span><span class="s1">'#node'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$form</span><span class="p">[</span><span class="s1">'type'</span><span class="p">][</span><span class="s1">'#value'</span><span class="p">]</span> <span class="o">.</span><span class="s1">'_node_form'</span> <span class="o">==</span> <span class="nv">$form_id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$form</span><span class="p">[</span><span class="s1">'buttons'</span><span class="p">][</span><span class="s1">'continue_edit'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">'#type'</span> <span class="o">=&gt;</span> <span class="s1">'submit'</span><span class="p">,</span>
+      <span class="s1">'#value'</span> <span class="o">=&gt;</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Save and continue editing'</span><span class="p">),</span>
+      <span class="s1">'#submit'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">'node_form_submit'</span><span class="p">,</span> <span class="s1">'_module_continue_edit'</span><span class="p">),</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">_module_continue_edit</span><span class="p">(</span><span class="nv">$form</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">$form_state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$form_state</span><span class="p">[</span><span class="s1">'redirect'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'node/'</span> <span class="o">.</span> <span class="nv">$form_state</span><span class="p">[</span><span class="s1">'nid'</span><span class="p">]</span> <span class="o">.</span> <span class="s1">'/edit'</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>A contributed module that would do this better would be <a href="http://drupal.org/project/save_edit">Save &amp; Edit</a>.</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

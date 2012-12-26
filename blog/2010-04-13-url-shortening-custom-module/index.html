@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; URL Shortening Custom Module</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">URL Shortening Custom Module</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Apr 13 2010">April 04, 2010</time>
+  </small>
+  <section class="post-content">
+    <p>I first tried using the modules <a href="http://drupal.org/project/shorturl">Short URL</a> and <a href="http://drupal.org/project/shorten">Shorten URLs</a> but I believe the module <strong>Short URL</strong> is currently on its early stages.</p>
+
+<p>I've decided to create a custom module for our project but basing it on the modules above. Unfortunately, the module isn't an API like <strong>Short URL</strong>. It was a combination of both in which it provides a UI for shortening URLs and records them.</p>
+
+<p>I started with how the module redirects the URLs when it encounters one from the record. The <strong>Short URL</strong> implemented the <code>hook<em>init()</em></code> to do this. This is somewhat what I was able to come up with based on the _Short URL__ module:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="sd">/**</span>
+<span class="sd"> * Implementation of hook_init().</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">url_shorten_init</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nv">$token</span> <span class="o">=</span> <span class="nx">arg</span><span class="p">(</span><span class="m">0</span><span class="p">);</span> <span class="c1">// Retrieve 1st segment of the URL.</span>
+  <span class="nv">$long_url</span> <span class="o">=</span> <span class="k">NULL</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$token</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$data</span> <span class="o">=</span> <span class="nx">db_fetch_object</span><span class="p">(</span><span class="nx">db_query</span><span class="p">(</span><span class="s2">"SELECT id, long_url FROM {url_shorten} WHERE short_url = '%s';"</span><span class="p">,</span> <span class="nv">$token</span><span class="p">));</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$data</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nv">$record</span> <span class="o">=</span> <span class="k">new</span> <span class="k">stdClass</span><span class="p">();</span>
+      <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">sid</span> <span class="o">=</span> <span class="nv">$data</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">;</span>
+      <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">referer</span> <span class="o">=</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'HTTP_REFERER'</span><span class="p">]))</span> <span class="o">?</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'HTTP_REFERER'</span><span class="p">]</span> <span class="o">:</span> <span class="s1">''</span><span class="p">;</span>
+      <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">date</span> <span class="o">=</span> <span class="nb">time</span><span class="p">();</span>
+      <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">ip_address</span> <span class="o">=</span> <span class="nb">ip2long</span><span class="p">(</span><span class="nx">ip_address</span><span class="p">());</span>
+
+      <span class="nx">drupal_write_record</span><span class="p">(</span><span class="s1">'url_shorten_stats'</span><span class="p">,</span> <span class="nv">$record</span><span class="p">);</span>
+      <span class="nx">drupal_goto</span><span class="p">(</span><span class="nv">$data</span><span class="o">-&gt;</span><span class="na">long_url</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="m">301</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>The code <code>drupal_goto()</code> is the one handling the redirect. I then did the UI for shortening URLs in which it makes use of a function for shortening. This was the function that I was able to copy from <a href="http://www.bytemycode.com/snippets/snippet/579/">this page</a>:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="sd">/**</span>
+<span class="sd"> * Generate a string with url_shorten_maxlength alpha characters. Snippet was taken</span>
+<span class="sd"> * from http://www.bytemycode.com/snippets/snippet/579/.</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">url_shorten_generate_code</span><span class="p">(</span><span class="nv">$length</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$code</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+
+  <span class="c1">// Recreate length to have different number of </span>
+  <span class="c1">// characters. 3 would be the minimum length.</span>
+  <span class="nv">$new_length</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="nv">$length</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$new_length</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$code</span> <span class="o">.=</span> <span class="nb">rand</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="o">?</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="m">65</span><span class="p">,</span> <span class="m">90</span><span class="p">))</span> <span class="o">:</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="m">97</span><span class="p">,</span> <span class="m">122</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Check if the generated code already exists.</span>
+  <span class="nx">db_query</span><span class="p">(</span><span class="s2">"SELECT id FROM {url_shorten} WHERE short_url = '%s'"</span><span class="p">,</span> <span class="nv">$code</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">db_affected_rows</span><span class="p">()</span> <span class="o">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">url_shorten_generate_code</span><span class="p">(</span><span class="nv">$length</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$code</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>It simply creates a string depending on the <code>$length</code> that is being generated randomly. The characters generated are being randomly picked from the ASCII table in which 65-90 are alpha characters in uppercase and 97-122 in lowercase. It then calls the function if the generated code already exists.</p>
+
+<p>As for the UI, it simply provides a textfield for the <strong>Long URL</strong> and another textfield for the <strong>Short URL</strong> which is optional. I've also implemented the tagging feature taken from the Taxonomy core module. It was the <code>taxonomy_autocomplete()</code> that I made use of. I was able to come up (not really come up but copied :D) with this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">url_shorten_autocomplete</span><span class="p">(</span><span class="nv">$string</span> <span class="o">=</span> <span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$arr</span> <span class="o">=</span> <span class="nx">drupal_explode_tags</span><span class="p">(</span><span class="nv">$string</span><span class="p">);</span>
+
+  <span class="nv">$last_string</span> <span class="o">=</span> <span class="nb">trim</span><span class="p">(</span><span class="nb">array_pop</span><span class="p">(</span><span class="nv">$arr</span><span class="p">));</span>
+  <span class="nv">$matches</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nv">$last_string</span> <span class="o">!=</span> <span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nx">db_query_range</span><span class="p">(</span><span class="s2">"SELECT tag FROM {url_shorten_tags} WHERE LOWER(tag) LIKE LOWER('%%%s%%')"</span><span class="p">,</span> <span class="nv">$last_string</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">10</span><span class="p">);</span>
+    <span class="nv">$prefix</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">)</span> <span class="o">?</span> <span class="nb">implode</span><span class="p">(</span><span class="s1">', '</span><span class="p">,</span> <span class="nv">$arr</span><span class="p">)</span> <span class="o">.</span><span class="s1">', '</span> <span class="o">:</span> <span class="s1">''</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="nv">$row</span> <span class="o">=</span> <span class="nx">db_fetch_object</span><span class="p">(</span><span class="nv">$result</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nv">$matches</span><span class="p">[</span><span class="nv">$prefix</span> <span class="o">.</span> <span class="nv">$row</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">]</span> <span class="o">=</span> <span class="nx">check_plain</span><span class="p">(</span><span class="nv">$row</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">drupal_json</span><span class="p">(</span><span class="nv">$matches</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>I've added some minor features e.g. records referrer and IP address for every redirect. Most are copied from other codes but I think their combination still provided a good URL Shortener. :bigsmile:</p>
+  </section>
+</article>
+<p>I first tried using the modules <a href="http://drupal.org/project/shorturl">Short URL</a> and <a href="http://drupal.org/project/shorten">Shorten URLs</a> but I believe the module <strong>Short URL</strong> is currently on its early stages.</p>
+
+<p>I've decided to create a custom module for our project but basing it on the modules above. Unfortunately, the module isn't an API like <strong>Short URL</strong>. It was a combination of both in which it provides a UI for shortening URLs and records them.</p>
+
+<p>I started with how the module redirects the URLs when it encounters one from the record. The <strong>Short URL</strong> implemented the <code>hook<em>init()</em></code> to do this. This is somewhat what I was able to come up with based on the _Short URL__ module:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="sd">/**</span>
+<span class="sd"> * Implementation of hook_init().</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">url_shorten_init</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nv">$token</span> <span class="o">=</span> <span class="nx">arg</span><span class="p">(</span><span class="m">0</span><span class="p">);</span> <span class="c1">// Retrieve 1st segment of the URL.</span>
+  <span class="nv">$long_url</span> <span class="o">=</span> <span class="k">NULL</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$token</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nv">$data</span> <span class="o">=</span> <span class="nx">db_fetch_object</span><span class="p">(</span><span class="nx">db_query</span><span class="p">(</span><span class="s2">"SELECT id, long_url FROM {url_shorten} WHERE short_url = '%s';"</span><span class="p">,</span> <span class="nv">$token</span><span class="p">));</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$data</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nv">$record</span> <span class="o">=</span> <span class="k">new</span> <span class="k">stdClass</span><span class="p">();</span>
+      <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">sid</span> <span class="o">=</span> <span class="nv">$data</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">;</span>
+      <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">referer</span> <span class="o">=</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'HTTP_REFERER'</span><span class="p">]))</span> <span class="o">?</span> <span class="nv">$_SERVER</span><span class="p">[</span><span class="s1">'HTTP_REFERER'</span><span class="p">]</span> <span class="o">:</span> <span class="s1">''</span><span class="p">;</span>
+      <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">date</span> <span class="o">=</span> <span class="nb">time</span><span class="p">();</span>
+      <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">ip_address</span> <span class="o">=</span> <span class="nb">ip2long</span><span class="p">(</span><span class="nx">ip_address</span><span class="p">());</span>
+
+      <span class="nx">drupal_write_record</span><span class="p">(</span><span class="s1">'url_shorten_stats'</span><span class="p">,</span> <span class="nv">$record</span><span class="p">);</span>
+      <span class="nx">drupal_goto</span><span class="p">(</span><span class="nv">$data</span><span class="o">-&gt;</span><span class="na">long_url</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="m">301</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>The code <code>drupal_goto()</code> is the one handling the redirect. I then did the UI for shortening URLs in which it makes use of a function for shortening. This was the function that I was able to copy from <a href="http://www.bytemycode.com/snippets/snippet/579/">this page</a>:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="sd">/**</span>
+<span class="sd"> * Generate a string with url_shorten_maxlength alpha characters. Snippet was taken</span>
+<span class="sd"> * from http://www.bytemycode.com/snippets/snippet/579/.</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">url_shorten_generate_code</span><span class="p">(</span><span class="nv">$length</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$code</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+
+  <span class="c1">// Recreate length to have different number of </span>
+  <span class="c1">// characters. 3 would be the minimum length.</span>
+  <span class="nv">$new_length</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="nv">$length</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$new_length</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$code</span> <span class="o">.=</span> <span class="nb">rand</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="o">?</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="m">65</span><span class="p">,</span> <span class="m">90</span><span class="p">))</span> <span class="o">:</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">rand</span><span class="p">(</span><span class="m">97</span><span class="p">,</span> <span class="m">122</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Check if the generated code already exists.</span>
+  <span class="nx">db_query</span><span class="p">(</span><span class="s2">"SELECT id FROM {url_shorten} WHERE short_url = '%s'"</span><span class="p">,</span> <span class="nv">$code</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">db_affected_rows</span><span class="p">()</span> <span class="o">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">url_shorten_generate_code</span><span class="p">(</span><span class="nv">$length</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$code</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>It simply creates a string depending on the <code>$length</code> that is being generated randomly. The characters generated are being randomly picked from the ASCII table in which 65-90 are alpha characters in uppercase and 97-122 in lowercase. It then calls the function if the generated code already exists.</p>
+
+<p>As for the UI, it simply provides a textfield for the <strong>Long URL</strong> and another textfield for the <strong>Short URL</strong> which is optional. I've also implemented the tagging feature taken from the Taxonomy core module. It was the <code>taxonomy_autocomplete()</code> that I made use of. I was able to come up (not really come up but copied :D) with this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">url_shorten_autocomplete</span><span class="p">(</span><span class="nv">$string</span> <span class="o">=</span> <span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$arr</span> <span class="o">=</span> <span class="nx">drupal_explode_tags</span><span class="p">(</span><span class="nv">$string</span><span class="p">);</span>
+
+  <span class="nv">$last_string</span> <span class="o">=</span> <span class="nb">trim</span><span class="p">(</span><span class="nb">array_pop</span><span class="p">(</span><span class="nv">$arr</span><span class="p">));</span>
+  <span class="nv">$matches</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nv">$last_string</span> <span class="o">!=</span> <span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nx">db_query_range</span><span class="p">(</span><span class="s2">"SELECT tag FROM {url_shorten_tags} WHERE LOWER(tag) LIKE LOWER('%%%s%%')"</span><span class="p">,</span> <span class="nv">$last_string</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">10</span><span class="p">);</span>
+    <span class="nv">$prefix</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">)</span> <span class="o">?</span> <span class="nb">implode</span><span class="p">(</span><span class="s1">', '</span><span class="p">,</span> <span class="nv">$arr</span><span class="p">)</span> <span class="o">.</span><span class="s1">', '</span> <span class="o">:</span> <span class="s1">''</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="nv">$row</span> <span class="o">=</span> <span class="nx">db_fetch_object</span><span class="p">(</span><span class="nv">$result</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nv">$matches</span><span class="p">[</span><span class="nv">$prefix</span> <span class="o">.</span> <span class="nv">$row</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">]</span> <span class="o">=</span> <span class="nx">check_plain</span><span class="p">(</span><span class="nv">$row</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">drupal_json</span><span class="p">(</span><span class="nv">$matches</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>I've added some minor features e.g. records referrer and IP address for every redirect. Most are copied from other codes but I think their combination still provided a good URL Shortener. :bigsmile:</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

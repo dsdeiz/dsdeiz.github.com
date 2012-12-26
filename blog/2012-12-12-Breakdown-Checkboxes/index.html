@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Breakdown checkboxes in FAPI and '#disabled' Property</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Breakdown checkboxes in FAPI and '#disabled' Property</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Dec 12 2012">December 12, 2012</time>
+  </small>
+  <section class="post-content">
+    <p>If you wish to set some FAPI properties of the checkboxes generated with <code>#type =&gt; 'checkboxes'</code> individually, you'll need to breakdown the checkboxes first. There are two ways to do this that I am aware of. One is to add a <code>#process</code> callback to the form element, and another is to set each <code>#options</code> as a separate element e.g. <code>$form['checkboxes'][{#option-key}]</code>.</p>
+
+<p>For adding the <code>#process</code> callback, you can do it like this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nv">$form</span><span class="p">[</span><span class="s1">'checkboxes'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+  <span class="s1">'#type'</span> <span class="o">=&gt;</span> <span class="s1">'checkboxes'</span><span class="p">,</span>
+  <span class="s1">'#options'</span> <span class="o">=&gt;</span> <span class="nv">$options</span><span class="p">,</span>
+  <span class="s1">'#process'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">'some_callback'</span><span class="p">),</span>
+  <span class="o">...</span>
+<span class="p">)</span></code></pre></div>
+
+<p>You'll then need to break the checkboxes on the <code>#process</code> callback using <code>form_process_checkboxes()</code> like this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="k">function</span> <span class="nf">some_callback</span><span class="p">(</span><span class="nv">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$element</span> <span class="o">=</span> <span class="nx">form_process_checkboxes</span><span class="p">(</span><span class="nv">$element</span><span class="p">);</span>
+  <span class="k">foreach</span> <span class="p">(</span><span class="nx">element_children</span><span class="p">(</span><span class="nv">$element</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// You now have access to each '#option' properties.</span>
+    <span class="nv">$element</span><span class="p">[</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'#default_value'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'foo'</span><span class="p">;</span>
+    <span class="k">print</span> <span class="nv">$element</span><span class="p">[</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'#title'</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nv">$element</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>If you are altering an existing form, you might want to add the <code>#process</code> callback into the array rather than doing <code>array('some_callback')</code>. See the note <a href="http://api.drupal.org/api/drupal/developer%21topics%21forms_api_reference.html/7#process">here</a>. Also, by this time, the element might have already gone through the <code>form_process_checkboxes</code>, so there is no need to call that function.</p>
+
+<p>The other way is to set each <code>#options</code> during form generation or alteration. This is thanks to <code>form_process_checkboxes</code>. I don't think this is mentioned in the FAPI documentation but I was able to find this <a href="http://drupal.org/node/342316#comment-4732130">comment</a>. To set each property for the checkbox on form generation or alteration, you can do it like this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$form</span><span class="p">[</span><span class="s1">'checkboxes'</span><span class="p">][</span><span class="s1">'#options'</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$form</span><span class="p">[</span><span class="s1">'checkboxes'</span><span class="p">][</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'#title'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Foo'</span><span class="p">);</span>
+  <span class="nv">$form</span><span class="p">[</span><span class="s1">'checkboxes'</span><span class="p">][</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'#default_value'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Bar'</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>You won't be needing <code>form_process_checkboxes</code> with this method.</p>
+
+<p>I'm not sure which one is the recommended way though I think both will work just fine. But the first method would probably be a bit longer.</p>
+
+<p>For the <code>#disabled</code> property, one thing I noticed is when a checkbox is checked by default but has the <code>#disabled</code> property, the submitted value for that checkbox becomes 'empty'. I haven't found out why though. It might be somewhere in <code>form_type_checkbox_value()</code>. All I have is <a href="http://drupal.stackexchange.com/a/4137">this link</a> which provided me a hint.</p>
+  </section>
+</article>
+<p>If you wish to set some FAPI properties of the checkboxes generated with <code>#type =&gt; 'checkboxes'</code> individually, you'll need to breakdown the checkboxes first. There are two ways to do this that I am aware of. One is to add a <code>#process</code> callback to the form element, and another is to set each <code>#options</code> as a separate element e.g. <code>$form['checkboxes'][{#option-key}]</code>.</p>
+
+<p>For adding the <code>#process</code> callback, you can do it like this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nv">$form</span><span class="p">[</span><span class="s1">'checkboxes'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+  <span class="s1">'#type'</span> <span class="o">=&gt;</span> <span class="s1">'checkboxes'</span><span class="p">,</span>
+  <span class="s1">'#options'</span> <span class="o">=&gt;</span> <span class="nv">$options</span><span class="p">,</span>
+  <span class="s1">'#process'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">'some_callback'</span><span class="p">),</span>
+  <span class="o">...</span>
+<span class="p">)</span></code></pre></div>
+
+<p>You'll then need to break the checkboxes on the <code>#process</code> callback using <code>form_process_checkboxes()</code> like this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="k">function</span> <span class="nf">some_callback</span><span class="p">(</span><span class="nv">$element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$element</span> <span class="o">=</span> <span class="nx">form_process_checkboxes</span><span class="p">(</span><span class="nv">$element</span><span class="p">);</span>
+  <span class="k">foreach</span> <span class="p">(</span><span class="nx">element_children</span><span class="p">(</span><span class="nv">$element</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// You now have access to each '#option' properties.</span>
+    <span class="nv">$element</span><span class="p">[</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'#default_value'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'foo'</span><span class="p">;</span>
+    <span class="k">print</span> <span class="nv">$element</span><span class="p">[</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'#title'</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nv">$element</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>If you are altering an existing form, you might want to add the <code>#process</code> callback into the array rather than doing <code>array('some_callback')</code>. See the note <a href="http://api.drupal.org/api/drupal/developer%21topics%21forms_api_reference.html/7#process">here</a>. Also, by this time, the element might have already gone through the <code>form_process_checkboxes</code>, so there is no need to call that function.</p>
+
+<p>The other way is to set each <code>#options</code> during form generation or alteration. This is thanks to <code>form_process_checkboxes</code>. I don't think this is mentioned in the FAPI documentation but I was able to find this <a href="http://drupal.org/node/342316#comment-4732130">comment</a>. To set each property for the checkbox on form generation or alteration, you can do it like this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$form</span><span class="p">[</span><span class="s1">'checkboxes'</span><span class="p">][</span><span class="s1">'#options'</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$form</span><span class="p">[</span><span class="s1">'checkboxes'</span><span class="p">][</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'#title'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Foo'</span><span class="p">);</span>
+  <span class="nv">$form</span><span class="p">[</span><span class="s1">'checkboxes'</span><span class="p">][</span><span class="nv">$key</span><span class="p">][</span><span class="s1">'#default_value'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Bar'</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>You won't be needing <code>form_process_checkboxes</code> with this method.</p>
+
+<p>I'm not sure which one is the recommended way though I think both will work just fine. But the first method would probably be a bit longer.</p>
+
+<p>For the <code>#disabled</code> property, one thing I noticed is when a checkbox is checked by default but has the <code>#disabled</code> property, the submitted value for that checkbox becomes 'empty'. I haven't found out why though. It might be somewhere in <code>form_type_checkbox_value()</code>. All I have is <a href="http://drupal.stackexchange.com/a/4137">this link</a> which provided me a hint.</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

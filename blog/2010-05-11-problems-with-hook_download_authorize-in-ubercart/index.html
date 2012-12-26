@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Problems with hook_download_authorize in Ubercart</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Problems with hook_download_authorize in Ubercart</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="May 11 2010">May 05, 2010</time>
+  </small>
+  <section class="post-content">
+    <p>My task involved to limit the number of downloads to 1 but with an exemption for those with a specific role or a so-called "credit". I've used <code>hook<em>download</em>authorize()</code> to try this one out.</p>
+
+<p>The first problem I encountered was that if you do a <code>return FALSE</code> as what the <a href="http://api.ubercart.org/api/function/hook_download_authorize/2">documentation</a> mentioned, it would return the error <strong>"A hook denied your access to this file. Please contact the site administrator if this message has been received in error."</strong> based on this section of the code:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="c1">//Check any if any hook_download_authorize calls deny the download</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nx">module_implements</span><span class="p">(</span><span class="s1">'download_authorize'</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$module</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$name</span> <span class="o">=</span> <span class="nv">$module</span> <span class="o">.</span><span class="s1">'_download_authorize'</span><span class="p">;</span>
+  <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$name</span><span class="p">(</span><span class="nv">$user</span><span class="p">,</span> <span class="nv">$file_download</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">UC_FILE_ERROR_HOOK_ERROR</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>The second problem I've encountered is that if you wish to create some validations that are called during that hook, all validations need to be passed rather than just an OR since in my problem, there are other options that lets you download the files if you failed one.</p>
+
+<p>I did not set any <strong>Download Limits</strong> under the <em>File Download Settings</em>. What I did then was this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MYMODULE_DOWNLOAD_LIMIT'</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="c1">// Need to fake the download limit.</span>
+
+<span class="k">function</span> <span class="nf">mymodule_download_authorize</span><span class="p">(</span><span class="nv">$user</span><span class="p">,</span> <span class="nv">$file_download</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">in_array</span><span class="p">(</span><span class="s1">'Unlimited Downloads Role'</span><span class="p">,</span> <span class="nb">array_values</span><span class="p">(</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">roles</span><span class="p">)))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// I've used Userpoints for the Credit part.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">userpoints_get_current_points</span><span class="p">(</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">uid</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="m">1</span> <span class="o">&amp;&amp;</span> <span class="nv">$file_download</span><span class="o">-&gt;</span><span class="na">accessed</span> <span class="o">&gt;=</span> <span class="nx">variable_get</span><span class="p">(</span><span class="s1">'mymodule_download_limit'</span><span class="p">,</span> <span class="nx">MYMODULE_DOWNLOAD_LIMIT</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nv">$file_download</span><span class="o">-&gt;</span><span class="na">accessed</span> <span class="o">&lt;</span> <span class="nx">variable_get</span><span class="p">(</span><span class="s1">'mymodule_download_limit'</span><span class="p">,</span> <span class="nx">MYMODULE_DOWNLOAD_LIMIT</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">drupal_set_message</span><span class="p">(</span><span class="nx">t</span><span class="p">(</span><span class="s1">'Download limit has been reached.'</span><span class="p">,</span> <span class="s1">'error'</span><span class="p">));</span>
+        <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Works fine but seems like a failed logic. Any suggestions much appreciated. :D</p>
+
+<p><strong>Update:</strong> For the "A hook has denied..." message problem,  <a href="http://drupal.org/user/49344">rszrama</a> (a developer of <a href="http://www.ubercart.org/">Ubercart</a>) has suggested to me to simply replace the message using <a href="http://drupal.org/project/stringoverrides">String Overrides</a> since the messages are being wrapped around <code>t()</code>.</p>
+  </section>
+</article>
+<p>My task involved to limit the number of downloads to 1 but with an exemption for those with a specific role or a so-called "credit". I've used <code>hook<em>download</em>authorize()</code> to try this one out.</p>
+
+<p>The first problem I encountered was that if you do a <code>return FALSE</code> as what the <a href="http://api.ubercart.org/api/function/hook_download_authorize/2">documentation</a> mentioned, it would return the error <strong>"A hook denied your access to this file. Please contact the site administrator if this message has been received in error."</strong> based on this section of the code:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="c1">//Check any if any hook_download_authorize calls deny the download</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nx">module_implements</span><span class="p">(</span><span class="s1">'download_authorize'</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$module</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$name</span> <span class="o">=</span> <span class="nv">$module</span> <span class="o">.</span><span class="s1">'_download_authorize'</span><span class="p">;</span>
+  <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$name</span><span class="p">(</span><span class="nv">$user</span><span class="p">,</span> <span class="nv">$file_download</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">UC_FILE_ERROR_HOOK_ERROR</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>The second problem I've encountered is that if you wish to create some validations that are called during that hook, all validations need to be passed rather than just an OR since in my problem, there are other options that lets you download the files if you failed one.</p>
+
+<p>I did not set any <strong>Download Limits</strong> under the <em>File Download Settings</em>. What I did then was this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">'MYMODULE_DOWNLOAD_LIMIT'</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="c1">// Need to fake the download limit.</span>
+
+<span class="k">function</span> <span class="nf">mymodule_download_authorize</span><span class="p">(</span><span class="nv">$user</span><span class="p">,</span> <span class="nv">$file_download</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nb">in_array</span><span class="p">(</span><span class="s1">'Unlimited Downloads Role'</span><span class="p">,</span> <span class="nb">array_values</span><span class="p">(</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">roles</span><span class="p">)))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// I've used Userpoints for the Credit part.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">userpoints_get_current_points</span><span class="p">(</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">uid</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="m">1</span> <span class="o">&amp;&amp;</span> <span class="nv">$file_download</span><span class="o">-&gt;</span><span class="na">accessed</span> <span class="o">&gt;=</span> <span class="nx">variable_get</span><span class="p">(</span><span class="s1">'mymodule_download_limit'</span><span class="p">,</span> <span class="nx">MYMODULE_DOWNLOAD_LIMIT</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nv">$file_download</span><span class="o">-&gt;</span><span class="na">accessed</span> <span class="o">&lt;</span> <span class="nx">variable_get</span><span class="p">(</span><span class="s1">'mymodule_download_limit'</span><span class="p">,</span> <span class="nx">MYMODULE_DOWNLOAD_LIMIT</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">TRUE</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">drupal_set_message</span><span class="p">(</span><span class="nx">t</span><span class="p">(</span><span class="s1">'Download limit has been reached.'</span><span class="p">,</span> <span class="s1">'error'</span><span class="p">));</span>
+        <span class="k">return</span> <span class="k">FALSE</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Works fine but seems like a failed logic. Any suggestions much appreciated. :D</p>
+
+<p><strong>Update:</strong> For the "A hook has denied..." message problem,  <a href="http://drupal.org/user/49344">rszrama</a> (a developer of <a href="http://www.ubercart.org/">Ubercart</a>) has suggested to me to simply replace the message using <a href="http://drupal.org/project/stringoverrides">String Overrides</a> since the messages are being wrapped around <code>t()</code>.</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

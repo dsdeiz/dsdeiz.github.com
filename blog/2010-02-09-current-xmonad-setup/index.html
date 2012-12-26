@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Current Xmonad Setup</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Current Xmonad Setup</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Feb 9 2010">February 02, 2010</time>
+  </small>
+  <section class="post-content">
+    <p>My <code>xmonad.hs</code>:</p>
+<div class="highlight"><pre><code class="language-haskell"><span class="kr">import</span> <span class="nn">XMonad</span>
+<span class="kr">import</span> <span class="nn">XMonad.Hooks.DynamicLog</span>
+<span class="kr">import</span> <span class="nn">XMonad.Hooks.ManageDocks</span>
+<span class="kr">import</span> <span class="nn">XMonad.Util.Run</span><span class="p">(</span><span class="n">spawnPipe</span><span class="p">)</span>
+<span class="kr">import</span> <span class="nn">XMonad.Util.EZConfig</span>
+<span class="kr">import</span> <span class="nn">System.IO</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.NoBorders</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.IM</span>
+<span class="kr">import</span> <span class="nn">Data.Ratio</span> <span class="p">((</span><span class="o">%</span><span class="p">))</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.Grid</span>
+<span class="kr">import</span> <span class="nn">XMonad.Prompt</span>
+<span class="kr">import</span> <span class="nn">XMonad.Prompt.Shell</span>
+<span class="kr">import</span> <span class="nn">XMonad.Actions.GridSelect</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.SimplestFloat</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.Reflect</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">XMonad.StackSet</span> <span class="k">as</span> <span class="n">W</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.ResizableTile</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.PerWorkspace</span>
+<span class="kr">import</span> <span class="nn">XMonad.Hooks.ManageHelpers</span>
+
+<span class="nf">myManageHook</span> <span class="ow">=</span> <span class="n">composeAll</span>
+    <span class="p">[</span> <span class="p">(</span><span class="n">role</span> <span class="o">=?</span> <span class="s">"gimp-toolbox"</span> <span class="o">&lt;||&gt;</span> <span class="n">role</span> <span class="o">=?</span> <span class="s">"gimp-image-window"</span><span class="p">)</span> <span class="o">--&gt;</span> <span class="p">(</span><span class="n">ask</span> <span class="o">&gt;&gt;=</span> <span class="n">doF</span> <span class="o">.</span> <span class="kt">W</span><span class="o">.</span><span class="n">sink</span><span class="p">)</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Skype"</span>                <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"3:skype"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Chrome"</span>               <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"2:web"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Shiretoko"</span>            <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"2:web"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Evince"</span>               <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"6:pdf"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"feh"</span>                  <span class="o">--&gt;</span> <span class="n">doCenterFloat</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Gimp"</span>                 <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"4:gimp"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Keepassx"</span>             <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"2:web"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"ROX-Filer"</span>            <span class="o">--&gt;</span> <span class="n">doCenterFloat</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"XCalc"</span>                <span class="o">--&gt;</span> <span class="n">doCenterFloat</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"OpenOffice.org 3.1"</span>   <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"7:office"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Pidgin"</span>               <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"5:pidgin"</span>
+    <span class="p">]</span>
+  <span class="kr">where</span> <span class="n">role</span> <span class="ow">=</span> <span class="n">stringProperty</span> <span class="s">"WM_WINDOW_ROLE"</span>
+
+<span class="nf">myLayoutHook</span> <span class="ow">=</span> <span class="n">smartBorders</span> <span class="o">$</span> <span class="n">avoidStruts</span> <span class="o">$</span> <span class="n">onWorkspace</span> <span class="s">"5:pidgin"</span> <span class="n">pidginLayout</span> <span class="o">$</span> <span class="n">onWorkspace</span> <span class="s">"4:gimp"</span> <span class="n">gimpLayout</span> <span class="o">$</span> <span class="n">onWorkspaces</span> <span class="p">[</span><span class="s">"2:web"</span><span class="p">,</span> <span class="s">"6:pdf"</span><span class="p">,</span> <span class="s">"7:office"</span><span class="p">]</span> <span class="kt">Full</span> <span class="o">$</span> <span class="n">onWorkspace</span> <span class="s">"3:skype"</span> <span class="kt">Grid</span> <span class="o">$</span> <span class="n">tiled</span> <span class="o">|||</span> <span class="kt">Full</span> <span class="o">|||</span> <span class="kt">Grid</span> <span class="o">|||</span> <span class="n">simplestFloat</span>
+  <span class="kr">where</span>
+    <span class="n">tiled</span> <span class="ow">=</span> <span class="kt">ResizableTall</span> <span class="mi">1</span> <span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="kt">[]</span>
+    <span class="n">gimpLayout</span> <span class="ow">=</span> <span class="n">withIM</span> <span class="p">(</span><span class="mf">0.20</span><span class="p">)</span> <span class="p">(</span><span class="kt">Role</span> <span class="s">"gimp-toolbox"</span><span class="p">)</span> <span class="o">$</span> <span class="n">reflectHoriz</span> <span class="o">$</span> <span class="n">withIM</span> <span class="p">(</span><span class="mf">0.20</span><span class="p">)</span> <span class="p">(</span><span class="kt">Role</span> <span class="s">"gimp-dock"</span><span class="p">)</span> <span class="kt">Full</span>
+    <span class="n">pidginLayout</span> <span class="ow">=</span> <span class="n">withIM</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="kt">Role</span> <span class="s">"buddy_list"</span><span class="p">)</span> <span class="kt">Grid</span>
+
+<span class="nf">myXPConfig</span> <span class="ow">=</span> <span class="n">defaultXPConfig</span> <span class="p">{</span> <span class="n">fgColor</span>   <span class="ow">=</span> <span class="s">"#FFFFFF"</span>
+                              <span class="p">,</span> <span class="n">bgColor</span>  <span class="ow">=</span> <span class="s">"#000000"</span>
+                              <span class="p">,</span> <span class="n">bgHLight</span> <span class="ow">=</span> <span class="s">"cyan"</span>
+                              <span class="p">,</span> <span class="n">fgHLight</span> <span class="ow">=</span> <span class="s">"#FFFFFF"</span>
+                              <span class="p">,</span> <span class="n">font</span>     <span class="ow">=</span> <span class="s">"xft:Terminus:pixelsize=12"</span>
+                              <span class="p">}</span>
+
+<span class="nf">myLogHook</span> <span class="ow">::</span> <span class="kt">Handle</span> <span class="ow">-&gt;</span> <span class="kt">X</span> <span class="nb">()</span>
+<span class="nf">myLogHook</span> <span class="n">h</span> <span class="ow">=</span> <span class="n">dynamicLogWithPP</span> <span class="o">$</span> <span class="n">customPP</span> <span class="p">{</span> <span class="n">ppOutput</span> <span class="ow">=</span> <span class="n">hPutStrLn</span> <span class="n">h</span> <span class="p">}</span>
+
+<span class="nf">customPP</span> <span class="ow">::</span> <span class="kt">PP</span>
+<span class="nf">customPP</span> <span class="ow">=</span> <span class="n">defaultPP</span> <span class="p">{</span> <span class="n">ppCurrent</span> <span class="ow">=</span> <span class="n">xmobarColor</span> <span class="s">"#FFFFFF"</span> <span class="s">""</span>
+                     <span class="p">,</span> <span class="n">ppUrgent</span>  <span class="ow">=</span> <span class="n">xmobarColor</span> <span class="s">"#FF0000"</span> <span class="s">""</span>
+                     <span class="p">,</span> <span class="n">ppLayout</span>  <span class="ow">=</span> <span class="n">xmobarColor</span> <span class="s">"orange"</span> <span class="s">""</span>
+                     <span class="p">,</span> <span class="n">ppTitle</span>   <span class="ow">=</span> <span class="n">xmobarColor</span> <span class="s">"#FFFFFF"</span> <span class="s">""</span> <span class="o">.</span> <span class="n">shorten</span> <span class="mi">80</span>
+                     <span class="p">}</span>
+
+<span class="nf">myWorkspaces</span> <span class="ow">=</span> <span class="p">[</span><span class="s">"1:main"</span><span class="p">,</span> <span class="s">"2:web"</span><span class="p">,</span> <span class="s">"3:skype"</span><span class="p">,</span> <span class="s">"4:gimp"</span><span class="p">,</span> <span class="s">"5:pidgin"</span><span class="p">,</span> <span class="s">"6:pdf"</span><span class="p">,</span> <span class="s">"7:office"</span><span class="p">]</span> <span class="o">++</span> <span class="n">map</span> <span class="n">show</span> <span class="p">[</span><span class="mi">8</span><span class="o">..</span><span class="mi">9</span><span class="p">]</span>
+
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+    <span class="n">xmproc</span> <span class="ow">&lt;-</span> <span class="n">spawnPipe</span> <span class="s">"xmobar"</span>
+    <span class="n">xmonad</span> <span class="o">$</span> <span class="n">defaultConfig</span>
+        <span class="p">{</span> <span class="n">manageHook</span> <span class="ow">=</span> <span class="n">manageDocks</span> <span class="o">&lt;+&gt;</span> <span class="n">myManageHook</span> <span class="o">&lt;+&gt;</span> <span class="n">manageHook</span> <span class="n">defaultConfig</span>
+        <span class="p">,</span> <span class="n">layoutHook</span> <span class="ow">=</span> <span class="n">myLayoutHook</span>
+        <span class="p">,</span> <span class="n">logHook</span> <span class="ow">=</span> <span class="n">myLogHook</span> <span class="n">xmproc</span>
+        <span class="p">,</span> <span class="n">modMask</span> <span class="ow">=</span> <span class="n">mod4Mask</span>
+        <span class="p">,</span> <span class="n">terminal</span> <span class="ow">=</span> <span class="s">"urxvt"</span>
+        <span class="p">,</span> <span class="n">focusFollowsMouse</span> <span class="ow">=</span> <span class="kt">False</span>
+        <span class="p">,</span> <span class="n">borderWidth</span> <span class="ow">=</span> <span class="mi">1</span>
+        <span class="p">,</span> <span class="n">normalBorderColor</span>  <span class="ow">=</span> <span class="s">"#999"</span>
+        <span class="p">,</span> <span class="n">focusedBorderColor</span> <span class="ow">=</span> <span class="s">"#ee9a00"</span>
+        <span class="p">,</span> <span class="n">workspaces</span> <span class="ow">=</span> <span class="n">myWorkspaces</span>
+        <span class="p">}</span> <span class="p">`</span><span class="n">additionalKeys</span><span class="p">`</span>
+        <span class="p">[</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mh">0x1008ff13</span><span class="p">),</span> <span class="n">spawn</span> <span class="s">"amixer sset PCM 5+"</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mh">0x1008ff11</span><span class="p">),</span> <span class="n">spawn</span> <span class="s">"amixer sset PCM 5-"</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="n">mod4Mask</span> <span class="o">.|.</span> <span class="n">shiftMask</span><span class="p">,</span> <span class="n">xK_p</span><span class="p">),</span> <span class="n">shellPrompt</span> <span class="n">myXPConfig</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="n">mod4Mask</span><span class="p">,</span> <span class="n">xK_g</span><span class="p">),</span> <span class="n">goToSelected</span> <span class="n">defaultGSConfig</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="n">mod4Mask</span><span class="p">,</span> <span class="n">xK_a</span><span class="p">),</span> <span class="n">sendMessage</span> <span class="kt">MirrorShrink</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="n">mod4Mask</span><span class="p">,</span> <span class="n">xK_z</span><span class="p">),</span> <span class="n">sendMessage</span> <span class="kt">MirrorExpand</span><span class="p">)</span>
+        <span class="p">]</span></code></pre></div>
+
+<p>My <code>.xmobarrc</code>:</p>
+<div class="highlight"><pre><code class="language-haskell"><span class="kt">Config</span> <span class="p">{</span> <span class="n">font</span> <span class="ow">=</span> <span class="s">"xft:Terminus:pixelsize=12"</span>
+       <span class="p">,</span> <span class="n">bgColor</span> <span class="ow">=</span> <span class="s">"#000000"</span>
+       <span class="p">,</span> <span class="n">fgColor</span> <span class="ow">=</span> <span class="s">"grey"</span>
+       <span class="p">,</span> <span class="n">position</span> <span class="ow">=</span> <span class="kt">TopW</span> <span class="kt">L</span> <span class="mi">90</span>
+       <span class="p">,</span> <span class="n">lowerOnStart</span> <span class="ow">=</span> <span class="kt">True</span>
+       <span class="p">,</span> <span class="n">commands</span> <span class="ow">=</span> <span class="p">[</span> <span class="kt">Run</span> <span class="kt">Cpu</span> <span class="p">[</span><span class="s">"-L"</span><span class="p">,</span><span class="s">"3"</span><span class="p">,</span><span class="s">"-H"</span><span class="p">,</span><span class="s">"50"</span><span class="p">,</span><span class="s">"--normal"</span><span class="p">,</span><span class="s">"green"</span><span class="p">,</span><span class="s">"--high"</span><span class="p">,</span><span class="s">"red"</span><span class="p">]</span> <span class="mi">10</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Memory</span> <span class="p">[</span><span class="s">"-t"</span><span class="p">,</span><span class="s">"Mem: &lt;usedratio&gt;%"</span><span class="p">]</span> <span class="mi">10</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Swap</span> <span class="kt">[]</span> <span class="mi">10</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Date</span> <span class="s">"%a %b %_d %l:%M"</span> <span class="s">"date"</span> <span class="mi">10</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">StdinReader</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Battery</span> <span class="p">[</span><span class="s">"-l"</span><span class="p">,</span> <span class="s">"#FF0000"</span><span class="p">]</span> <span class="mi">600</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">CoreTemp</span> <span class="p">[</span><span class="s">"-t"</span><span class="p">,</span><span class="s">"&lt;core0&gt;"</span><span class="p">,</span><span class="s">"-L"</span><span class="p">,</span><span class="s">"40"</span><span class="p">,</span><span class="s">"-H"</span><span class="p">,</span><span class="s">"60"</span><span class="p">,</span><span class="s">"-l"</span><span class="p">,</span><span class="s">"lightblue"</span><span class="p">,</span><span class="s">"-n"</span><span class="p">,</span><span class="s">"orange"</span><span class="p">,</span><span class="s">"-h"</span><span class="p">,</span><span class="s">"red"</span><span class="p">]</span> <span class="mi">50</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Com</span> <span class="s">"/home/personal/scripts/volume.sh"</span> <span class="kt">[]</span> <span class="s">"vol"</span> <span class="mi">10</span>
+                    <span class="p">]</span>
+       <span class="p">,</span> <span class="n">sepChar</span> <span class="ow">=</span> <span class="s">"%"</span>
+       <span class="p">,</span> <span class="n">alignSep</span> <span class="ow">=</span> <span class="s">"}{"</span>
+       <span class="p">,</span> <span class="n">template</span> <span class="ow">=</span> <span class="s">"%StdinReader% }{ %vol% &lt;fc=#ffffff&gt;%battery%&lt;/fc&gt; %cpu% Temp: %coretemp% %memory% %swap% &lt;fc=#ee9a00&gt;%date%&lt;/fc&gt;"</span>
+       <span class="p">}</span></code></pre></div>
+
+<p>Most are copied from <a href="http://haskell.org/haskellwiki/Xmonad/Config_archive">Xmonad's Config Archive</a>. As for the volume script in xmobar, you may find this <a href="http://bbs.archlinux.org/viewtopic.php?id=74842">thread</a> helpful.</p>
+
+<p>This is how it would somehow look:</p>
+
+<p>Workspace 1 with <code>ResizableTall</code>:</p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/2010-02-10-081038_1280x800_scrot.png"><img src="http://dl.dropbox.com/u/24796303/blog/2010-02-10-081038_1280x800_scrot.png" width="383"></a></p>
+
+<p>Workspace 4 with <code>Gimp Layout</code>:</p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/2010-02-10-090623_1280x800_scrot.png"><img src="http://dl.dropbox.com/u/24796303/blog/2010-02-10-090623_1280x800_scrot.png" width="383"></a></p>
+
+<p>The <em>Gimp Layout</em> can be found <a href="http://nathanhowell.net/2009/03/08/xmonad-and-the-gimp/">here</a>. You may also find this <a href="http://www.haskell.org/haskellwiki/Xmonad/General_xmonad.hs_config_tips#Tiling_most_windows_in_gimp">article</a> helpful. I'm not quite sure but I believe, if you've used the default settings, Gimp windows are floating.</p>
+
+<p>Workspace 5 with <code>IM Grid</code>:</p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/2010-02-10-083559_1280x800_scrot_0.png"><img src="http://dl.dropbox.com/u/24796303/blog/2010-02-10-083559_1280x800_scrot_0.png" width="383"></a></p>
+
+<p>More info on the <em>IM Grid</em> layout can be found <a href="http://xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Layout-IM.html">here</a>.</p>
+  </section>
+</article>
+<p>My <code>xmonad.hs</code>:</p>
+<div class="highlight"><pre><code class="language-haskell"><span class="kr">import</span> <span class="nn">XMonad</span>
+<span class="kr">import</span> <span class="nn">XMonad.Hooks.DynamicLog</span>
+<span class="kr">import</span> <span class="nn">XMonad.Hooks.ManageDocks</span>
+<span class="kr">import</span> <span class="nn">XMonad.Util.Run</span><span class="p">(</span><span class="n">spawnPipe</span><span class="p">)</span>
+<span class="kr">import</span> <span class="nn">XMonad.Util.EZConfig</span>
+<span class="kr">import</span> <span class="nn">System.IO</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.NoBorders</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.IM</span>
+<span class="kr">import</span> <span class="nn">Data.Ratio</span> <span class="p">((</span><span class="o">%</span><span class="p">))</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.Grid</span>
+<span class="kr">import</span> <span class="nn">XMonad.Prompt</span>
+<span class="kr">import</span> <span class="nn">XMonad.Prompt.Shell</span>
+<span class="kr">import</span> <span class="nn">XMonad.Actions.GridSelect</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.SimplestFloat</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.Reflect</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">XMonad.StackSet</span> <span class="k">as</span> <span class="n">W</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.ResizableTile</span>
+<span class="kr">import</span> <span class="nn">XMonad.Layout.PerWorkspace</span>
+<span class="kr">import</span> <span class="nn">XMonad.Hooks.ManageHelpers</span>
+
+<span class="nf">myManageHook</span> <span class="ow">=</span> <span class="n">composeAll</span>
+    <span class="p">[</span> <span class="p">(</span><span class="n">role</span> <span class="o">=?</span> <span class="s">"gimp-toolbox"</span> <span class="o">&lt;||&gt;</span> <span class="n">role</span> <span class="o">=?</span> <span class="s">"gimp-image-window"</span><span class="p">)</span> <span class="o">--&gt;</span> <span class="p">(</span><span class="n">ask</span> <span class="o">&gt;&gt;=</span> <span class="n">doF</span> <span class="o">.</span> <span class="kt">W</span><span class="o">.</span><span class="n">sink</span><span class="p">)</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Skype"</span>                <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"3:skype"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Chrome"</span>               <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"2:web"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Shiretoko"</span>            <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"2:web"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Evince"</span>               <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"6:pdf"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"feh"</span>                  <span class="o">--&gt;</span> <span class="n">doCenterFloat</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Gimp"</span>                 <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"4:gimp"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Keepassx"</span>             <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"2:web"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"ROX-Filer"</span>            <span class="o">--&gt;</span> <span class="n">doCenterFloat</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"XCalc"</span>                <span class="o">--&gt;</span> <span class="n">doCenterFloat</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"OpenOffice.org 3.1"</span>   <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"7:office"</span>
+    <span class="p">,</span> <span class="n">className</span> <span class="o">=?</span> <span class="s">"Pidgin"</span>               <span class="o">--&gt;</span> <span class="n">doShift</span> <span class="s">"5:pidgin"</span>
+    <span class="p">]</span>
+  <span class="kr">where</span> <span class="n">role</span> <span class="ow">=</span> <span class="n">stringProperty</span> <span class="s">"WM_WINDOW_ROLE"</span>
+
+<span class="nf">myLayoutHook</span> <span class="ow">=</span> <span class="n">smartBorders</span> <span class="o">$</span> <span class="n">avoidStruts</span> <span class="o">$</span> <span class="n">onWorkspace</span> <span class="s">"5:pidgin"</span> <span class="n">pidginLayout</span> <span class="o">$</span> <span class="n">onWorkspace</span> <span class="s">"4:gimp"</span> <span class="n">gimpLayout</span> <span class="o">$</span> <span class="n">onWorkspaces</span> <span class="p">[</span><span class="s">"2:web"</span><span class="p">,</span> <span class="s">"6:pdf"</span><span class="p">,</span> <span class="s">"7:office"</span><span class="p">]</span> <span class="kt">Full</span> <span class="o">$</span> <span class="n">onWorkspace</span> <span class="s">"3:skype"</span> <span class="kt">Grid</span> <span class="o">$</span> <span class="n">tiled</span> <span class="o">|||</span> <span class="kt">Full</span> <span class="o">|||</span> <span class="kt">Grid</span> <span class="o">|||</span> <span class="n">simplestFloat</span>
+  <span class="kr">where</span>
+    <span class="n">tiled</span> <span class="ow">=</span> <span class="kt">ResizableTall</span> <span class="mi">1</span> <span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="kt">[]</span>
+    <span class="n">gimpLayout</span> <span class="ow">=</span> <span class="n">withIM</span> <span class="p">(</span><span class="mf">0.20</span><span class="p">)</span> <span class="p">(</span><span class="kt">Role</span> <span class="s">"gimp-toolbox"</span><span class="p">)</span> <span class="o">$</span> <span class="n">reflectHoriz</span> <span class="o">$</span> <span class="n">withIM</span> <span class="p">(</span><span class="mf">0.20</span><span class="p">)</span> <span class="p">(</span><span class="kt">Role</span> <span class="s">"gimp-dock"</span><span class="p">)</span> <span class="kt">Full</span>
+    <span class="n">pidginLayout</span> <span class="ow">=</span> <span class="n">withIM</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="kt">Role</span> <span class="s">"buddy_list"</span><span class="p">)</span> <span class="kt">Grid</span>
+
+<span class="nf">myXPConfig</span> <span class="ow">=</span> <span class="n">defaultXPConfig</span> <span class="p">{</span> <span class="n">fgColor</span>   <span class="ow">=</span> <span class="s">"#FFFFFF"</span>
+                              <span class="p">,</span> <span class="n">bgColor</span>  <span class="ow">=</span> <span class="s">"#000000"</span>
+                              <span class="p">,</span> <span class="n">bgHLight</span> <span class="ow">=</span> <span class="s">"cyan"</span>
+                              <span class="p">,</span> <span class="n">fgHLight</span> <span class="ow">=</span> <span class="s">"#FFFFFF"</span>
+                              <span class="p">,</span> <span class="n">font</span>     <span class="ow">=</span> <span class="s">"xft:Terminus:pixelsize=12"</span>
+                              <span class="p">}</span>
+
+<span class="nf">myLogHook</span> <span class="ow">::</span> <span class="kt">Handle</span> <span class="ow">-&gt;</span> <span class="kt">X</span> <span class="nb">()</span>
+<span class="nf">myLogHook</span> <span class="n">h</span> <span class="ow">=</span> <span class="n">dynamicLogWithPP</span> <span class="o">$</span> <span class="n">customPP</span> <span class="p">{</span> <span class="n">ppOutput</span> <span class="ow">=</span> <span class="n">hPutStrLn</span> <span class="n">h</span> <span class="p">}</span>
+
+<span class="nf">customPP</span> <span class="ow">::</span> <span class="kt">PP</span>
+<span class="nf">customPP</span> <span class="ow">=</span> <span class="n">defaultPP</span> <span class="p">{</span> <span class="n">ppCurrent</span> <span class="ow">=</span> <span class="n">xmobarColor</span> <span class="s">"#FFFFFF"</span> <span class="s">""</span>
+                     <span class="p">,</span> <span class="n">ppUrgent</span>  <span class="ow">=</span> <span class="n">xmobarColor</span> <span class="s">"#FF0000"</span> <span class="s">""</span>
+                     <span class="p">,</span> <span class="n">ppLayout</span>  <span class="ow">=</span> <span class="n">xmobarColor</span> <span class="s">"orange"</span> <span class="s">""</span>
+                     <span class="p">,</span> <span class="n">ppTitle</span>   <span class="ow">=</span> <span class="n">xmobarColor</span> <span class="s">"#FFFFFF"</span> <span class="s">""</span> <span class="o">.</span> <span class="n">shorten</span> <span class="mi">80</span>
+                     <span class="p">}</span>
+
+<span class="nf">myWorkspaces</span> <span class="ow">=</span> <span class="p">[</span><span class="s">"1:main"</span><span class="p">,</span> <span class="s">"2:web"</span><span class="p">,</span> <span class="s">"3:skype"</span><span class="p">,</span> <span class="s">"4:gimp"</span><span class="p">,</span> <span class="s">"5:pidgin"</span><span class="p">,</span> <span class="s">"6:pdf"</span><span class="p">,</span> <span class="s">"7:office"</span><span class="p">]</span> <span class="o">++</span> <span class="n">map</span> <span class="n">show</span> <span class="p">[</span><span class="mi">8</span><span class="o">..</span><span class="mi">9</span><span class="p">]</span>
+
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+    <span class="n">xmproc</span> <span class="ow">&lt;-</span> <span class="n">spawnPipe</span> <span class="s">"xmobar"</span>
+    <span class="n">xmonad</span> <span class="o">$</span> <span class="n">defaultConfig</span>
+        <span class="p">{</span> <span class="n">manageHook</span> <span class="ow">=</span> <span class="n">manageDocks</span> <span class="o">&lt;+&gt;</span> <span class="n">myManageHook</span> <span class="o">&lt;+&gt;</span> <span class="n">manageHook</span> <span class="n">defaultConfig</span>
+        <span class="p">,</span> <span class="n">layoutHook</span> <span class="ow">=</span> <span class="n">myLayoutHook</span>
+        <span class="p">,</span> <span class="n">logHook</span> <span class="ow">=</span> <span class="n">myLogHook</span> <span class="n">xmproc</span>
+        <span class="p">,</span> <span class="n">modMask</span> <span class="ow">=</span> <span class="n">mod4Mask</span>
+        <span class="p">,</span> <span class="n">terminal</span> <span class="ow">=</span> <span class="s">"urxvt"</span>
+        <span class="p">,</span> <span class="n">focusFollowsMouse</span> <span class="ow">=</span> <span class="kt">False</span>
+        <span class="p">,</span> <span class="n">borderWidth</span> <span class="ow">=</span> <span class="mi">1</span>
+        <span class="p">,</span> <span class="n">normalBorderColor</span>  <span class="ow">=</span> <span class="s">"#999"</span>
+        <span class="p">,</span> <span class="n">focusedBorderColor</span> <span class="ow">=</span> <span class="s">"#ee9a00"</span>
+        <span class="p">,</span> <span class="n">workspaces</span> <span class="ow">=</span> <span class="n">myWorkspaces</span>
+        <span class="p">}</span> <span class="p">`</span><span class="n">additionalKeys</span><span class="p">`</span>
+        <span class="p">[</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mh">0x1008ff13</span><span class="p">),</span> <span class="n">spawn</span> <span class="s">"amixer sset PCM 5+"</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mh">0x1008ff11</span><span class="p">),</span> <span class="n">spawn</span> <span class="s">"amixer sset PCM 5-"</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="n">mod4Mask</span> <span class="o">.|.</span> <span class="n">shiftMask</span><span class="p">,</span> <span class="n">xK_p</span><span class="p">),</span> <span class="n">shellPrompt</span> <span class="n">myXPConfig</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="n">mod4Mask</span><span class="p">,</span> <span class="n">xK_g</span><span class="p">),</span> <span class="n">goToSelected</span> <span class="n">defaultGSConfig</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="n">mod4Mask</span><span class="p">,</span> <span class="n">xK_a</span><span class="p">),</span> <span class="n">sendMessage</span> <span class="kt">MirrorShrink</span><span class="p">)</span>
+        <span class="p">,</span> <span class="p">((</span><span class="n">mod4Mask</span><span class="p">,</span> <span class="n">xK_z</span><span class="p">),</span> <span class="n">sendMessage</span> <span class="kt">MirrorExpand</span><span class="p">)</span>
+        <span class="p">]</span></code></pre></div>
+
+<p>My <code>.xmobarrc</code>:</p>
+<div class="highlight"><pre><code class="language-haskell"><span class="kt">Config</span> <span class="p">{</span> <span class="n">font</span> <span class="ow">=</span> <span class="s">"xft:Terminus:pixelsize=12"</span>
+       <span class="p">,</span> <span class="n">bgColor</span> <span class="ow">=</span> <span class="s">"#000000"</span>
+       <span class="p">,</span> <span class="n">fgColor</span> <span class="ow">=</span> <span class="s">"grey"</span>
+       <span class="p">,</span> <span class="n">position</span> <span class="ow">=</span> <span class="kt">TopW</span> <span class="kt">L</span> <span class="mi">90</span>
+       <span class="p">,</span> <span class="n">lowerOnStart</span> <span class="ow">=</span> <span class="kt">True</span>
+       <span class="p">,</span> <span class="n">commands</span> <span class="ow">=</span> <span class="p">[</span> <span class="kt">Run</span> <span class="kt">Cpu</span> <span class="p">[</span><span class="s">"-L"</span><span class="p">,</span><span class="s">"3"</span><span class="p">,</span><span class="s">"-H"</span><span class="p">,</span><span class="s">"50"</span><span class="p">,</span><span class="s">"--normal"</span><span class="p">,</span><span class="s">"green"</span><span class="p">,</span><span class="s">"--high"</span><span class="p">,</span><span class="s">"red"</span><span class="p">]</span> <span class="mi">10</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Memory</span> <span class="p">[</span><span class="s">"-t"</span><span class="p">,</span><span class="s">"Mem: &lt;usedratio&gt;%"</span><span class="p">]</span> <span class="mi">10</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Swap</span> <span class="kt">[]</span> <span class="mi">10</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Date</span> <span class="s">"%a %b %_d %l:%M"</span> <span class="s">"date"</span> <span class="mi">10</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">StdinReader</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Battery</span> <span class="p">[</span><span class="s">"-l"</span><span class="p">,</span> <span class="s">"#FF0000"</span><span class="p">]</span> <span class="mi">600</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">CoreTemp</span> <span class="p">[</span><span class="s">"-t"</span><span class="p">,</span><span class="s">"&lt;core0&gt;"</span><span class="p">,</span><span class="s">"-L"</span><span class="p">,</span><span class="s">"40"</span><span class="p">,</span><span class="s">"-H"</span><span class="p">,</span><span class="s">"60"</span><span class="p">,</span><span class="s">"-l"</span><span class="p">,</span><span class="s">"lightblue"</span><span class="p">,</span><span class="s">"-n"</span><span class="p">,</span><span class="s">"orange"</span><span class="p">,</span><span class="s">"-h"</span><span class="p">,</span><span class="s">"red"</span><span class="p">]</span> <span class="mi">50</span>
+                    <span class="p">,</span> <span class="kt">Run</span> <span class="kt">Com</span> <span class="s">"/home/personal/scripts/volume.sh"</span> <span class="kt">[]</span> <span class="s">"vol"</span> <span class="mi">10</span>
+                    <span class="p">]</span>
+       <span class="p">,</span> <span class="n">sepChar</span> <span class="ow">=</span> <span class="s">"%"</span>
+       <span class="p">,</span> <span class="n">alignSep</span> <span class="ow">=</span> <span class="s">"}{"</span>
+       <span class="p">,</span> <span class="n">template</span> <span class="ow">=</span> <span class="s">"%StdinReader% }{ %vol% &lt;fc=#ffffff&gt;%battery%&lt;/fc&gt; %cpu% Temp: %coretemp% %memory% %swap% &lt;fc=#ee9a00&gt;%date%&lt;/fc&gt;"</span>
+       <span class="p">}</span></code></pre></div>
+
+<p>Most are copied from <a href="http://haskell.org/haskellwiki/Xmonad/Config_archive">Xmonad's Config Archive</a>. As for the volume script in xmobar, you may find this <a href="http://bbs.archlinux.org/viewtopic.php?id=74842">thread</a> helpful.</p>
+
+<p>This is how it would somehow look:</p>
+
+<p>Workspace 1 with <code>ResizableTall</code>:</p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/2010-02-10-081038_1280x800_scrot.png"><img src="http://dl.dropbox.com/u/24796303/blog/2010-02-10-081038_1280x800_scrot.png" width="383"></a></p>
+
+<p>Workspace 4 with <code>Gimp Layout</code>:</p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/2010-02-10-090623_1280x800_scrot.png"><img src="http://dl.dropbox.com/u/24796303/blog/2010-02-10-090623_1280x800_scrot.png" width="383"></a></p>
+
+<p>The <em>Gimp Layout</em> can be found <a href="http://nathanhowell.net/2009/03/08/xmonad-and-the-gimp/">here</a>. You may also find this <a href="http://www.haskell.org/haskellwiki/Xmonad/General_xmonad.hs_config_tips#Tiling_most_windows_in_gimp">article</a> helpful. I'm not quite sure but I believe, if you've used the default settings, Gimp windows are floating.</p>
+
+<p>Workspace 5 with <code>IM Grid</code>:</p>
+
+<p><a href="http://dl.dropbox.com/u/24796303/blog/2010-02-10-083559_1280x800_scrot_0.png"><img src="http://dl.dropbox.com/u/24796303/blog/2010-02-10-083559_1280x800_scrot_0.png" width="383"></a></p>
+
+<p>More info on the <em>IM Grid</em> layout can be found <a href="http://xmonad.org/xmonad-docs/xmonad-contrib/XMonad-Layout-IM.html">here</a>.</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

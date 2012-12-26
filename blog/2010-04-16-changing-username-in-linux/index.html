@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Changing Username in Linux</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Changing Username in Linux</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Apr 16 2010">April 04, 2010</time>
+  </small>
+  <section class="post-content">
+    <p>I tried changing my username on my Arch Linux install but somewhat caused a problem. I did the usual <code>usermod -l new<em>login old</em>login</code> and renamed my HOME directory. I followed the instructions from <a href="http://www.cyberciti.biz/faq/howto-change-rename-user-name-id/">this page</a>.</p>
+
+<p>I tried logging in with the new username but for some reason, it wasn't logging me in. I was not able to spot any "useful information" in the logs - <em>auth.log</em> and <em>user.log</em>. </p>
+
+<p>Someone advised me to login from the root shell by calling the command <code>login</code>. This then gave me the error message. I obviously didn't change my HOME directory correctly as it was pointing to /home/old_login and goes to / as it can't find the directory (since I've moved it :bigsmile:). I misunderstood the statement below:</p>
+
+<blockquote>
+<p>...In particular, the user's home directory name should probably be changed to reflect the new login name.</p>
+</blockquote>
+
+<p>So I guess the way to change the username and <em>renaming the HOME directory</em> would be <code>usermod -l new<em>login -d /home/new</em>login/ -m old_login</code>. I gotta read the man pages more. :D</p>
+  </section>
+</article>
+<p>I tried changing my username on my Arch Linux install but somewhat caused a problem. I did the usual <code>usermod -l new<em>login old</em>login</code> and renamed my HOME directory. I followed the instructions from <a href="http://www.cyberciti.biz/faq/howto-change-rename-user-name-id/">this page</a>.</p>
+
+<p>I tried logging in with the new username but for some reason, it wasn't logging me in. I was not able to spot any "useful information" in the logs - <em>auth.log</em> and <em>user.log</em>. </p>
+
+<p>Someone advised me to login from the root shell by calling the command <code>login</code>. This then gave me the error message. I obviously didn't change my HOME directory correctly as it was pointing to /home/old_login and goes to / as it can't find the directory (since I've moved it :bigsmile:). I misunderstood the statement below:</p>
+
+<blockquote>
+<p>...In particular, the user's home directory name should probably be changed to reflect the new login name.</p>
+</blockquote>
+
+<p>So I guess the way to change the username and <em>renaming the HOME directory</em> would be <code>usermod -l new<em>login -d /home/new</em>login/ -m old_login</code>. I gotta read the man pages more. :D</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Remove Class from Body Classes</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Remove Class from Body Classes</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Mar 8 2010">March 03, 2010</time>
+  </small>
+  <section class="post-content">
+    <p>Removing a class from the variable <code>$body_classes</code> is very simple. All you need to do is make some changes on the variable in the <code>SUBTHEME_preprocess_page</code> function.</p>
+
+<p>I have done this with a <a href="http://drupal.org/project/zen">Zen</a> subtheme:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">SUBTHEME_preprocess_page</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$vars</span><span class="p">,</span> <span class="nv">$hook</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">{</span><span class="nv">$node</span> <span class="o">=</span> <span class="nx">menu_get_object</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nv">$vars</span><span class="p">[</span><span class="s1">'node'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$node</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="cm">/*</span>
+<span class="cm">   * Make some changes once the node type is 'full'. 'full' is the content</span>
+<span class="cm">   * type I am using for pages with no sidebars.</span>
+<span class="cm">   */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nv">$node</span><span class="o">-&gt;</span><span class="na">type</span> <span class="o">==</span> <span class="s1">'full'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$body_classes</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="nv">$vars</span><span class="p">[</span><span class="s1">'body_classes'</span><span class="p">]);</span>
+    <span class="nv">$new_body_classes</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+    <span class="c1">// Remove from the array one-sidebar and sidebar-right if they exist.</span>
+    <span class="k">foreach</span><span class="p">(</span><span class="nv">$body_classes</span> <span class="k">AS</span> <span class="nv">$val</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nv">$val</span> <span class="o">!=</span> <span class="s1">'one-sidebar'</span> <span class="o">&amp;&amp;</span> <span class="nv">$val</span> <span class="o">!=</span> <span class="s1">'sidebar-right'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$new_body_classes</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$val</span><span class="p">;</span>
+      <span class="p">}</span>   
+    <span class="p">}</span>   
+
+    <span class="c1">// This is to make sure that the variables $right and $left don't have values.</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$vars</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]);</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$vars</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]);</span>
+
+    <span class="c1">// Setup the new $body_classes variable.</span>
+    <span class="nv">$vars</span><span class="p">[</span><span class="s1">'body_classes'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">implode</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="nv">$new_body_classes</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Cheers! ;)</p>
+  </section>
+</article>
+<p>Removing a class from the variable <code>$body_classes</code> is very simple. All you need to do is make some changes on the variable in the <code>SUBTHEME_preprocess_page</code> function.</p>
+
+<p>I have done this with a <a href="http://drupal.org/project/zen">Zen</a> subtheme:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">SUBTHEME_preprocess_page</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$vars</span><span class="p">,</span> <span class="nv">$hook</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">{</span><span class="nv">$node</span> <span class="o">=</span> <span class="nx">menu_get_object</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nv">$vars</span><span class="p">[</span><span class="s1">'node'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$node</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="cm">/*</span>
+<span class="cm">   * Make some changes once the node type is 'full'. 'full' is the content</span>
+<span class="cm">   * type I am using for pages with no sidebars.</span>
+<span class="cm">   */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nv">$node</span><span class="o">-&gt;</span><span class="na">type</span> <span class="o">==</span> <span class="s1">'full'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$body_classes</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="nv">$vars</span><span class="p">[</span><span class="s1">'body_classes'</span><span class="p">]);</span>
+    <span class="nv">$new_body_classes</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+    <span class="c1">// Remove from the array one-sidebar and sidebar-right if they exist.</span>
+    <span class="k">foreach</span><span class="p">(</span><span class="nv">$body_classes</span> <span class="k">AS</span> <span class="nv">$val</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nv">$val</span> <span class="o">!=</span> <span class="s1">'one-sidebar'</span> <span class="o">&amp;&amp;</span> <span class="nv">$val</span> <span class="o">!=</span> <span class="s1">'sidebar-right'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$new_body_classes</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$val</span><span class="p">;</span>
+      <span class="p">}</span>   
+    <span class="p">}</span>   
+
+    <span class="c1">// This is to make sure that the variables $right and $left don't have values.</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$vars</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]);</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$vars</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]);</span>
+
+    <span class="c1">// Setup the new $body_classes variable.</span>
+    <span class="nv">$vars</span><span class="p">[</span><span class="s1">'body_classes'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">implode</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="nv">$new_body_classes</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Cheers! ;)</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

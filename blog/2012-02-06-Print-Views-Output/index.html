@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Print Views Output in Drupal</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Print Views Output in Drupal</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Feb 6 2012">February 02, 2012</time>
+  </small>
+  <section class="post-content">
+    <p>There are times that I would like to print the output of a view without it being rendered from a template i.e. it would go through <code>page.tpl.php</code>. I find this useful when say I'd like to do an Ajax call and I'd like it to return just the output of the view itself so I could print it inside a <code>div</code> container for example. This is quite simple as I could use <a href="http://api.drupal.org/api/drupal/includes--common.inc/function/drupal_json/6">drupal_json</a> as my reference.</p>
+
+<p>I first created a new menu like so:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">MODULE_menu</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nv">$items</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+  <span class="nv">$items</span><span class="p">[</span><span class="s1">'example/js'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'page callback'</span> <span class="o">=&gt;</span> <span class="s1">'MODULE_menu_callback'</span><span class="p">,</span>
+    <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="nx">MENU_CALLBACK</span><span class="p">,</span>
+    <span class="s1">'access callback'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="nv">$items</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Then the callback which is based on <code>drupal_json()</code>:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">MODULE_menu_callback</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">drupal_set_header</span><span class="p">(</span><span class="s1">'Content-Type: text/plain; charset=utf-8'</span><span class="p">);</span>
+
+  <span class="k">echo</span> <span class="nx">views_embed_view</span><span class="p">(</span><span class="s1">'view_name'</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Now, I could just do a simple ajax call to use the output inside any element like so:</p>
+<div class="highlight"><pre><code class="language-javascript"><span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">Drupal</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">basePath</span> <span class="o">+</span> <span class="s1">'example/js'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'.some-element'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Woot! :D</p>
+  </section>
+</article>
+<p>There are times that I would like to print the output of a view without it being rendered from a template i.e. it would go through <code>page.tpl.php</code>. I find this useful when say I'd like to do an Ajax call and I'd like it to return just the output of the view itself so I could print it inside a <code>div</code> container for example. This is quite simple as I could use <a href="http://api.drupal.org/api/drupal/includes--common.inc/function/drupal_json/6">drupal_json</a> as my reference.</p>
+
+<p>I first created a new menu like so:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">MODULE_menu</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nv">$items</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+  <span class="nv">$items</span><span class="p">[</span><span class="s1">'example/js'</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'page callback'</span> <span class="o">=&gt;</span> <span class="s1">'MODULE_menu_callback'</span><span class="p">,</span>
+    <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="nx">MENU_CALLBACK</span><span class="p">,</span>
+    <span class="s1">'access callback'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="nv">$items</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Then the callback which is based on <code>drupal_json()</code>:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">MODULE_menu_callback</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">drupal_set_header</span><span class="p">(</span><span class="s1">'Content-Type: text/plain; charset=utf-8'</span><span class="p">);</span>
+
+  <span class="k">echo</span> <span class="nx">views_embed_view</span><span class="p">(</span><span class="s1">'view_name'</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Now, I could just do a simple ajax call to use the output inside any element like so:</p>
+<div class="highlight"><pre><code class="language-javascript"><span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">Drupal</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">basePath</span> <span class="o">+</span> <span class="s1">'example/js'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'.some-element'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span></code></pre></div>
+
+<p>Woot! :D</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+

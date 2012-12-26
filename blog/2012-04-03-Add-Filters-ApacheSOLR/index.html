@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Add Filters for Apache SOLR</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body>
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Add Filters for Apache SOLR</h1>
+<article>
+  <small class="meta">
+    Posted on <time datetime="Apr 3 2012">April 04, 2012</time>
+  </small>
+  <section class="post-content">
+    <p>To add simple filters on your search query with <a href="http://drupal.org/project/apachesolr">apachesolr</a> can be easily done through <code>hook_apachesolr_query_alter</code>. You'll find the documentation on <code>path/to/apachesolr/apachesolr.api.php</code>. An example would be:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">module_apachesolr_query_alter</span><span class="p">(</span><span class="nv">$query</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'page'</span><span class="p">);</span>
+
+  <span class="c1">// To filter by either page or article content type</span>
+  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'page OR article'</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>For adding subqueries (which is a bit different), you may do this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">module_apachesolr_query_alter</span><span class="p">(</span><span class="nv">$query</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$sometid</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+  <span class="nv">$filter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SolrFilterSubQuery</span><span class="p">(</span><span class="s1">'AND'</span><span class="p">);</span>
+  <span class="nv">$filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'video'</span><span class="p">);</span>
+  <span class="nv">$filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'tid'</span><span class="p">,</span> <span class="nv">$sometid</span><span class="p">);</span>
+
+  <span class="nv">$compiled_filter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SolrFilterSubQuery</span><span class="p">(</span><span class="s1">'OR'</span><span class="p">);</span>
+  <span class="nv">$compiled_filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'faq'</span><span class="p">);</span>
+  <span class="nv">$compiled_filter</span><span class="o">-&gt;</span><span class="na">addFilterSubQuery</span><span class="p">(</span><span class="nv">$filter</span><span class="p">);</span>
+
+  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilterSubQuery</span><span class="p">(</span><span class="nv">$compiled_filter</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>In here, I've used <code>addFilterSubQuery</code> for the final query as when you do <code>$query-&gt;addFilter('bundle', 'faq'); $query-&gt;addFilterSubQuery($filter)</code>, the operator would be <strong>AND</strong>. For filtering, you can go to <code>admin/reports/apachesolr</code> to find the available fields.</p>
+
+<p>Cheers! :D</p>
+  </section>
+</article>
+<p>To add simple filters on your search query with <a href="http://drupal.org/project/apachesolr">apachesolr</a> can be easily done through <code>hook_apachesolr_query_alter</code>. You'll find the documentation on <code>path/to/apachesolr/apachesolr.api.php</code>. An example would be:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">module_apachesolr_query_alter</span><span class="p">(</span><span class="nv">$query</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'page'</span><span class="p">);</span>
+
+  <span class="c1">// To filter by either page or article content type</span>
+  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'page OR article'</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>For adding subqueries (which is a bit different), you may do this:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">module_apachesolr_query_alter</span><span class="p">(</span><span class="nv">$query</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$sometid</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+  <span class="nv">$filter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SolrFilterSubQuery</span><span class="p">(</span><span class="s1">'AND'</span><span class="p">);</span>
+  <span class="nv">$filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'video'</span><span class="p">);</span>
+  <span class="nv">$filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'tid'</span><span class="p">,</span> <span class="nv">$sometid</span><span class="p">);</span>
+
+  <span class="nv">$compiled_filter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SolrFilterSubQuery</span><span class="p">(</span><span class="s1">'OR'</span><span class="p">);</span>
+  <span class="nv">$compiled_filter</span><span class="o">-&gt;</span><span class="na">addFilter</span><span class="p">(</span><span class="s1">'bundle'</span><span class="p">,</span> <span class="s1">'faq'</span><span class="p">);</span>
+  <span class="nv">$compiled_filter</span><span class="o">-&gt;</span><span class="na">addFilterSubQuery</span><span class="p">(</span><span class="nv">$filter</span><span class="p">);</span>
+
+  <span class="nv">$query</span><span class="o">-&gt;</span><span class="na">addFilterSubQuery</span><span class="p">(</span><span class="nv">$compiled_filter</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+<p>In here, I've used <code>addFilterSubQuery</code> for the final query as when you do <code>$query-&gt;addFilter('bundle', 'faq'); $query-&gt;addFilterSubQuery($filter)</code>, the operator would be <strong>AND</strong>. For filtering, you can go to <code>admin/reports/apachesolr</code> to find the available fields.</p>
+
+<p>Cheers! :D</p>
+
+        </div>
+
+        <aside class="sidebar">
+          <section class="about-me">
+            <h2 class="title">About Me</h2>
+            <p>Nothing to see here.</p>
+            <ul class="social">
+              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="github.com/ddfreyne/nanoc">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>
+
