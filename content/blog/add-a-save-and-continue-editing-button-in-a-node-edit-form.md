@@ -5,6 +5,7 @@ excerpt: ''
 title: Add a "Save and continue editing" button in a Node Edit Form
 created_at: Sep 8 2010
 tags: 
+  - drupal
 ---
 There are times that I would somehow want to continue editing a node rather than view it after saving. Here's a little snippet that would achieve what I needed.
 

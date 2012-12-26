@@ -2,7 +2,7 @@
 <h1 class="post-title"><%= @item[:title] %></h1>
 <article>
   <small class="meta">
-    Posted on <time datetime="<%= @item[:created_at] %>"><%= published_date(@item) %></time>
+    Posted <time datetime="<%= @item[:created_at] %>"><%= published_date(@item) %></time> on <%= tags_for(@item, { :base_url => '/tags/' }) %>
   </small>
   <section class="post-content">
     <%= yield %>

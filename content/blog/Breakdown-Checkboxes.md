@@ -5,6 +5,7 @@ excerpt: ''
 title: Breakdown checkboxes in FAPI and '#disabled' Property
 created_at: Dec 12 2012
 tags: 
+  - drupal
 ---
 If you wish to set some FAPI properties of the checkboxes generated with `#type => 'checkboxes'` individually, you'll need to breakdown the checkboxes first. There are two ways to do this that I am aware of. One is to add a `#process` callback to the form element, and another is to set each `#options` as a separate element e.g. `$form['checkboxes'][{#option-key}]`.
 

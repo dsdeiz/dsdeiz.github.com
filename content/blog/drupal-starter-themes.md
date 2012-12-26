@@ -5,6 +5,7 @@ excerpt: ''
 title: Drupal Starter Themes
 created_at: Mar 3 2010
 tags: 
+  - drupal
 ---
 Here's a list of starter themes that I have observed popular. The first three would be the ones that I've tried out. The next ones are the ones I am planning to try out. Below the names of each theme are the description taken directly from their project page:
 

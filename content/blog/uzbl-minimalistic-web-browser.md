@@ -5,6 +5,7 @@ excerpt: ''
 title: Uzbl - Minimalistic Web Browser
 created_at: Feb 14 2010
 tags: 
+- linux
 ---
 [Uzbl](http://www.uzbl.org/) is a very nice browser &mdash; quite easy to use, navigation is through keybinds, has modes, and a lot more features. Uzbl can be taken [here](http://uzbl.org/get.php).
 

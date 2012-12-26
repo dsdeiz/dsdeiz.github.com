@@ -5,6 +5,7 @@ excerpt: ''
 title: Starting with Git
 created_at: Jul 7 2010
 tags: 
+- git
 ---
 Recently I started using [Git](http://en.wikipedia.org/wiki/Git_(software)) again so I could play with [Kohana v3](http://kohanaframework.org/) (it has a tutorial about [Working with Git](http://kohanaframework.org/guide/tutorials.git)). Here are some really neat resources which I'm pretty sure are already popular (just wanted to repost them like what everybody does):
 

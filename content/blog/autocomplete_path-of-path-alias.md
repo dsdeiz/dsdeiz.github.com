@@ -5,6 +5,7 @@ excerpt: ''
 title: ! '#autocomplete_path of Path Alias'
 created_at: Mar 11 2010
 tags: 
+  - drupal
 ---
 I was trying to implement the <code>#autocomplete_path</code> to be used to autocomplete URL aliases. I believe this is somewhat a short introduction to doing autocomplete in your textfields when using the [Form API](http://api.drupal.org/api/drupal/developer--topics--forms_api_reference.html).
 

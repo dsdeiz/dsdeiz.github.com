@@ -5,6 +5,8 @@ excerpt: ''
 title: Migrating to Jekyll Part 2
 created_at: Feb 2 2012
 tags: 
+- jekyll
+- ruby
 ---
 After setting up the basic install of my Jekyll site, I then migrated the posts of my current Drupal site over to Jekyll.
 

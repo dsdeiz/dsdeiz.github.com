@@ -5,6 +5,7 @@ excerpt: ''
 title: Upon Redmine Installation
 created_at: Jul 28 2010
 tags: 
+- redmine
 ---
 Recently I stumbled upon an [entry](http://www.cyberciti.biz/tips/open-source-project-management-software.html) from [nixCraft](http://www.cyberciti.biz/) about Web-Based [Project Management Software](http://en.wikipedia.org/wiki/Project_management_software). The one that got my attention at first was [Trac](http://trac.edgewall.org/) as it was the tool we are using in our projects and that it was written in [Python](http://www.python.org/) (a programming language I was very much interested to learn but didn't have the time; and was too complicated for me :P). I also wanted to integrate [Git](http://git-scm.com) with __Trac__. I then found an entry from [Stack Overflow](http://stackoverflow.com/questions/623130/git-and-trac-or-similar) in which the "best" answer was to use [Redmine](http://www.redmine.org/). It's a bit new to me so I decided to give it a try.
 

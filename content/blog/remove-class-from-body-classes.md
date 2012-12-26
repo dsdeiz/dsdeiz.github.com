@@ -5,6 +5,7 @@ excerpt: ''
 title: Remove Class from Body Classes
 created_at: Mar 8 2010
 tags: 
+- drupal
 ---
 Removing a class from the variable `$body_classes` is very simple. All you need to do is make some changes on the variable in the `SUBTHEME_preprocess_page` function.
 

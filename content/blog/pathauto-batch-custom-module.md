@@ -5,6 +5,7 @@ excerpt: ''
 title: Pathauto Batch Custom Module
 created_at: May 31 2010
 tags: 
+- drupal
 ---
 I recently just started studying about Drupal's [Batch API](http://api.drupal.org/api/group/batch/6). I've decided to duplicate [Pathauto Bulk Update](http://drupal.org/project/pathauto) but using the __Batch API__ in order to bypass the limit you set for Pathauto Bulk Update. Mostly are based on the samples from the [API reference](http://api.drupal.org/api/group/batch/6) and the [Handbook](http://drupal.org/node/180528).
 

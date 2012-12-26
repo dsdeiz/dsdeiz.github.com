@@ -5,6 +5,7 @@ excerpt: ''
 title: Check Available Variables in Theming
 created_at: Mar 18 2010
 tags: 
+  - drupal
 ---
 First off, you can probably check out [this entry](http://www.thingy-ma-jig.co.uk/blog/02-10-2007/hugely-useful-hugely-undocumented) which provides four functions to look at upon developing. You would need the [Devel](http://drupal.org/project/devel) module for this.
 

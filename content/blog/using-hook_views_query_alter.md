@@ -5,6 +5,8 @@ excerpt: ''
 title: Using hook_views_query_alter
 created_at: Sep 20 2011
 tags: 
+- drupal
+- views
 ---
 There are times that you might want to alter the query that the Views module generates. My problem was to include an attribute filter for products from the [Ubercart](http://www.ubercart.org/) module. [uc_views](http://drupal.org/project/uc_views) might be able to do the trick although filters for product attributes were only for products that have already been order. There is also a [patch](http://drupal.org/node/651036) available although I didn't make use of it as I only needed something simple. I decided to use [hook_views_query_alter](http://views.doc.logrus.com/group__views__hooks.html#gf4d538493930fe0fa0ce6fb3bf42c156). It says to put your function `MODULENAME_views_query_alter` in __MODULENAME.views.inc__ although it seemed to have just been called in my __MODULENAME.module__.
 

@@ -5,6 +5,7 @@ excerpt: ''
 title: Print Views Output in Drupal
 created_at: Feb 6 2012
 tags: 
+  - drupal
 ---
 There are times that I would like to print the output of a view without it being rendered from a template i.e. it would go through `page.tpl.php`. I find this useful when say I'd like to do an Ajax call and I'd like it to return just the output of the view itself so I could print it inside a `div` container for example. This is quite simple as I could use [drupal_json](http://api.drupal.org/api/drupal/includes--common.inc/function/drupal_json/6) as my reference.
 

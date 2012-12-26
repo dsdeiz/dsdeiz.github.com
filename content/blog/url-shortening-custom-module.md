@@ -5,6 +5,7 @@ excerpt: ''
 title: URL Shortening Custom Module
 created_at: Apr 13 2010
 tags: 
+- drupal
 ---
 I first tried using the modules [Short URL](http://drupal.org/project/shorturl) and [Shorten URLs](http://drupal.org/project/shorten) but I believe the module __Short URL__ is currently on its early stages.
 

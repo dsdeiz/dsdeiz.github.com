@@ -5,6 +5,8 @@ excerpt: ''
 title: Problems with hook_download_authorize in Ubercart
 created_at: May 11 2010
 tags: 
+- drupal
+- ubercart
 ---
 My task involved to limit the number of downloads to 1 but with an exemption for those with a specific role or a so-called "credit". I've used <code>hook_download_authorize()</code> to try this one out.
 

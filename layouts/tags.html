@@ -1,8 +1,6 @@
----
-title: Home
----
-
-<% sorted_articles.each do |item| %>
+<% render 'default' do %>
+<h1 class="tag-title"><%= @item[:title] %></h1>
+<% items_with_tag(@item[:tag]).each do |item| %>
 <article class="post">
   <header>
     <h2>
@@ -17,4 +15,5 @@ title: Home
     <p><%= excerptize(strip_html(item.compiled_content), { :length => 600 }) %></p>
   </section>
 </article>
+<% end %>
 <% end %>

@@ -5,6 +5,8 @@ excerpt: ''
 title: Changing Username in Linux
 created_at: Apr 16 2010
 tags: 
+  - linux
+  - arch linux
 ---
 I tried changing my username on my Arch Linux install but somewhat caused a problem. I did the usual <code>usermod -l new_login old_login</code> and renamed my HOME directory. I followed the instructions from [this page](http://www.cyberciti.biz/faq/howto-change-rename-user-name-id/).
 

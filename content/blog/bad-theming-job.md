@@ -5,6 +5,7 @@ excerpt: ''
 title: Bad Theming Job
 created_at: Aug 9 2010
 tags: 
+  - drupal
 ---
 I read last time about [Drupal Theming Nightmares](http://sotak.co.uk/blog/drupal-theming-nightmares-part-1) written by a [Drupalist](http://sotak.co.uk/about-me). It is somehow a series of the blogger's experience upon continuing the theming job started by another themer. If you know about theming in Drupal then your reaction would probably be similar to the comments.
 

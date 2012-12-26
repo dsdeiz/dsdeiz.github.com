@@ -5,6 +5,7 @@ excerpt: ''
 title: Create Custom Form Instead Of Altering Node Form
 created_at: Sep 14 2012
 tags: 
+  - drupal
 ---
 This a post to remind me to not alter the node form as much as possible, but instead create a custom form and save the node upon submission. Some issues I had trouble with:
 

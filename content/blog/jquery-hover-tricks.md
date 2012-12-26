@@ -5,6 +5,8 @@ excerpt: ''
 title: jQuery Hover Tricks
 created_at: Oct 25 2011
 tags: 
+- jquery
+- javascript
 ---
 I had an issue in which I need to keep an element shown when the mouse hovers on another element. The markup looks like this:
 

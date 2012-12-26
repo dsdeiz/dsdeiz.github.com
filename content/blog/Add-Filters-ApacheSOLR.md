@@ -5,6 +5,8 @@ excerpt: ''
 title: Add Filters for Apache SOLR
 created_at: Apr 3 2012
 tags: 
+  - drupal
+  - solr
 ---
 To add simple filters on your search query with [apachesolr](http://drupal.org/project/apachesolr) can be easily done through `hook_apachesolr_query_alter`. You'll find the documentation on `path/to/apachesolr/apachesolr.api.php`. An example would be:
 

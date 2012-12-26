@@ -30,6 +30,10 @@ compile '/assets/css/*/' do
   # don’t filter or layout
 end
 
+compile '/tags/*/' do
+  layout 'tags'
+end
+
 compile '/blog/*/' do
   filter :redcarpet,
          :options => { :fenced_code_blocks => true },
@@ -74,6 +78,10 @@ route '*' do
     # Write item with identifier /foo/ to /foo/index.html
     item.identifier + 'index.html'
   end
+end
+
+preprocess do
+  create_tag_items
 end
 
 layout '*', :erb

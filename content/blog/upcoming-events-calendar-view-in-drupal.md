@@ -5,6 +5,7 @@ excerpt: ''
 title: Upcoming Events Calendar View in Drupal
 created_at: Nov 4 2010
 tags: 
+- drupal
 ---
 Here's what I have when I worked on an Event feature for a site. I first tried the [Event](http://drupal.org/project/event) module although it wasn't flexible enough to accomplish some of the things I needed. The modules I finally used (with their specific versions) were:
 

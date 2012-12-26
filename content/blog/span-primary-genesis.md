@@ -5,6 +5,7 @@ excerpt: ''
 title: ! '&lt;span&gt; Tag in Primary Links in a Genesis Subtheme'
 created_at: Feb 14 2010
 tags: 
+- drupal
 ---
 The codes on this post below would result to a markup like this in a [Genesis](http://drupal.org/project/genesis) subtheme:
 

@@ -5,6 +5,8 @@ excerpt: ''
 title: Setting Up Pianobar with lastfmsubmitd
 created_at: Dec 15 2010
 tags: 
+- linux
+- pianobar
 ---
 [Pandora](http://www.pandora.com/) is a really neat, free internet radio service. I am using a console client for __Pandora__ which is [Pianobar](https://github.com/PromyLOPh/pianobar). It's lacking one feature that I wanted though in which it would scrobble the music it plays over to [Last.fm](http://www.last.fm/). Previously it did support scrobbling to __Last.fm__ but has been [moved](https://github.com/PromyLOPh/pianobar/issues/issue/21). The author said you can make use an external scrobbler.
 

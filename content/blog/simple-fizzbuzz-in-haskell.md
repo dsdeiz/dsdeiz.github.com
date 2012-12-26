@@ -5,6 +5,8 @@ excerpt: ''
 title: Simple FizzBuzz in Haskell
 created_at: Oct 3 2010
 tags: 
+- haskell
+- fizzbuzz
 ---
 Yesterday I started reading about [Haskell](http://www.haskell.org/) through [Learn You a Haskell](http://learnyouahaskell.com/). I started playing around with __Haskell__ when I changed my window manager to __Xmonad__. 
 
