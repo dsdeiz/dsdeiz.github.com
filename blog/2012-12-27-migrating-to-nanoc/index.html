@@ -49,9 +49,31 @@
 
 <p>For stylesheets, I still used Compass. There is an existing <a href="https://github.com/chriseppstein/compass/wiki/nanoc-Integration">documentation</a> on the integration of Compass with Nanoc. I don't really know what are the advantages of having a <code>:sass</code> filter rather than just editing the <code>config.rb</code> file and running <code>compass watch</code> inside your project directory.</p>
 
-<p>For the <strong>Tag</strong> items, I used <a href="https://github.com/telemachus/ithaca/blob/master/lib/categories.rb">this</a> and <a href="http://stackoverflow.com/questions/13866141/how-to-generate-pages-for-each-tag-in-nanoc">this</a> for the <a href="https://github.com/dsdeiz/dsdeiz.github.com/blob/source/lib/tags.rb">tags</a> helper (it's the same as the latter though).</p>
+<p>For the <strong>Tag</strong> items, I used <a href="https://github.com/telemachus/ithaca/blob/master/lib/categories.rb">this</a> and <a href="http://stackoverflow.com/questions/13866141/how-to-generate-pages-for-each-tag-in-nanoc">this</a> for the <a href="https://github.com/dsdeiz/dsdeiz.github.com/blob/source/lib/tags.rb">tags</a> helper (it's the same as the latter though). Here's a breakdown of how the <code>TagItems</code> module works:</p>
+<div class="highlight"><pre><code class="language-ruby"><span class="c1"># Make sure that the tags collection doesn't contain duplicate tags.</span>
+<span class="nb">require</span> <span class="s1">'set'</span>
 
-<p>For the <strong>Related Articles</strong>, I have a method for this at <code>MyHelper</code>. This one is based on <a href="https://gist.github.com/889341">this gist</a>. It's kinda funny though since I was planning to display random articles for each tags tagged on the current article displayed but since this is a static site, the random articles are only generated on compilation. xD</p>
+<span class="n">tags</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">new</span>
+
+<span class="c1"># Add the tags for the current item to the set if the 'tags' attribute is not</span>
+<span class="c1"># empty.</span>
+<span class="n">items</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
+  <span class="n">item</span><span class="o">[</span><span class="ss">:tags</span><span class="o">].</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">tags</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">}</span> <span class="k">unless</span> <span class="n">item</span><span class="o">[</span><span class="ss">:tags</span><span class="o">].</span><span class="n">nil?</span>
+<span class="k">end</span>
+
+<span class="c1"># Append new 'tag' item on items with the attribute 'tag'.</span>
+<span class="n">tags</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">tag</span><span class="o">|</span>
+  <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="no">Nanoc</span><span class="o">::</span><span class="no">Item</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="p">{</span> <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="n">tag</span><span class="p">,</span> <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="s2">"Articles on “</span><span class="si">#{</span><span class="n">tag</span><span class="si">}</span><span class="s2">”"</span> <span class="p">},</span> <span class="s2">"/tags/</span><span class="si">#{</span><span class="n">tag</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">end</span></code></pre></div>
+
+<p>In my <code>Rules</code> file, I then have this:</p>
+<div class="highlight"><pre><code class="language-ruby"><span class="n">preprocess</span> <span class="k">do</span>
+  <span class="n">create_tag_items</span>
+<span class="k">end</span></code></pre></div>
+
+<p>This creates new items dynamically during compilation. Once the items are in place, you can use the <code>compile</code> rule to select a layout for tag items.</p>
+
+<p>For the <strong>Related Articles</strong>, I have a method for this at <code>MyHelper</code>. This one is based on <a href="https://gist.github.com/889341">this gist</a>. It's kinda funny though since I was planning to display random articles for each tags tagged on the current article displayed but since this is a static site, the random articles are only generated on compilation. And this generation happens every compilation. xD I might remove this next time as this will cause problems when there are too many items.</p>
 
 <p>That's it for now. I'm still planning to create an image gallery, portfolio, about page, rss feed and probably a contact page. And also add disqus. And probably a way to create new blog posts other than creating the files by hand.</p>
 
