@@ -37,9 +37,37 @@ excerptize(strip_html(item.compiled_content), { :length => 600 })
 
 For stylesheets, I still used Compass. There is an existing [documentation](https://github.com/chriseppstein/compass/wiki/nanoc-Integration) on the integration of Compass with Nanoc. I don't really know what are the advantages of having a `:sass` filter rather than just editing the `config.rb` file and running `compass watch` inside your project directory.
 
-For the **Tag** items, I used [this](https://github.com/telemachus/ithaca/blob/master/lib/categories.rb) and [this](http://stackoverflow.com/questions/13866141/how-to-generate-pages-for-each-tag-in-nanoc) for the [tags](https://github.com/dsdeiz/dsdeiz.github.com/blob/source/lib/tags.rb) helper (it's the same as the latter though).
+For the **Tag** items, I used [this](https://github.com/telemachus/ithaca/blob/master/lib/categories.rb) and [this](http://stackoverflow.com/questions/13866141/how-to-generate-pages-for-each-tag-in-nanoc) for the [tags](https://github.com/dsdeiz/dsdeiz.github.com/blob/source/lib/tags.rb) helper (it's the same as the latter though). Here's a breakdown of how the `TagItems` module works:
 
-For the **Related Articles**, I have a method for this at `MyHelper`. This one is based on [this gist](https://gist.github.com/889341). It's kinda funny though since I was planning to display random articles for each tags tagged on the current article displayed but since this is a static site, the random articles are only generated on compilation. xD
+~~~ ruby
+# Make sure that the tags collection doesn't contain duplicate tags.
+require 'set'
+
+tags = Set.new
+
+# Add the tags for the current item to the set if the 'tags' attribute is not
+# empty.
+items.each do |item|
+  item[:tags].each { |t| tags.add(t) } unless item[:tags].nil?
+end
+
+# Append new 'tag' item on items with the attribute 'tag'.
+tags.each do |tag|
+  @items << Nanoc::Item.new('', { :tag => tag, :title => "Articles on &ldquo;#{tag}&rdquo;" }, "/tags/#{tag}")
+end
+~~~
+
+In my `Rules` file, I then have this:
+
+~~~ ruby
+preprocess do
+  create_tag_items
+end
+~~~
+
+This creates new items dynamically during compilation. Once the items are in place, you can use the `compile` rule to select a layout for tag items.
+
+For the **Related Articles**, I have a method for this at `MyHelper`. This one is based on [this gist](https://gist.github.com/889341). It's kinda funny though since I was planning to display random articles for each tags tagged on the current article displayed but since this is a static site, the random articles are only generated on compilation. And this generation happens every compilation. xD I might remove this next time as this will cause problems when there are too many items.
 
 That's it for now. I'm still planning to create an image gallery, portfolio, about page, rss feed and probably a contact page. And also add disqus. And probably a way to create new blog posts other than creating the files by hand.
 
