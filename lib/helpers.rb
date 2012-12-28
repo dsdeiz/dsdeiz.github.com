@@ -16,7 +16,7 @@ module MyHelper
   # Prettify the date.
   def published_date(item)
     require 'time'
-    Time.parse(item[:created_at]).strftime('%B %m, %Y')
+    Time.parse(item[:created_at]).strftime('%B %d, %Y')
   end
 
   # Retrieve the articles belonging to the current tag. See
@@ -31,11 +31,13 @@ module MyHelper
       end
     end
 
-    # Shuffle the items.
-    articles.shuffle!
-
     # Return only unique items.
     articles.uniq!
+
+    # Sort articles.
+    articles.sort_by! do |a|
+      attribute_to_time(a[:created_at])
+    end.reverse
 
     # Return only items from first to fifth.
     articles[0..4]

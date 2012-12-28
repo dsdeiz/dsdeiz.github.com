@@ -1,0 +1,12 @@
+---
+title: Screenies
+classes:
+- no-sidebar
+---
+
+<p>These are my desktop screenies:</p>
+<ul class="gallery-image">
+  <% get_gallery('screenies').each do |item| %>
+  <li><a href="<%= item[:image] %>"><img src="<%= item[:thumbnail] %>" /></a></li>
+  <% end %>
+</ul>

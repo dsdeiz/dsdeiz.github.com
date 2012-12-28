@@ -30,6 +30,18 @@ compile '/assets/css/*/' do
   # don’t filter or layout
 end
 
+compile '/assets/js/*/' do
+  # don’t filter or layout
+end
+
+compile '/gallery/*/' do
+  # Galleries have identifiers /gallery/*. Only compile if extension is 'html'.
+  if item[:extension] == 'html'
+    filter :erb
+    layout 'page'
+  end
+end
+
 compile '/tags/*/' do
   layout 'tags'
 end
@@ -52,6 +64,15 @@ compile '*' do
   end
 end
 
+route '/gallery/*/' do
+  if item[:extension] == 'html'
+    item.identifier + 'index.html'
+  else
+    # no output for galleries
+    nil
+  end
+end
+
 route '/assets/sass/_*/' do
   # don't output partials, so return nil
   nil
@@ -62,6 +83,10 @@ route '/assets/sass/*/' do
 end
 
 route '/assets/css/*/' do
+  item.identifier.chop + '.' + item[:extension]
+end
+
+route '/assets/js/*/' do
   item.identifier.chop + '.' + item[:extension]
 end
 

@@ -123,6 +123,9 @@ blockquote {
   }
 }
 
+/* Remove the previously set span columns. */
+.no-sidebar .main-container .main .content { @include span-columns(14, 14) }
+
 .footer-container {
   @include padding-leader;
   @include padding-trailer;
@@ -166,5 +169,37 @@ footer {
 
   .site-info {
     text-align: right;
+  }
+}
+
+.navigation .nav ul {
+  @include no-bullets;
+
+  margin-left:   0;
+  padding-left:  0;
+}
+
+// ================================================================================
+// Image gallery
+// ================================================================================
+
+ul.gallery-image {
+  @include no-bullets;
+
+  li {
+    @include trailer(1);
+    @include span-columns(3, 15);
+    &:nth-child(5n) { @include omega; }
+
+    height: 70px;
+    display: block;
+    text-align: center;
+
+    a {
+      &:link,
+      &:visited {
+        border-bottom: 0;
+      }
+    }
   }
 }

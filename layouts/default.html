@@ -5,11 +5,12 @@
     <title>fr.ench.info &mdash; <%= @item[:title] %></title>
     <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/colorbox.css" media="screen">
 
     <!-- you don't need to keep this, but it's cool for stats! -->
     <meta name="generator" content="nanoc <%= Nanoc::VERSION %>"> 
   </head>
-  <body>
+  <body class="<%= @item[:classes].join(' ') unless @item[:classes].nil? %>">
     <div class="header-container">
       <header class="header">
         <h1><%= link_to('fr.ench.info', '/') %></h1>
@@ -22,21 +23,7 @@
           <%= yield %>
         </div>
 
-        <aside class="sidebar">
-          <section class="about-me">
-            <h2 class="title">About Me</h2>
-            <p>Nothing to see here.</p>
-            <ul class="social">
-              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
-              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
-              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
-            </ul>
-          </section>
-
-          <section>
-            <%= render 'related_articles' if @item[:kind] == 'article' %>
-          </section>
-        </aside>
+        <%= render 'sidebar' unless @item[:classes] != nil and @item[:classes].include?('no-sidebar') %>
       </div>
     </div>
 
@@ -50,5 +37,9 @@
         </section>
       </footer>
     </div>
+
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.colorbox.min.js"></script>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
   </body>
 </html>

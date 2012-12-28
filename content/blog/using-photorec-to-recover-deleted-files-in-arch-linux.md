@@ -5,6 +5,7 @@ excerpt: ''
 title: Using PhotoRec to Recover Deleted Files in Arch Linux
 created_at: Aug 24 2010
 tags: 
+- linux
 ---
 Recently I accidentally deleted my `xmonad.hs` file which I've worked on for so long. I had no back up or a Trash folder whatsoever. I searched for a file recovery software that would bring back my config file. I took a look at [Arch Linux's File Recovery](http://wiki.archlinux.org/index.php/File_Recovery) wiki to try out the ones they've listed.
 
