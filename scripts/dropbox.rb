@@ -1,5 +1,5 @@
 # Generate a file with the JSON of every screenshots with thumbnails in Dropbox
-# account. Usage: `ruby scripts/dropbox.rb`
+# account. Usage: `ruby scripts/dropbox.rb filename`
 
 require 'dropbox_sdk'
 require 'json'
@@ -70,8 +70,8 @@ class JSONScreenies
       end
     end
 
-    # Write the JSON output to screenies.json.
-    File.open('screenies.json', 'w') do |file|
+    # Write the JSON output to ARGV[1]
+    File.open(ARGV[0], 'w') do |file|
       file.write(JSON.pretty_generate(json))
     end
   end
