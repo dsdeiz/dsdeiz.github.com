@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>fr.ench.info &mdash; <%= @item[:title] %></title>
-    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="/assets/css/colorbox.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="<%= url_with_hash_for('/assets/sass/screen/') %>" media="screen">
+    <link rel="stylesheet" type="text/css" href="<%= url_with_hash_for('/assets/css/monokai/') %>" media="screen">
+    <link rel="stylesheet" type="text/css" href="<%= url_with_hash_for('/assets/css/colorbox/') %>" media="screen">
 
     <!-- you don't need to keep this, but it's cool for stats! -->
     <meta name="generator" content="nanoc <%= Nanoc::VERSION %>"> 

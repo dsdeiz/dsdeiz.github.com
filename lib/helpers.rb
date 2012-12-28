@@ -42,6 +42,15 @@ module MyHelper
     # Return only items from first to fifth.
     articles[0..4]
   end
+
+  # Generate the url for the current item with the hash of the item's raw
+  # content appended after ?. Used as cache buster.
+  def url_with_hash_for(identifier)
+    require 'digest/sha1'
+
+    item = @items.find { |i| i.identifier == identifier }
+    item.path + '?' + Digest::SHA1.hexdigest(item.raw_content)[0, 8]
+  end
 end
 
 include MyHelper
