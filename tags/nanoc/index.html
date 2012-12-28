@@ -5,11 +5,12 @@
     <title>fr.ench.info &mdash; Articles on &ldquo;nanoc&rdquo;</title>
     <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/colorbox.css" media="screen">
 
     <!-- you don't need to keep this, but it's cool for stats! -->
     <meta name="generator" content="nanoc 3.4.3"> 
   </head>
-  <body>
+  <body class="">
     <div class="header-container">
       <header class="header">
         <h1><a href="/">fr.ench.info</a></h1>
@@ -25,10 +26,27 @@
 <article class="post">
   <header>
     <h2>
+      <a href="/blog/2012-12-28-image-gallery-nanoc/">Image Gallery in Nanoc</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Dec 28 2012">December 28, 2012</time> on <a href="/tags/nanoc" rel="tag">nanoc</a>, <a href="/tags/ruby" rel="tag">ruby</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>My image gallery for screenies is a custom data source for Nanoc which generates items for each JSON file located in the gallery directory. This makes it easy for me to grab the images rather than creating an item for each image by hand.
+
+I created a ruby script that grabs all images from my Dropbox account since it is where all my desktop screenshots are stored. The script then generates a JSON file with each image in an entry { 'image': '...', 'thumbnail': '...' }. This is my first time messing around with the Dropbox API too. The API is well documented so I just had to follow the tutoria...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
       <a href="/blog/2012-12-27-migrating-to-nanoc/">Migrating to Nanoc</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Dec 27 2012">December 12, 2012</time> on <a href="/tags/nanoc" rel="tag">nanoc</a>, <a href="/tags/ruby" rel="tag">ruby</a>
+      Posted <time datetime="Dec 27 2012">December 27, 2012</time> on <a href="/tags/nanoc" rel="tag">nanoc</a>, <a href="/tags/ruby" rel="tag">ruby</a>
     </small>
   </header>
 
@@ -43,20 +61,29 @@ The first thing I did was to convert my markdown files. This wasn't really a pro
         </div>
 
         <aside class="sidebar">
-          <section class="about-me">
-            <h2 class="title">About Me</h2>
-            <p>Nothing to see here.</p>
-            <ul class="social">
-              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
-              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
-              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
-            </ul>
-          </section>
+  <section class="about-me">
+    <h2 class="title">About Me</h2>
+    <p>Nothing to see here.</p>
+    <ul class="social">
+      <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+      <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+      <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+    </ul>
+  </section>
 
-          <section>
-            
-          </section>
-        </aside>
+  <section class="navigation">
+    <h2 class="title">Navigation</h2>
+    <nav class="nav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/gallery/screenies">Screenies</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  
+</aside>
+
       </div>
     </div>
 
@@ -70,6 +97,10 @@ The first thing I did was to convert my markdown files. This wasn't really a pro
         </section>
       </footer>
     </div>
+
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.colorbox.min.js"></script>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
   </body>
 </html>
 

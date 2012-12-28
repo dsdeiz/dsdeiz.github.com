@@ -1584,6 +1584,14 @@ blockquote {
   display: inline;
 }
 
+/* Remove the previously set span columns. */
+.no-sidebar .main-container .main .content {
+  width: 100%;
+  float: left;
+  margin-right: 1.44928%;
+  display: inline;
+}
+
 .footer-container {
   padding-top: 1.42857em;
   padding-bottom: 1.42857em;
@@ -1659,4 +1667,43 @@ footer section {
 }
 footer .site-info {
   text-align: right;
+}
+
+.navigation .nav ul {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+.navigation .nav ul li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+
+ul.gallery-image {
+  list-style: none;
+}
+ul.gallery-image li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0;
+}
+ul.gallery-image li {
+  margin-bottom: 1.42857em;
+  width: 18.91892%;
+  float: left;
+  margin-right: 1.35135%;
+  display: inline;
+  height: 70px;
+  display: block;
+  text-align: center;
+}
+ul.gallery-image li:nth-child(5n) {
+  float: right;
+  margin-right: 0;
+  #margin-left: -1em;
+  display: inline;
+}
+ul.gallery-image li a:link, ul.gallery-image li a:visited {
+  border-bottom: 0;
 }

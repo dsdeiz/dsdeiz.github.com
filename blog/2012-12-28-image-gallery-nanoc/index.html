@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Image Gallery in Nanoc</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/colorbox.css" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body class="">
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Image Gallery in Nanoc</h1>
+<article>
+  <small class="meta">
+    Posted <time datetime="Dec 28 2012">December 28, 2012</time> on <a href="/tags/nanoc" rel="tag">nanoc</a>, <a href="/tags/ruby" rel="tag">ruby</a>
+  </small>
+  <section class="post-content">
+    <p>My image gallery for <a href="/gallery/screenies">screenies</a> is a custom data source for Nanoc which generates items for each JSON file located in the <code>gallery</code> directory. This makes it easy for me to grab the images rather than creating an item for each image by hand.</p>
+
+<p>I created a ruby <a href="https://github.com/dsdeiz/dsdeiz.github.com/blob/source/scripts/dropbox.rb">script</a> that grabs all images from my Dropbox account since it is where all my desktop screenshots are stored. The script then generates a JSON file with each image in an entry <code>{ 'image': '...', 'thumbnail': '...' }</code>. This is my first time messing around with the Dropbox API too. The API is well documented so I just had to follow the <a href="https://www.dropbox.com/developers/start/setup#ruby">tutorial</a>. I've used <a href="https://www.dropbox.com/static/developers/dropbox-ruby-sdk-1.5.1-docs/">this</a> and the file located under <code>/path/to/dropbox-sdk/cli_example.rb</code> as references. What the script does is just grab the files on my Dropbox account under <code>Public/screenies</code> and their corresponding thumbnails which are located under <code>Public/screenies/thumbs</code>. The filename for a thumbnail is the original filename + '-thumb.png'. The script only includes the images that have thumbnails. It then generates the JSON entry mentioned above. The URLs for each image and thumbnail can be generated using this pattern - <code>https://dl.dropbox.com/u/[uid]/screenies/filename.png</code>. I just then need to run the script for it to generate the JSON file under the <code>gallery</code> directory.</p>
+
+<p>After having the JSON file, I created a <a href="https://github.com/dsdeiz/dsdeiz.github.com/blob/source/lib/image_gallery.rb">custom data source</a> for image galleries. What the data source does is grab each JSON files located under <code>gallery</code> and create items for each entry in those files. Each item would have the identifier <code>/gallery/filename_of_json_file/image_property_of_entry</code>. Attributes for each items are hardcoded so each entry on the JSON file requires the 'image' and 'thumbnail' properties. It also adds the attributes 'kind' and 'type' in which 'kind' is 'gallery' and 'type' is the basename of the JSON file. In this data source, I only implemented the <a href="http://nanoc.stoneship.org/docs/api/3.4/Nanoc/DataSource.html#items-instance_method">items</a> method. In my <code>Rules</code> file, I then have this:</p>
+<div class="highlight"><pre><code class="language-ruby"><span class="n">compile</span> <span class="s1">'/gallery/*/'</span> <span class="k">do</span>
+  <span class="c1"># Galleries have identifiers /gallery/*. Only compile if extension is 'html'.</span>
+  <span class="k">if</span> <span class="n">item</span><span class="o">[</span><span class="ss">:extension</span><span class="o">]</span> <span class="o">==</span> <span class="s1">'html'</span>
+    <span class="n">filter</span> <span class="ss">:erb</span>
+    <span class="n">layout</span> <span class="s1">'page'</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">route</span> <span class="s1">'/gallery/*/'</span> <span class="k">do</span>
+  <span class="k">if</span> <span class="n">item</span><span class="o">[</span><span class="ss">:extension</span><span class="o">]</span> <span class="o">==</span> <span class="s1">'html'</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">identifier</span> <span class="o">+</span> <span class="s1">'index.html'</span>
+  <span class="k">else</span>
+    <span class="c1"># no output for galleries</span>
+    <span class="kp">nil</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></div>
+
+<p>The rule only compiles items with identifiers <code>/gallery/</code> and extension 'html'. This is so each items the data source creates doesn't have its page.</p>
+
+<p>With this custom data source, I could now create galleries for each json file other than 'screenies'. It could use some improvements but for now, I'm satisfied with this implementation.</p>
+  </section>
+</article>
+
+        </div>
+
+        <aside class="sidebar">
+  <section class="about-me">
+    <h2 class="title">About Me</h2>
+    <p>Nothing to see here.</p>
+    <ul class="social">
+      <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+      <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+      <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+    </ul>
+  </section>
+
+  <section class="navigation">
+    <h2 class="title">Navigation</h2>
+    <nav class="nav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/gallery/screenies">Screenies</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  
+  <section class="related-articles">
+    <h2 class="title">Related Articles</h2>
+
+<ul>
+  
+  <li><a href="/blog/2012-02-02-jekyll-2/">Migrating to Jekyll Part 2</a>
+  
+  <li><a href="/blog/2012-02-02-jekyll-1/">Migrating to Jekyll Part 1</a>
+  
+  <li><a href="/blog/2012-12-27-migrating-to-nanoc/">Migrating to Nanoc</a>
+  
+  <li><a href="/blog/2012-12-28-image-gallery-nanoc/">Image Gallery in Nanoc</a>
+  
+</ul>
+
+
+  </section>
+  
+</aside>
+
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="http://nanoc.stoneship.org/">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.colorbox.min.js"></script>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+  </body>
+</html>
+

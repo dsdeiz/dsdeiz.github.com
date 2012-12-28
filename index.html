@@ -5,11 +5,12 @@
     <title>fr.ench.info &mdash; Home</title>
     <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/colorbox.css" media="screen">
 
     <!-- you don't need to keep this, but it's cool for stats! -->
     <meta name="generator" content="nanoc 3.4.3"> 
   </head>
-  <body>
+  <body class="">
     <div class="header-container">
       <header class="header">
         <h1><a href="/">fr.ench.info</a></h1>
@@ -24,10 +25,27 @@
 <article class="post">
   <header>
     <h2>
+      <a href="/blog/2012-12-28-image-gallery-nanoc/">Image Gallery in Nanoc</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Dec 28 2012">December 28, 2012</time> on <a href="/tags/nanoc" rel="tag">nanoc</a>, <a href="/tags/ruby" rel="tag">ruby</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>My image gallery for screenies is a custom data source for Nanoc which generates items for each JSON file located in the gallery directory. This makes it easy for me to grab the images rather than creating an item for each image by hand.
+
+I created a ruby script that grabs all images from my Dropbox account since it is where all my desktop screenshots are stored. The script then generates a JSON file with each image in an entry { 'image': '...', 'thumbnail': '...' }. This is my first time messing around with the Dropbox API too. The API is well documented so I just had to follow the tutoria...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
       <a href="/blog/2012-12-27-migrating-to-nanoc/">Migrating to Nanoc</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Dec 27 2012">December 12, 2012</time> on <a href="/tags/nanoc" rel="tag">nanoc</a>, <a href="/tags/ruby" rel="tag">ruby</a>
+      Posted <time datetime="Dec 27 2012">December 27, 2012</time> on <a href="/tags/nanoc" rel="tag">nanoc</a>, <a href="/tags/ruby" rel="tag">ruby</a>
     </small>
   </header>
 
@@ -70,7 +88,7 @@ You'll then need to break...</p>
       <a href="/blog/2012-09-14-Create-Custom-Form-Instead-Of-Altering-Node-Form/">Create Custom Form Instead Of Altering Node Form</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Sep 14 2012">September 09, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Sep 14 2012">September 14, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -101,7 +119,7 @@ Make the first ta...</p>
       <a href="/blog/2012-04-03-Add-Filters-ApacheSOLR/">Add Filters for Apache SOLR</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Apr 3 2012">April 04, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/solr" rel="tag">solr</a>
+      Posted <time datetime="Apr 3 2012">April 03, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/solr" rel="tag">solr</a>
     </small>
   </header>
 
@@ -129,7 +147,7 @@ function module_apachesolr_query_alter($query) {
       <a href="/blog/2012-02-06-Print-Views-Output/">Print Views Output in Drupal</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Feb 6 2012">February 02, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Feb 6 2012">February 06, 2012</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -198,7 +216,7 @@ After this, I downloaded a backup copy of the database of my current blog using 
       <a href="/blog/2011-10-25-jquery-hover-tricks/">jQuery Hover Tricks</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Oct 25 2011">October 10, 2011</time> on <a href="/tags/jquery" rel="tag">jquery</a>, <a href="/tags/javascript" rel="tag">javascript</a>
+      Posted <time datetime="Oct 25 2011">October 25, 2011</time> on <a href="/tags/jquery" rel="tag">jquery</a>, <a href="/tags/javascript" rel="tag">javascript</a>
     </small>
   </header>
 
@@ -222,7 +240,7 @@ The goal is to have .dialog shown when mouse hovers over to #hover-here and the 
       <a href="/blog/2011-09-20-using-hook_views_query_alter/">Using hook_views_query_alter</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Sep 20 2011">September 09, 2011</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/views" rel="tag">views</a>
+      Posted <time datetime="Sep 20 2011">September 20, 2011</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/views" rel="tag">views</a>
     </small>
   </header>
 
@@ -239,7 +257,7 @@ I...</p>
       <a href="/blog/2011-03-11-quick-tip-for-numeric-and-textual-file-permissions/">Quick Tip for Numeric and Textual File Permissions</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Mar 11 2011">March 03, 2011</time> on <a href="/tags/linux" rel="tag">linux</a>
+      Posted <time datetime="Mar 11 2011">March 11, 2011</time> on <a href="/tags/linux" rel="tag">linux</a>
     </small>
   </header>
 
@@ -259,7 +277,7 @@ For changing permissions, y...</p>
       <a href="/blog/2010-12-15-setting-up-pianobar-with-lastfmsubmitd/">Setting Up Pianobar with lastfmsubmitd</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Dec 15 2010">December 12, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/pianobar" rel="tag">pianobar</a>
+      Posted <time datetime="Dec 15 2010">December 15, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/pianobar" rel="tag">pianobar</a>
     </small>
   </header>
 
@@ -276,7 +294,7 @@ For my external scrobbler I've used lastfmsubmitd. To set it up, you'll first ne
       <a href="/blog/2010-11-04-upcoming-events-calendar-view-in-drupal/">Upcoming Events Calendar View in Drupal</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Nov 4 2010">November 11, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Nov 4 2010">November 04, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -298,7 +316,7 @@ For my Event content type, I just have the usual fields for a node with a datest
       <a href="/blog/2010-10-03-simple-fizzbuzz-in-haskell/">Simple FizzBuzz in Haskell</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Oct 3 2010">October 10, 2010</time> on <a href="/tags/haskell" rel="tag">haskell</a>, <a href="/tags/fizzbuzz" rel="tag">fizzbuzz</a>
+      Posted <time datetime="Oct 3 2010">October 03, 2010</time> on <a href="/tags/haskell" rel="tag">haskell</a>, <a href="/tags/fizzbuzz" rel="tag">fizzbuzz</a>
     </small>
   </header>
 
@@ -323,7 +341,7 @@ Somehow cheated because I based it on this though I don't quite get that one yet
       <a href="/blog/2010-09-08-add-a-save-and-continue-editing-button-in-a-node-edit-form/">Add a "Save and continue editing" button in a Node Edit Form</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Sep 8 2010">September 09, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Sep 8 2010">September 08, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -350,7 +368,7 @@ function _module...</p>
       <a href="/blog/2010-08-24-using-photorec-to-recover-deleted-files-in-arch-linux/">Using PhotoRec to Recover Deleted Files in Arch Linux</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Aug 24 2010">August 08, 2010</time> on (none)
+      Posted <time datetime="Aug 24 2010">August 24, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>
     </small>
   </header>
 
@@ -369,7 +387,7 @@ I also tried searching for a Windows program to recover files from an ext4 parti
       <a href="/blog/2010-08-09-bad-theming-job/">Bad Theming Job</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Aug 9 2010">August 08, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Aug 9 2010">August 09, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -386,7 +404,7 @@ I then recently checked one of the themes I've created and also found out that i
       <a href="/blog/2010-07-28-upon-redmine-installation/">Upon Redmine Installation</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Jul 28 2010">July 07, 2010</time> on <a href="/tags/redmine" rel="tag">redmine</a>
+      Posted <time datetime="Jul 28 2010">July 28, 2010</time> on <a href="/tags/redmine" rel="tag">redmine</a>
     </small>
   </header>
 
@@ -437,7 +455,7 @@ I...</p>
       <a href="/blog/2010-06-22-bluetrip-css-framework/">BlueTrip CSS Framework</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Jun 22 2010">June 06, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/web design" rel="tag">web design</a>
+      Posted <time datetime="Jun 22 2010">June 22, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/web design" rel="tag">web design</a>
     </small>
   </header>
 
@@ -457,7 +475,7 @@ A full featured and beautiful CSS framework which originally combined the best o
       <a href="/blog/2010-05-31-pathauto-batch-custom-module/">Pathauto Batch Custom Module</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="May 31 2010">May 05, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="May 31 2010">May 31, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -481,7 +499,7 @@ function pathauto_batch_form_submit($form, &amp;$form_state) {
       <a href="/blog/2010-05-11-problems-with-hook_download_authorize-in-ubercart/">Problems with hook_download_authorize in Ubercart</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="May 11 2010">May 05, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/ubercart" rel="tag">ubercart</a>
+      Posted <time datetime="May 11 2010">May 11, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/ubercart" rel="tag">ubercart</a>
     </small>
   </header>
 
@@ -501,7 +519,7 @@ foreach (module_implements('download_authori...</p>
       <a href="/blog/2010-04-16-changing-username-in-linux/">Changing Username in Linux</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Apr 16 2010">April 04, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/arch linux" rel="tag">arch linux</a>
+      Posted <time datetime="Apr 16 2010">April 16, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/arch linux" rel="tag">arch linux</a>
     </small>
   </header>
 
@@ -520,7 +538,7 @@ Someone advised me to login from the root shell by calling the command login. Th
       <a href="/blog/2010-04-13-url-shortening-custom-module/">URL Shortening Custom Module</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Apr 13 2010">April 04, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Apr 13 2010">April 13, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -540,7 +558,7 @@ I started with how the module redirects the URLs when it encounters one from the
       <a href="/blog/2010-03-18-check-available-variables-in-theming/">Check Available Variables in Theming</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Mar 18 2010">March 03, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Mar 18 2010">March 18, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -558,7 +576,7 @@ I personally use dsm though I believe it simply makes use of the dpm function fr
       <a href="/blog/2010-03-11-autocomplete_path-of-path-alias/">#autocomplete_path of Path Alias</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Mar 11 2010">March 03, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Mar 11 2010">March 11, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -589,7 +607,7 @@ function example_autocomplete() {
       <a href="/blog/2010-03-08-remove-class-from-body-classes/">Remove Class from Body Classes</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Mar 8 2010">March 03, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Mar 8 2010">March 08, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -641,7 +659,7 @@ For many people, Zen is the ultimate starting theme for Drupal. If you are build
       <a href="/blog/2010-02-14-span-primary-genesis/">&lt;span&gt; Tag in Primary Links in a Genesis Subtheme</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Feb 14 2010">February 02, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+      Posted <time datetime="Feb 14 2010">February 14, 2010</time> on <a href="/tags/drupal" rel="tag">drupal</a>
     </small>
   </header>
 
@@ -663,7 +681,7 @@ function SUBTHEME_theme(&amp;$existing, $type, $theme, $path) {
       <a href="/blog/2010-02-14-uzbl-minimalistic-web-browser/">Uzbl - Minimalistic Web Browser</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Feb 14 2010">February 02, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>
+      Posted <time datetime="Feb 14 2010">February 14, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>
     </small>
   </header>
 
@@ -683,7 +701,7 @@ Uzbl is a free and open source minimalistic web browser designed for simplicity 
       <a href="/blog/2010-02-12-fixing-initscripts/">Fixing Initscripts</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Feb 12 2010">February 02, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/initscripts" rel="tag">initscripts</a>
+      Posted <time datetime="Feb 12 2010">February 12, 2010</time> on <a href="/tags/linux" rel="tag">linux</a>, <a href="/tags/initscripts" rel="tag">initscripts</a>
     </small>
   </header>
 
@@ -706,7 +724,7 @@ Put sleep 60 in /et...</p>
       <a href="/blog/2010-02-09-current-xmonad-setup/">Current Xmonad Setup</a>
     </h2>
     <small class="meta">
-      Posted <time datetime="Feb 9 2010">February 02, 2010</time> on <a href="/tags/xmonad" rel="tag">xmonad</a>, <a href="/tags/linux" rel="tag">linux</a>
+      Posted <time datetime="Feb 9 2010">February 09, 2010</time> on <a href="/tags/xmonad" rel="tag">xmonad</a>, <a href="/tags/linux" rel="tag">linux</a>
     </small>
   </header>
 
@@ -741,20 +759,29 @@ myManageHook = composeAll
         </div>
 
         <aside class="sidebar">
-          <section class="about-me">
-            <h2 class="title">About Me</h2>
-            <p>Nothing to see here.</p>
-            <ul class="social">
-              <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
-              <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
-              <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
-            </ul>
-          </section>
+  <section class="about-me">
+    <h2 class="title">About Me</h2>
+    <p>Nothing to see here.</p>
+    <ul class="social">
+      <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+      <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+      <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+    </ul>
+  </section>
 
-          <section>
-            
-          </section>
-        </aside>
+  <section class="navigation">
+    <h2 class="title">Navigation</h2>
+    <nav class="nav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/gallery/screenies">Screenies</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  
+</aside>
+
       </div>
     </div>
 
@@ -768,6 +795,10 @@ myManageHook = composeAll
         </section>
       </footer>
     </div>
+
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.colorbox.min.js"></script>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
   </body>
 </html>
 
