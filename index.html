@@ -25,6 +25,26 @@
 <article class="post">
   <header>
     <h2>
+      <a href="/blog/2013-01-06-migrate-field-collections/">Migrating Field Collections</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Jan 6 2013">January 06, 2013</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/migrate" rel="tag">migrate</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>Field collection allows users to group fields. Basically, when you create a 'field collection' field, you are creating a field_collection_item bundle in which you can then add fields on it. This is nice but unfortunately the migrate module doesn't support this. I got this working though with the patch here. To apply the patch you can do this:
+cd /path/to/field_collection/
+wget http://drupal.org/files/field_collection_migrate-entity_load-1175082-120.patch
+patch -p1 &lt; field_collection_migrate-entity_load-1175082-120.patch
+
+There is a sample usage of the destination handler found at the beg...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
       <a href="/blog/2012-12-28-image-gallery-nanoc/">Image Gallery in Nanoc</a>
     </h2>
     <small class="meta">
@@ -169,28 +189,6 @@ function MODULE_menu() {
 <article class="post">
   <header>
     <h2>
-      <a href="/blog/2012-02-02-jekyll-1/">Migrating to Jekyll Part 1</a>
-    </h2>
-    <small class="meta">
-      Posted <time datetime="Feb 2 2012">February 02, 2012</time> on <a href="/tags/jekyll" rel="tag">jekyll</a>, <a href="/tags/ruby" rel="tag">ruby</a>
-    </small>
-  </header>
-
-  <section class="post-content">
-    <p>Recently, I read about a few Drupal blogs migrating over to Jekyll — acko.net and Development Seed. The concept seems nice as you will be writing the content in files instead of a database so I thought I would give it a try. With this, I am able to write blog posts using Vim. Also, on my current blog, I am using Markdown as my input filter for writing blog posts.
-
-Installation &amp; Configuration
-
-Installing Jekyll was easy as I had only to follow these instructions. Did the following steps to install it:
-$ sudo apt-get install rubygems
-$ sudo gem install jekyll
-$ sudo apt-get install pytho...</p>
-  </section>
-</article>
-
-<article class="post">
-  <header>
-    <h2>
       <a href="/blog/2012-02-02-jekyll-2/">Migrating to Jekyll Part 2</a>
     </h2>
     <small class="meta">
@@ -207,6 +205,28 @@ Migration was also easy as I only needed to follow these steps. I first installe
 $ sudo gem install sequel mysqlplus
 
 After this, I downloaded a backup copy of the database of my current blog using Backup and Migrate and imported it to a newly created database. As far as I know, you would only actually need the tables node and node_revisions. My Drupal site has a prefix drpl_ for its tables so I nee...</p>
+  </section>
+</article>
+
+<article class="post">
+  <header>
+    <h2>
+      <a href="/blog/2012-02-02-jekyll-1/">Migrating to Jekyll Part 1</a>
+    </h2>
+    <small class="meta">
+      Posted <time datetime="Feb 2 2012">February 02, 2012</time> on <a href="/tags/jekyll" rel="tag">jekyll</a>, <a href="/tags/ruby" rel="tag">ruby</a>
+    </small>
+  </header>
+
+  <section class="post-content">
+    <p>Recently, I read about a few Drupal blogs migrating over to Jekyll — acko.net and Development Seed. The concept seems nice as you will be writing the content in files instead of a database so I thought I would give it a try. With this, I am able to write blog posts using Vim. Also, on my current blog, I am using Markdown as my input filter for writing blog posts.
+
+Installation &amp; Configuration
+
+Installing Jekyll was easy as I had only to follow these instructions. Did the following steps to install it:
+$ sudo apt-get install rubygems
+$ sudo gem install jekyll
+$ sudo apt-get install pytho...</p>
   </section>
 </article>
 

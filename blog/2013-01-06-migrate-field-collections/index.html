@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Migrating Field Collections</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?f5453056" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css?bfd7f3f9" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/colorbox.css?5eb04151" media="screen">
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body class="">
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Migrating Field Collections</h1>
+<article>
+  <small class="meta">
+    Posted <time datetime="Jan 6 2013">January 06, 2013</time> on <a href="/tags/drupal" rel="tag">drupal</a>, <a href="/tags/migrate" rel="tag">migrate</a>
+  </small>
+  <section class="post-content">
+    <p><a href="http://drupal.org/project/field_collection">Field collection</a> allows users to group fields. Basically, when you create a 'field collection' field, you are creating a <code>field_collection_item</code> bundle in which you can then add fields on it. This is nice but unfortunately the <a href="http://drupal.org/project/migrate">migrate</a> module doesn't support this. I got this working though with the patch <a href="http://drupal.org/node/1175082#comment-6833952">here</a>. To apply the patch you can do this:</p>
+<div class="highlight"><pre><code class="language-bash"><span class="nb">cd</span> /path/to/field_collection/
+wget http://drupal.org/files/field_collection_migrate-entity_load-1175082-120.patch
+patch -p1 &lt; field_collection_migrate-entity_load-1175082-120.patch</code></pre></div>
+
+<p>There is a sample usage of the destination handler found at the beginning of the file <code>field_collection.migrate.inc</code>. Basically, you'll need to have a <code>host_entity_id</code> mapped for it to work. Here's a sample of how I used it. Sources are both from CSV files. I have a field called <code>field_sample_field_collection</code> which has a field <code>field_sample_terms</code>. The term ids on the CSV file are already migrated over. My CSV files are in these format:</p>
+<div class="highlight"><pre><code class="language-text">nodes.csv
+"nid","title"
+1,Foo
+2,Bar
+
+field-collections.csv
+"item_id","tids","nid"
+"1","9, 7, 8","2"
+"2","3, 4, 9","1"</code></pre></div>
+
+<p><code>node.inc</code>:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">SampleBundleNodeMigration</span> <span class="k">extends</span> <span class="nx">DynamicMigration</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">description</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Migrate nodes.'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSourceCSV</span><span class="p">(</span>
+      <span class="nx">drupal_get_path</span><span class="p">(</span><span class="s1">'module'</span><span class="p">,</span> <span class="s1">'field_collections_migrate'</span><span class="p">)</span> <span class="o">.</span> <span class="s1">'/csv/nodes.csv'</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(),</span>
+      <span class="k">array</span><span class="p">(</span><span class="s1">'header_rows'</span> <span class="o">=&gt;</span> <span class="m">1</span><span class="p">)</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">destination</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateDestinationNode</span><span class="p">(</span><span class="s1">'sample_bundle'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSQLMap</span><span class="p">(</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">machineName</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(</span>
+        <span class="s1">'nid'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+          <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'int'</span><span class="p">,</span>
+          <span class="s1">'not null'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
+        <span class="p">)</span>
+      <span class="p">),</span>
+      <span class="nx">MigrateDestinationNode</span><span class="o">::</span><span class="na">getKeySchema</span><span class="p">()</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addSimpleMappings</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'title'</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p><code>field_collection.inc</code>:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">SampleFieldCollectionMigration</span> <span class="k">extends</span> <span class="nx">DynamicMigration</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">description</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Migrate field collection entities.'</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dependencies</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'SampleBundleNode'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSourceCSV</span><span class="p">(</span>
+      <span class="nx">drupal_get_path</span><span class="p">(</span><span class="s1">'module'</span><span class="p">,</span> <span class="s1">'field_collections_migrate'</span><span class="p">)</span> <span class="o">.</span> <span class="s1">'/csv/field-collections.csv'</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(),</span>
+      <span class="k">array</span><span class="p">(</span><span class="s1">'header_rows'</span> <span class="o">=&gt;</span> <span class="m">1</span><span class="p">)</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">destination</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateDestinationFieldCollection</span><span class="p">(</span>
+      <span class="s1">'field_sample_field_collection'</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(</span><span class="s1">'host_entity_type'</span> <span class="o">=&gt;</span> <span class="s1">'node'</span><span class="p">)</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSQLMap</span><span class="p">(</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">machineName</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(</span>
+        <span class="s1">'item_id'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+          <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'int'</span><span class="p">,</span>
+          <span class="s1">'not null'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
+        <span class="p">)</span>
+      <span class="p">),</span>
+      <span class="nx">MigrateDestinationFieldCollection</span><span class="o">::</span><span class="na">getKeySchema</span><span class="p">()</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span>
+      <span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'host_entity_id'</span><span class="p">,</span> <span class="s1">'nid'</span><span class="p">)</span>
+      <span class="o">-&gt;</span><span class="na">sourceMigration</span><span class="p">(</span><span class="s1">'SampleBundleNode'</span><span class="p">);</span>
+
+    <span class="nv">$this</span>
+      <span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'field_sample_terms'</span><span class="p">,</span> <span class="s1">'tids'</span><span class="p">)</span>
+      <span class="o">-&gt;</span><span class="na">separator</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+      <span class="o">-&gt;</span><span class="na">arguments</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'source_type'</span> <span class="o">=&gt;</span> <span class="s1">'tid'</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Cheers! :D</p>
+  </section>
+</article>
+
+        </div>
+
+        <aside class="sidebar">
+  <section class="about-me">
+    <h2 class="title">About Me</h2>
+    <p>Nothing to see here.</p>
+    <ul class="social">
+      <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+      <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+      <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+    </ul>
+  </section>
+
+  <section class="navigation">
+    <h2 class="title">Navigation</h2>
+    <nav class="nav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/gallery/screenies">Screenies</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  
+  <section class="related-articles">
+    <h2 class="title">Related Articles</h2>
+
+<ul>
+  
+  <li><a href="/blog/2010-02-14-span-primary-genesis/">&lt;span&gt; Tag in Primary Links in a Genesis Subtheme</a>
+  
+  <li><a href="/blog/2010-03-03-drupal-starter-themes/">Drupal Starter Themes</a>
+  
+  <li><a href="/blog/2010-03-08-remove-class-from-body-classes/">Remove Class from Body Classes</a>
+  
+  <li><a href="/blog/2010-03-11-autocomplete_path-of-path-alias/">#autocomplete_path of Path Alias</a>
+  
+  <li><a href="/blog/2010-03-18-check-available-variables-in-theming/">Check Available Variables in Theming</a>
+  
+</ul>
+
+
+  </section>
+  
+</aside>
+
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="http://nanoc.stoneship.org/">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.colorbox.min.js"></script>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+  </body>
+</html>
+
