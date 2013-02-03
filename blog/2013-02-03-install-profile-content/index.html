@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>fr.ench.info &mdash; Installation Profile with Content</title>
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css?37eb1c5d" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/monokai.css?bfd7f3f9" media="screen">
+    <link rel="stylesheet" type="text/css" href="/assets/css/colorbox.css?5eb04151" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+
+    <!-- you don't need to keep this, but it's cool for stats! -->
+    <meta name="generator" content="nanoc 3.4.3"> 
+  </head>
+  <body class="">
+    <div class="header-container">
+      <header class="header">
+        <h1><a href="/">fr.ench.info</a></h1>
+      </header>
+    </div>
+
+    <div class="main-container">
+      <div class="main">
+        <div class="content">
+          
+<h1 class="post-title">Installation Profile with Content</h1>
+<article>
+  <small class="meta">
+    Posted <time datetime="Feb 3 2013">February 03, 2013</time> on <a href="/tags/drupal" rel="tag">drupal</a>
+  </small>
+  <section class="post-content">
+    <p>Recently, I encountered a project that requires rebuilding a site over and over in order to test recent changes. There were a bunch of scripts that did this automatically. The scripts were bash and PHP scripts. The bash scripts consist of calling <code>drush</code> commands such as <code>drush en</code>, <code>drush si</code> and <code>drush scr</code>. The PHP scripts task were to import content, terms, and probably set some configurations. These PHP scripts are also the ones ran through <code>drush scr</code>. I didn't go through each line of the scripts but I think what they basically do is enable modules, import contents from a data source, copy some files over to <code>sites/default/files</code> and install Drupal.</p>
+
+<p>While all these are cool and all (and works perfectly), I thought that there might be a 'Drupal way' to do it. The first thing that came to my mind to automate all these is to use <a href="http://drupal.org/developing/distributions">Installation Profiles</a>. Basically, include all needed modules in the profile's <code>.info</code> file and do the importing on an added task.</p>
+
+<p>These are the things I did:
+1. Create sample content types and export these through features.
+2. Export CSV files and images.
+3. Create a migration class using <a href="http://drupal.org/project/migrate">Migrate</a> module.
+4. Add a new task in the profile to process the import creating in the previous step.</p>
+
+<p>The first step is simple. I created 3 content types namely <strong>Pants</strong>, <strong>Shirt</strong>, and <strong>Product</strong>. <strong>Pants</strong> and <strong>Shirts</strong> contain the fields <em>Image</em> (created automatically when using the <em>Standard</em> profile) and <em>Price</em>. The two content types also contain fields that are specific to each of them e.g. color for <strong>Shirt</strong> and size for <strong>Pants</strong>. <strong>Product</strong> content type has a multi-value field called <em>Items</em>. This field is an <a href="http://drupal.org/project/entityreference">entityreference</a> that accepts the bundles <strong>Pants</strong> and <strong>Shirt</strong>.</p>
+
+<p>For the second step, I used <a href="http://drupal.org/project/views_data_export">Views data export</a> to create the CSV export. I messed up the field names and values though so I had to modify each exported CSV file.</p>
+
+<p>The third step is quite tricky since I don't use the Migrate module that much. It's quite powerful though. I created three migration classes - one for each content type. I had simple content types so the migration classes were a bit easy to create.</p>
+
+<p>The fourth step is to create an installation profile. This was my first time creating one so I did some researches before proceeding. My <code>.install</code> file basically just calls <code>standard_install()</code>. It only contains this a <code>hook_install</code> implementation:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Implements hook_install().</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">myprofile_install</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Do the installation from the Standard profile.</span>
+  <span class="k">include_once</span> <span class="nx">DRUPAL_ROOT</span> <span class="o">.</span> <span class="s1">'/profiles/standard/standard.install'</span><span class="p">;</span>
+  <span class="nx">standard_install</span><span class="p">();</span>
+<span class="p">}</span></code></pre></div>
+
+<p>I encountered a few issues with this one though. I removed a few core modules from my <code>.info</code> file which caused the installation to break. Probably it's best to review what exactly <code>standard_install()</code> contains other than just calling it.</p>
+
+<p>I then added one task for importing the content. I was advised to checkout <a href="http://drupal.org/project/commerce_kickstart">Commerce Kickstart</a> distribution since it has a 'demo' task which does the importing. I simply just investigated what was defined in <code>commerce_kickstart_import_content()</code> and <code>migrate_ui_batch()</code>.</p>
+
+<p>So yeah, that's just it. :D I did a few re-installation before I got the Installation Profile to work. This works for simple tasks though I'm not sure how well it would when it comes to a large Drupal application. You can download the profile <a href="https://www.dropbox.com/s/8eaemxweacygg7k/myprofile.tar.gz?dl=1">here</a>. Boom! 8-)</p>
+  </section>
+</article>
+
+        </div>
+
+        <aside class="sidebar">
+  <section class="about-me">
+    <h2 class="title">About Me</h2>
+    <p>Nothing to see here.</p>
+    <ul class="social">
+      <li><a target="_blank" href="http://twitter.com/breadpan"><i class="icon-twitter"></i> Twitter</a></li>
+      <li><a target="_blank" href="http://github.com/dsdeiz"><i class="icon-github"></i> Github</a></li>
+      <li><a target="_blank" href="http://last.fm/user/dsdeiz"><i class="icon-music"></i> Lastfm</a></li>
+    </ul>
+  </section>
+
+  <section class="navigation">
+    <h2 class="title">Navigation</h2>
+    <nav class="nav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/gallery/screenies">Screenies</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  
+  <section class="related-articles">
+    <h2 class="title">Related Articles</h2>
+
+<ul>
+  
+  <li><a href="/blog/2010-02-14-span-primary-genesis/">&lt;span&gt; Tag in Primary Links in a Genesis Subtheme</a>
+  
+  <li><a href="/blog/2010-03-03-drupal-starter-themes/">Drupal Starter Themes</a>
+  
+  <li><a href="/blog/2010-03-08-remove-class-from-body-classes/">Remove Class from Body Classes</a>
+  
+  <li><a href="/blog/2010-03-11-autocomplete_path-of-path-alias/">#autocomplete_path of Path Alias</a>
+  
+  <li><a href="/blog/2010-03-18-check-available-variables-in-theming/">Check Available Variables in Theming</a>
+  
+</ul>
+
+
+  </section>
+  
+</aside>
+
+      </div>
+    </div>
+
+    <div class="footer-container">
+      <footer class="footer">
+        <section class="view-source">
+          <p>View the source for this site <a target="_blank" href="https://github.com/dsdeiz/dsdeiz.github.com">here</a>.</p>
+        </section>
+        <section class="site-info">
+          <p>Site generated with <a target="_blank" href="http://nanoc.stoneship.org/">Nanoc</a> and hosted at <a target="_blank" href="http://github.com/">Github</a>.<br />Images hosted by <a target="_blank" href="http://db.tt/dzLS9TI4">Dropbox</a>.</p>
+        </section>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.colorbox.min.js"></script>
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+  </body>
+</html>
+
