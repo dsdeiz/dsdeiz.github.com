@@ -13,6 +13,7 @@ Recently, I encountered a project that requires rebuilding a site over and over 
 While all these are cool and all (and works perfectly), I thought that there might be a 'Drupal way' to do it. The first thing that came to my mind to automate all these is to use [Installation Profiles](http://drupal.org/developing/distributions). Basically, include all needed modules in the profile's `.info` file and do the importing on an added task.
 
 These are the things I did:
+
 1. Create sample content types and export these through features.
 2. Export CSV files and images.
 3. Create a migration class using [Migrate](http://drupal.org/project/migrate) module.
