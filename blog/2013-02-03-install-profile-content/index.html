@@ -32,13 +32,14 @@
 
 <p>While all these are cool and all (and works perfectly), I thought that there might be a 'Drupal way' to do it. The first thing that came to my mind to automate all these is to use <a href="http://drupal.org/developing/distributions">Installation Profiles</a>. Basically, include all needed modules in the profile's <code>.info</code> file and do the importing on an added task.</p>
 
-<p>These are the things I did:
-1. Create sample content types and export these through features.
-2. Export CSV files and images.
-3. Create a migration class using <a href="http://drupal.org/project/migrate">Migrate</a> module.
-4. Add a new task in the profile to process the import creating in the previous step.</p>
+<p>These are the things I did:</p>
 
-<p>The first step is simple. I created 3 content types namely <strong>Pants</strong>, <strong>Shirt</strong>, and <strong>Product</strong>. <strong>Pants</strong> and <strong>Shirts</strong> contain the fields <em>Image</em> (created automatically when using the <em>Standard</em> profile) and <em>Price</em>. The two content types also contain fields that are specific to each of them e.g. color for <strong>Shirt</strong> and size for <strong>Pants</strong>. <strong>Product</strong> content type has a multi-value field called <em>Items</em>. This field is an <a href="http://drupal.org/project/entityreference">entityreference</a> that accepts the bundles <strong>Pants</strong> and <strong>Shirt</strong>.</p>
+<ol>
+<li>Create sample content types and export these through features.</li>
+<li>Export CSV files and images.</li>
+<li>Create a migration class using <a href="http://drupal.org/project/migrate">Migrate</a> module.</li>
+<li>Add a new task in the profile to process the import creating in the previous step.</li>
+</ol><p>The first step is simple. I created 3 content types namely <strong>Pants</strong>, <strong>Shirt</strong>, and <strong>Product</strong>. <strong>Pants</strong> and <strong>Shirts</strong> contain the fields <em>Image</em> (created automatically when using the <em>Standard</em> profile) and <em>Price</em>. The two content types also contain fields that are specific to each of them e.g. color for <strong>Shirt</strong> and size for <strong>Pants</strong>. <strong>Product</strong> content type has a multi-value field called <em>Items</em>. This field is an <a href="http://drupal.org/project/entityreference">entityreference</a> that accepts the bundles <strong>Pants</strong> and <strong>Shirt</strong>.</p>
 
 <p>For the second step, I used <a href="http://drupal.org/project/views_data_export">Views data export</a> to create the CSV export. I messed up the field names and values though so I had to modify each exported CSV file.</p>
 
