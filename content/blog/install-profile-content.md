@@ -3,7 +3,7 @@ kind: article
 layout: post
 excerpt: ''
 title: Installation Profile with Content
-created_at: Sep 14 2012
+created_at: Feb 3 2013
 tags:
   - drupal
 ---
@@ -41,6 +41,6 @@ function myprofile_install() {
 
 I encountered a few issues with this one though. I removed a few core modules from my `.info` file which caused the installation to break. Probably it's best to review what exactly `standard_install()` contains other than just calling it.
 
-I then added one task for importing the content. I was advised to checkout [Commerce Kickstart](http://drupal.org/project/commerce_kickstart) distribution since it has a 'demo' task which does the importing. I simply just investigated what was defined in [commerce_kickstart_import_content](http://drupalcode.org/project/commerce_kickstart.git/blob/refs/heads/7.x-2.x:/commerce_kickstart.install#l385) and [migrate_ui_batch](http://drupalcode.org/project/migrate.git/blob/HEAD:/migrate_ui/migrate_ui.pages.inc#l309).
+I then added one task for importing the content. I was advised to checkout [Commerce Kickstart](http://drupal.org/project/commerce_kickstart) distribution since it has a 'demo' task which does the importing. I simply just investigated what was defined in `commerce_kickstart_import_content()` and `migrate_ui_batch()`.
 
-So yeah, that's just it. :D I did a few re-installation before I got the Installation Profile to work. This works for simple tasks though I'm not sure how well it would when it comes to a large Drupal application. You can download the profile [here](https://www.dropbox.com/s/8eaemxweacygg7k/myprofile.tar.gz). Boom! 8-)
+So yeah, that's just it. :D I did a few re-installation before I got the Installation Profile to work. This works for simple tasks though I'm not sure how well it would when it comes to a large Drupal application. You can download the profile [here](https://www.dropbox.com/s/8eaemxweacygg7k/myprofile.tar.gz?dl=1). Boom! 8-)
