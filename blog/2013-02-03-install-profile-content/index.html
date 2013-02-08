@@ -43,7 +43,141 @@
 
 <p>For the second step, I used <a href="http://drupal.org/project/views_data_export">Views data export</a> to create the CSV export. I messed up the field names and values though so I had to modify each exported CSV file.</p>
 
-<p>The third step is quite tricky since I don't use the Migrate module that much. It's quite powerful though. I created three migration classes - one for each content type. I had simple content types so the migration classes were a bit easy to create.</p>
+<p>The third step is quite tricky since I don't use the Migrate module that much. It's quite powerful though. I created three migration classes - one for each content type. I had simple content types so the migration classes were a bit easy to create. I have these for my Migrate classes:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Base migration for product nodes.</span>
+<span class="sd"> */</span>
+<span class="k">class</span> <span class="nc">BaseProductMigration</span> <span class="k">extends</span> <span class="nx">DynamicMigration</span> <span class="p">{</span>
+  <span class="k">protected</span> <span class="nv">$data_source_path</span><span class="p">;</span>
+  <span class="k">protected</span> <span class="nv">$files_source_path</span><span class="p">;</span>
+
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+
+    <span class="nv">$module_path</span>             <span class="o">=</span> <span class="nx">drupal_get_path</span><span class="p">(</span><span class="s1">'module'</span><span class="p">,</span> <span class="s1">'my_profile_migrate'</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data_source_path</span>  <span class="o">=</span> <span class="nv">$module_path</span> <span class="o">.</span> <span class="s1">'/exports/csv'</span><span class="p">;</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">files_source_path</span> <span class="o">=</span> <span class="nv">$module_path</span> <span class="o">.</span> <span class="s1">'/exports/source_files'</span><span class="p">;</span>
+
+    <span class="c1">// Shared fields.</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">'Title'</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'body'</span><span class="p">,</span> <span class="s1">'Body'</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'field_price'</span><span class="p">,</span> <span class="s1">'Price'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'field_image'</span><span class="p">,</span> <span class="s1">'File Name'</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'field_image:source_dir'</span><span class="p">)</span>
+         <span class="o">-&gt;</span><span class="na">defaultValue</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">files_source_path</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Migration class for 'Shirt' nodes.</span>
+<span class="sd"> */</span>
+<span class="k">class</span> <span class="nc">ShirtsMigration</span> <span class="k">extends</span> <span class="nx">BaseProductMigration</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">description</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Migrate Shirt nodes.'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSourceCSV</span><span class="p">(</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data_source_path</span> <span class="o">.</span> <span class="s1">'/shirts.csv'</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(),</span>
+      <span class="k">array</span><span class="p">(</span><span class="s1">'header_rows'</span> <span class="o">=&gt;</span> <span class="m">1</span><span class="p">,</span> <span class="s1">'embedded_newlines'</span> <span class="o">=&gt;</span> <span class="m">1</span><span class="p">)</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">destination</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateDestinationNode</span><span class="p">(</span><span class="s1">'shirt'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSQLMap</span><span class="p">(</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">machineName</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(</span>
+        <span class="s1">'nid'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+          <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'int'</span><span class="p">,</span>
+          <span class="s1">'not null'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
+        <span class="p">),</span>
+      <span class="p">),</span>
+      <span class="nx">MigrateDestinationNode</span><span class="o">::</span><span class="na">getKeySchema</span><span class="p">()</span>
+    <span class="p">);</span>
+
+    <span class="c1">// Fields.</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'field_shirt_color'</span><span class="p">,</span> <span class="s1">'Color'</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'field_shirt_size'</span><span class="p">,</span> <span class="s1">'Size'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Migration class for 'Pants' nodes.</span>
+<span class="sd"> */</span>
+<span class="k">class</span> <span class="nc">PantsMigration</span> <span class="k">extends</span> <span class="nx">BaseProductMigration</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">description</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Migrate Pants nodes.'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSourceCSV</span><span class="p">(</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data_source_path</span> <span class="o">.</span> <span class="s1">'/pants.csv'</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(),</span>
+      <span class="k">array</span><span class="p">(</span><span class="s1">'header_rows'</span> <span class="o">=&gt;</span> <span class="m">1</span><span class="p">,</span> <span class="s1">'embedded_newlines'</span> <span class="o">=&gt;</span> <span class="m">1</span><span class="p">)</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">destination</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateDestinationNode</span><span class="p">(</span><span class="s1">'pants'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSQLMap</span><span class="p">(</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">machineName</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(</span>
+        <span class="s1">'nid'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+          <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'int'</span><span class="p">,</span>
+          <span class="s1">'not null'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
+        <span class="p">),</span>
+      <span class="p">),</span>
+      <span class="nx">MigrateDestinationNode</span><span class="o">::</span><span class="na">getKeySchema</span><span class="p">()</span>
+    <span class="p">);</span>
+
+    <span class="c1">// Fields.</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'field_pants_size'</span><span class="p">,</span> <span class="s1">'Size'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Migration class for 'Product' nodes.</span>
+<span class="sd"> */</span>
+<span class="k">class</span> <span class="nc">ProductsMigration</span> <span class="k">extends</span> <span class="nx">BaseProductMigration</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">description</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Migrate Product nodes.'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dependencies</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'Shirts'</span><span class="p">,</span> <span class="s1">'Pants'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSourceCSV</span><span class="p">(</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">data_source_path</span> <span class="o">.</span> <span class="s1">'/products.csv'</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(),</span>
+      <span class="k">array</span><span class="p">(</span><span class="s1">'header_rows'</span> <span class="o">=&gt;</span> <span class="m">1</span><span class="p">,</span> <span class="s1">'embedded_newlines'</span> <span class="o">=&gt;</span> <span class="m">1</span><span class="p">)</span>
+    <span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">destination</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateDestinationNode</span><span class="p">(</span><span class="s1">'product'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MigrateSQLMap</span><span class="p">(</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">machineName</span><span class="p">,</span>
+      <span class="k">array</span><span class="p">(</span>
+        <span class="s1">'nid'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+          <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'int'</span><span class="p">,</span>
+          <span class="s1">'not null'</span> <span class="o">=&gt;</span> <span class="k">TRUE</span><span class="p">,</span>
+        <span class="p">),</span>
+      <span class="p">),</span>
+      <span class="nx">MigrateDestinationNode</span><span class="o">::</span><span class="na">getKeySchema</span><span class="p">()</span>
+    <span class="p">);</span>
+
+    <span class="c1">// Remove shared fields not applicable for product nodes.</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">removeFieldMapping</span><span class="p">(</span><span class="s1">'field_price'</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">removeFieldMapping</span><span class="p">(</span><span class="s1">'field_image'</span><span class="p">);</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">removeFieldMapping</span><span class="p">(</span><span class="s1">'field_image:source_dir'</span><span class="p">);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addFieldMapping</span><span class="p">(</span><span class="s1">'field_product_items'</span><span class="p">,</span> <span class="s1">'Items'</span><span class="p">)</span>
+         <span class="o">-&gt;</span><span class="na">separator</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
+         <span class="o">-&gt;</span><span class="na">sourceMigration</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">'Shirts'</span><span class="p">,</span> <span class="s1">'Pants'</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 
 <p>The fourth step is to create an installation profile. This was my first time creating one so I did some researches before proceeding. My <code>.install</code> file basically just calls <code>standard_install()</code>. It only contains this <code>hook_install</code> implementation:</p>
 <div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
@@ -60,6 +194,55 @@
 <p>I encountered a few issues with this one though. I removed a few core modules from my <code>.info</code> file which caused the installation to break. Probably it's best to review what exactly <code>standard_install()</code> contains other than just calling it.</p>
 
 <p>I then added one task for importing the content. I was advised to checkout <a href="http://drupal.org/project/commerce_kickstart">Commerce Kickstart</a> distribution since it has a 'demo' task which does the importing. I simply just investigated what was defined in <code>commerce_kickstart_import_content()</code> and <code>migrate_ui_batch()</code>.</p>
+
+<p>This is what my <code>.profile</code> contains:</p>
+<div class="highlight"><pre><code class="language-php"><span class="cp">&lt;?php</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Implements hook_install_tasks().</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">myprofile_install_tasks</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$install_state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$tasks</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'myprofile_import_content'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">'display_name'</span> <span class="o">=&gt;</span> <span class="nx">st</span><span class="p">(</span><span class="s1">'Import content'</span><span class="p">),</span>
+      <span class="s1">'type'</span> <span class="o">=&gt;</span> <span class="s1">'batch'</span><span class="p">,</span>
+    <span class="p">),</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="nv">$tasks</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Task callback: Import content from existing migrations.</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">myprofile_import_content</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nb">ini_set</span><span class="p">(</span><span class="s2">"auto_detect_line_endings"</span><span class="p">,</span> <span class="k">TRUE</span><span class="p">);</span>
+
+  <span class="nv">$operations</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+  <span class="nv">$migrations</span> <span class="o">=</span> <span class="nx">migrate_migrations</span><span class="p">();</span>
+  <span class="k">foreach</span> <span class="p">(</span><span class="nv">$migrations</span> <span class="k">as</span> <span class="nv">$machine_name</span> <span class="o">=&gt;</span> <span class="nv">$migration</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$operations</span><span class="p">[]</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'_myprofile_import'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="nv">$machine_name</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="nv">$batch</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'title'</span> <span class="o">=&gt;</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Importing content'</span><span class="p">),</span>
+    <span class="s1">'operations'</span> <span class="o">=&gt;</span> <span class="nv">$operations</span><span class="p">,</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="nv">$batch</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Batch operation for importing content.</span>
+<span class="sd"> *</span>
+<span class="sd"> * @see migrate_ui_batch()</span>
+<span class="sd"> */</span>
+<span class="k">function</span> <span class="nf">_myprofile_import</span><span class="p">(</span><span class="nv">$machine_name</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">$context</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$context</span><span class="p">[</span><span class="s1">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">t</span><span class="p">(</span><span class="s1">'Importing content'</span><span class="p">);</span>
+  <span class="nv">$migration</span> <span class="o">=</span> <span class="nx">Migration</span><span class="o">::</span><span class="na">getInstance</span><span class="p">(</span><span class="nv">$machine_name</span><span class="p">);</span>
+  <span class="nv">$migration</span><span class="o">-&gt;</span><span class="na">processImport</span><span class="p">();</span>
+<span class="p">}</span></code></pre></div>
 
 <p>So yeah, that's just it. :D I did a few re-installations before I got the Installation Profile to work. This works for simple tasks though I'm not sure how well it would when it comes to a large Drupal application. You can download the profile <a href="https://www.dropbox.com/s/8eaemxweacygg7k/myprofile.tar.gz?dl=1">here</a>. Boom! 8-)</p>
   </section>
